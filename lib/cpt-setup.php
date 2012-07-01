@@ -29,15 +29,11 @@ class Snippet_CPT_Setup {
 		add_action( 'init', array( &$this, 'cpt_loop' ) );
 		add_filter( 'post_updated_messages', array( &$this, 'messages' ) );
 		add_filter( 'user_can_richedit', array( &$this, 'remove_html' ), 50 );
-		// add_filter( 'quicktags_settings', array( &$this, 'remove_quicktags' ) );
 		add_filter( 'enter_title_here', array( &$this, 'title' ) );
 		add_filter( 'manage_edit-'. $this->slug .'_columns', array( &$this, 'columns' ) );
-		add_action( 'manage_posts_custom_column' ,  array( &$this, 'columns_display' ) );
-		// add_action( 'admin_head', array( &$this, 'admin_head' ) );
-		// add_action( 'admin_footer', array( &$this, 'admin_footer' ) );
+		add_action( 'manage_posts_custom_column', array( &$this, 'columns_display' ) );
 		add_action( 'add_meta_boxes', array( &$this, 'meta_boxes' ) );
 		add_filter( 'gettext', array( &$this, 'text' ), 10, 2 );
-
 
 	}
 
@@ -105,13 +101,6 @@ class Snippet_CPT_Setup {
 		return true;
 	}
 
-	public function remove_quicktags( $tags ) {
-		if ( get_post_type() == $this->slug )
-			$tags['buttons'] = 'link,ul,ol,li,close,fullscreen';
-		return $tags;
-
-	}
-
 	public function title( $title ){
 
 		$screen = get_current_screen();
@@ -120,17 +109,6 @@ class Snippet_CPT_Setup {
 		}
 
 		return $title;
-	}
-
-	public function admin_head() {
-		if ( get_post_type() == $this->slug )
-		remove_action( 'media_buttons', 'media_buttons' );
-
-		// echo '<style type="text/css">
-		// 	#postexcerpt { margin: 40px auto -15px; }
-		// 	#postexcerpt textarea + p { display: none; }
-		// </style>';
-
 	}
 
 	public function columns( $columns ) {
@@ -170,18 +148,10 @@ class Snippet_CPT_Setup {
 
 	}
 
-	public function admin_footer() {
-		?>
-		<script type="text/javascript">
-			jQuery('#normal-sortables').insertBefore('#postdivrich');
-		</script>
-		<?php
-	}
-
 	public function text( $translation, $text ) {
 		global $pagenow;
 
-		if ( ( $pagenow == 'post-new.php' && $_GET['post_type'] == $this->slug ) || ( $pagenow == 'post.php' && get_post_type( $_GET['post'] ) == $this->slug ) || ( $pagenow == 'edit.php' && $_GET['post_type'] == $this->slug ) ) {
+		if ( ( $pagenow == 'post-new.php' && isset( $_GET['post_type'] ) && $_GET['post_type'] == $this->slug ) || ( $pagenow == 'post.php' && isset( $_GET['post_type'] ) && get_post_type( $_GET['post'] ) == $this->slug ) || ( $pagenow == 'edit.php' && $_GET['post_type'] == $this->slug ) ) {
 
 			switch ($text) {
 				case 'Excerpt';
