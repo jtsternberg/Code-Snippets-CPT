@@ -5,71 +5,66 @@
  */
 class Snippet_Tax_Setup {
 
-	public $taxonomy = 'Language';
-	public $plural = 'Languages';
+	public $singular;
+	public $plural;
 	public $slug;
-	public $cpt;
+	public $object_types;
+	public $args;
 
-	/**
-	 * Holds copy of instance, so other plugins can remove our hooks.
-	 *
-	 * @since 1.0
-	 * @link http://core.trac.wordpress.org/attachment/ticket/16149/query-standard-format-posts.php
-	 * @link http://twitter.com/#!/markjaquith/status/66862769030438912
-	 *
-	 */
-	static $instance;
+	public function __construct( $singular, $plural = '', $object_types, $args = array() ) {
 
-	function __construct() {
+		if( ! $singular )
+			wp_die( 'No taxonomy ID given' );
 
-		self::$instance = $this;
+		$this->singular     = $singular;
+		$this->plural       = ( empty( $plural ) ) ? $singular .'s' : $plural;
+		$this->slug         = sanitize_title( $this->plural );
+		$this->object_types = (array) $object_types;
+		$this->args         = (array) $args;
 
-		$this->slug = sanitize_title( $this->plural );
-
-		$this->cpt = new Snippet_CPT_Setup;
-
-		add_action( 'init', array( &$this, 'tax_loop' ) );
-		add_action( 'admin_menu', array( &$this, 'add_select_box' ) );
+		add_action( 'init', array( $this, 'tax_loop' ) );
 
 	}
 
-	public function tax_loop( $singular = '', $plural = '', $post_types = array(), $custom_args = array() ) {
-
-		$post_types = !empty( $post_types ) ? $post_types : array( 'code-snippets' );
-		$singular = !empty( $singular ) ? $singular : $this->taxonomy;
-		if ( empty( $plural ) ) $plural = $singular .'s';
+	public function tax_loop() {
 
 		$labels = array(
-			'name' => $plural,
-			'singular_name' => $singular,
-			'search_items' =>  'Search '.$plural,
-			'all_items' => 'All '.$plural,
-			'parent_item' => 'Parent '.$singular,
-			'parent_item_colon' => 'Parent '.$singular.':',
-			'edit_item' => 'Edit '.$singular,
-			'update_item' => 'Update '.$singular,
-			'add_new_item' => 'Add New '.$singular,
-			'new_item_name' => 'New '.$singular.' Name',
+			'name' => $this->plural,
+			'singular_name' => $this->singular,
+			'search_items' =>  'Search '.$this->plural,
+			'all_items' => 'All '.$this->plural,
+			'parent_item' => 'Parent '.$this->singular,
+			'parent_item_colon' => 'Parent '.$this->singular.':',
+			'edit_item' => 'Edit '.$this->singular,
+			'update_item' => 'Update '.$this->singular,
+			'add_new_item' => 'Add New '.$this->singular,
+			'new_item_name' => 'New '.$this->singular.' Name',
 		);
 		$defaults = array(
 			'hierarchical' => true,
 			'labels' => $labels,
 			'show_ui' => true,
 			'query_var' => true,
-			'rewrite' => array( 'slug' => sanitize_title( $plural ) ),
+			'rewrite' => array( 'slug' => $this->slug ),
 		);
 
-		$args = wp_parse_args( $custom_args, $defaults );
+		$args = wp_parse_args( $this->args, $defaults );
 
-		register_taxonomy( sanitize_title( $plural ), $post_types, $args );
+		register_taxonomy( $this->slug, $this->object_types, $args );
 
 	}
 
+	public function init_select_box() {
+		add_action( 'admin_menu', array( $this, 'add_select_box' ) );
+	}
+
 	public function add_select_box() {
-		//remove default
-		remove_meta_box( $this->slug .'div', $this->cpt->slug, 'core' );
-		// add custom
-		add_meta_box( $this->slug .'_dropdown', $this->plural, array( &$this, 'select_box' ), $this->cpt->slug, 'side', 'high' );
+		foreach ( $this->object_types as $key => $cpt ) {
+			//remove default
+			remove_meta_box( $this->slug .'div', $cpt, 'core' );
+			// add custom
+			add_meta_box( $this->slug .'_dropdown', 'Programming '. $this->singular, array( &$this, 'select_box' ), $cpt, 'side', 'high' );
+		}
 	}
 
 	public function select_box() {
@@ -89,17 +84,21 @@ class Snippet_Tax_Setup {
 			}
 		}
 
+		echo "<div style='margin-bottom: 5px;'>",
+		"<select name='tax_input[". $this->slug ."][]'>";
+
 		foreach ( $terms as $term ) {
 
-			echo "<div style='margin-bottom: 5px;'><input style='margin-right: 5px;' type='radio' name='editorial_option[]' id='option-".  $term->slug ."' value='" . $term->slug . "'";
+			echo "<option value='" . $term->term_id . "'";
 			if ( !empty( $existing ) && in_array( $term->term_id, $existing ) ) {
-				echo " checked";
+				echo " selected";
 			}
-			echo "/><label for='option-". $term->slug ."'>". $term->name ."</label></div>\n";
+			echo ">" . $term->name . "</option>";
 		}
+		echo "</select></div>\n";
 
 	}
 
 }
 
-new Snippet_Tax_Setup;
+// new Snippet_Tax_Setup;

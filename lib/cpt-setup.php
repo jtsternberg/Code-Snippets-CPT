@@ -26,6 +26,18 @@ class Snippet_CPT_Setup {
 
 		$this->slug = sanitize_title( $this->plural );
 
+		$cats = new Snippet_Tax_Setup( 'Snippet Category', 'Snippet Categories', array( $this->slug ) );
+		$args = array(
+			'hierarchical' => false,
+		);
+		new Snippet_Tax_Setup( 'Snippet Tag', '', array( $this->slug ), $args );
+		$args = array(
+			'public' => false,
+			'show_ui' => false,
+		);
+		$language = new Snippet_Tax_Setup( 'Language', '', array( $this->slug ), $args );
+		$language->init_select_box();
+
 		add_action( 'init', array( &$this, 'cpt_loop' ) );
 		add_filter( 'post_updated_messages', array( &$this, 'messages' ) );
 		add_filter( 'user_can_richedit', array( &$this, 'remove_html' ), 50 );
@@ -33,8 +45,22 @@ class Snippet_CPT_Setup {
 		add_filter( 'manage_edit-'. $this->slug .'_columns', array( &$this, 'columns' ) );
 		add_action( 'manage_posts_custom_column', array( &$this, 'columns_display' ) );
 		add_action( 'add_meta_boxes', array( &$this, 'meta_boxes' ) );
-		add_filter( 'gettext', array( &$this, 'text' ), 10, 2 );
+		add_filter( 'gettext', array( &$this, 'text' ), 20, 2 );
+		add_filter( 'the_content', array( &$this, 'content' ) );
+		register_activation_hook( DWSNIPPET_PATH .'code-snippets-cpt.php', array( &$this, 'add_languages_event' ) );
+		add_action( 'snippet_add_languages', array( &$this, 'add_languages' ) );
 
+	}
+
+	public function add_languages_event() {
+		wp_schedule_single_event( ( time() + 2 ), 'snippet_add_languages' );
+	}
+
+	public function add_languages() {
+		$languages = array( 'Python', 'HTML', 'CSS', 'JavaScript', 'PHP', 'SQL', 'Perl', 'Ruby' );
+		foreach ( $languages as $language ) {
+			wp_insert_term( $language, 'languages' );
+		}
 	}
 
 	public function cpt_loop( $custom_args = array() ) {
@@ -151,7 +177,7 @@ class Snippet_CPT_Setup {
 	public function text( $translation, $text ) {
 		global $pagenow;
 
-		if ( ( $pagenow == 'post-new.php' && isset( $_GET['post_type'] ) && $_GET['post_type'] == $this->slug ) || ( $pagenow == 'post.php' && isset( $_GET['post_type'] ) && get_post_type( $_GET['post'] ) == $this->slug ) || ( $pagenow == 'edit.php' && $_GET['post_type'] == $this->slug ) ) {
+		if ( ( $pagenow == 'post-new.php' && isset( $_GET['post_type'] ) && $_GET['post_type'] == $this->slug ) || ( $pagenow == 'post.php' && isset( $_GET['post'] ) && get_post_type( $_GET['post'] ) == $this->slug ) || ( $pagenow == 'edit.php' && isset( $_GET['post_type'] ) && $_GET['post_type'] == $this->slug ) ) {
 
 			switch ($text) {
 				case 'Excerpt';
@@ -159,6 +185,9 @@ class Snippet_CPT_Setup {
 				break;
 				case 'Excerpts are optional hand-crafted summaries of your content that can be used in your theme. <a href="http://codex.wordpress.org/Excerpt" target="_blank">Learn more about manual excerpts.</a>';
 					return '';
+				break;
+				case 'Permalink:';
+					return 'Choose a slug that\'s easy to remember for the shortcode:';
 				break;
 			}
 		}
@@ -177,12 +206,19 @@ class Snippet_CPT_Setup {
 		$settings = array(
 			'media_buttons' => false,
 			'textarea_name'=>'content',
-			'textarea_rows' => 25,
+			'textarea_rows' => 30,
 			'tabindex' => '4',
 			'dfw' => true,
 			'quicktags' => array( 'buttons' => 'link,ul,ol,li,close,fullscreen' )
 		);
 		wp_editor( $post->post_content, 'content', $settings );
+
+	}
+
+	public function content( $content ) {
+		// if ( get_post_type() == $this->slug )
+		// 	$content = '<pre class="brush: php; title: ; notranslate" title="">'. $content .'</pre>';
+		return $content;
 
 	}
 
