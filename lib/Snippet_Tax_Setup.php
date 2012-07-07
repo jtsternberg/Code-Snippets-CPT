@@ -5,11 +5,11 @@
  */
 class Snippet_Tax_Setup {
 
-	public $singular;
-	public $plural;
-	public $slug;
-	public $object_types;
-	public $args;
+	private $singular;
+	private $plural;
+	private $slug;
+	private $object_types;
+	private $args;
 
 	public function __construct( $singular, $plural = '', $object_types, $args = array() ) {
 
