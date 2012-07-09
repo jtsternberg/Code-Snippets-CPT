@@ -14,15 +14,15 @@ pre.prettyprint {
 
 .str
 {
-    color: #EC7600;
+    color: #E6DB74;
 }
 .kwd
 {
-    color: #00AEEF;
+    color: #F92672;
 }
 .com
 {
-    color: #66747B;
+    color: #6b7771;
 }
 .typ
 {
@@ -34,7 +34,7 @@ pre.prettyprint {
 }
 .pun
 {
-    color: #F1F2F3;
+    color: #cee0f2;
 }
 .pln
 {
@@ -66,7 +66,7 @@ ol.linenums
     margin-bottom: 0;
 }
 .prettyprint {
-    background: #000;
+    background: #272822;
 }
 li.L0, li.L1, li.L2, li.L3, li.L4, li.L5, li.L6, li.L7, li.L8, li.L9
 {
@@ -74,7 +74,7 @@ li.L0, li.L1, li.L2, li.L3, li.L4, li.L5, li.L6, li.L7, li.L8, li.L9
     list-style-type: decimal;
 }
 li.L1, li.L3, li.L5, li.L7, li.L9 {
-    background: #121212;
+    background: #2b2d26;
 }
 @media print
 {
