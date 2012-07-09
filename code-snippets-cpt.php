@@ -16,7 +16,6 @@ class CodeSnippitInit {
 
 	function __construct() {
 
-		add_action( 'init', array( $this, 'plugin_init' ) );
 		define( 'DWSNIPPET_PATH', plugin_dir_path( __FILE__ ) );
 		// define( 'DWSNIPPET_URL', plugins_url('/', __FILE__ ) );
 
@@ -24,11 +23,9 @@ class CodeSnippitInit {
 		require_once( DWSNIPPET_PATH .'lib/functions.php' );
 
 		// Snippet Post-Type Setup
+		require_once( DWSNIPPET_PATH .'lib/CPT_Setup.php' );
 		require_once( DWSNIPPET_PATH .'lib/Snippet_CPT_Setup.php' );
 		$this->cpt = new Snippet_CPT_Setup( 'Code Snippet' );
-
-		// Custom Metaboxes Setup
-		require_once( DWSNIPPET_PATH .'lib/cmb-setup.php' );
 
 		// Custom Taxonomy Setup
 		require_once( DWSNIPPET_PATH .'lib/Snippet_Tax_Setup.php' );
@@ -47,13 +44,7 @@ class CodeSnippitInit {
 
 
 		// add_action( 'all_admin_notices', array( $this, 'testing_testing_testing' ) );
-		// add_action( 'wp_footer', array( $this, 'run_js' ) );
-	}
-
-	public function plugin_init() {
-
-		if ( ! class_exists( 'cmb_Meta_Box' ) ) require_once( DWSNIPPET_PATH .'lib/cmb/init.php' );
-
+		add_action( 'wp_footer', array( $this, 'run_js' ) );
 	}
 
 	public function add_languages_event() {
@@ -93,20 +84,19 @@ class CodeSnippitInit {
 		wp_reset_query();
 
 		if ( !empty( $content ) ) {
-			wp_enqueue_script( 'syntax-highlighter', plugins_url('/lib/src/shCore.js', __FILE__ ), null, '1.0', true );
-			wp_enqueue_script( 'syntax-highlighter-php', plugins_url('/lib/js/shBrushPhp.js', __FILE__ ), 'syntax-highlighter', '1.0', true );
-			wp_enqueue_style( 'syntax-highlighter', plugins_url('/lib/css/shCore.css', __FILE__ ), null, '1.0', true );
-			wp_enqueue_style( 'syntax-highlighter-dark', plugins_url('/lib/css/shThemeRDark.css', __FILE__ ), 'syntax-highlighter', '1.0', true );
+			wp_enqueue_script( 'prettify' );
+			wp_enqueue_style( 'prettify' );
+			// wp_enqueue_script( 'syntax-highlighter-php', plugins_url('/lib/js/shBrushPhp.js', __FILE__ ), 'syntax-highlighter', '1.0', true );
 		}
 
-		return '<pre class="brush: php">'. $content .'</pre>';
+		return '<pre class="prettyprint linenums">'. htmlentities( $content ) .'</pre>';
 
 	}
 
 	public function run_js() {
 		?>
 		<script type="text/javascript">
-		     SyntaxHighlighter.all()
+			window.onload = function(){ prettyPrint(); };
 		</script>
 		<?php
 	}

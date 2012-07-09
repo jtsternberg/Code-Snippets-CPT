@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin class for Code Snipet CPT and it's associated taxonomies.
+ * Plugin class for generating Custom Post Types.
  *
  */
 class CPT_Setup {
@@ -23,6 +23,11 @@ class CPT_Setup {
 	 */
 	static $instance;
 
+
+	function CPT_Setup( $post_type, $plural = '', $registered = '', $args = array() ) {
+		CPT_Setup::__construct( $post_type, $plural, $registered, $args );
+	}
+
 	function __construct( $post_type, $plural = '', $registered = '', $args = array() ) {
 
 		self::$instance = $this;
@@ -38,6 +43,8 @@ class CPT_Setup {
 
 		add_action( 'init', array( &$this, 'cpt_loop' ) );
 		add_filter( 'post_updated_messages', array( &$this, 'messages' ) );
+		add_filter( 'manage_edit-'. $this->slug .'_columns', array( &$this, 'columns' ) );
+		add_action( 'manage_posts_custom_column', array( &$this, 'columns_display' ) );
 
 	}
 
@@ -98,6 +105,14 @@ class CPT_Setup {
 		);
 		return $messages;
 
+	}
+
+	public function columns( $columns ) {
+		return $columns;
+	}
+
+	public function columns_display( $column ) {
+		// placeholder
 	}
 
 }

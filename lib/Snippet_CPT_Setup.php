@@ -1,9 +1,9 @@
 <?php
 /**
- * Plugin class for Code Snipet CPT and it's associated taxonomies.
+ * Plugin class that registers the Code Snipet CPT.
  *
  */
-class Snippet_CPT_Setup {
+class Snippet_CPT_Setup extends CPT_Setup {
 
 	/**
 	 * Holds copy of instance, so other plugins can remove our hooks.
@@ -19,27 +19,45 @@ class Snippet_CPT_Setup {
 
 		self::$instance = $this;
 
-		require_once( DWSNIPPET_PATH .'lib/CPT_Setup.php' );
-		$this->labels = new CPT_Setup( 'Code Snippet' );
+		$this->CPT_Setup( 'Code Snippet' );
 
 		add_filter( 'user_can_richedit', array( &$this, 'remove_html' ), 50 );
 		add_filter( 'enter_title_here', array( &$this, 'title' ) );
-		add_filter( 'manage_edit-'. $this->labels->slug .'_columns', array( &$this, 'columns' ) );
-		add_action( 'manage_posts_custom_column', array( &$this, 'columns_display' ) );
 		add_action( 'add_meta_boxes', array( &$this, 'meta_boxes' ) );
 		add_filter( 'gettext', array( &$this, 'text' ), 20, 2 );
+		add_action( 'init', array( &$this, 'register_scripts_styles' ) );
+		add_action( 'wp_enqueue_scripts', array( &$this, 'enqueue' ) );
+		add_action( 'template_redirect', array( &$this, 'remove_filter' ) );
+		add_filter( 'the_content', array( &$this, 'prettify_content' ), 20, 2 );
+	}
 
+	public function remove_filter() {
+		if ( get_post_type() != $this->slug ) return;
+		remove_filter('the_content', 'wptexturize');
+		remove_filter ('the_content','wpautop');
+	}
+
+	public function register_scripts_styles() {
+		wp_register_script( 'prettify', plugins_url('/js/prettify.js', __FILE__ ), null, '1.0' );
+		wp_register_style( 'prettify', plugins_url('/css/prettify.css', __FILE__ ), null, '1.0' );
+		wp_register_style( 'prettify-plus', plugins_url('/css/prettify-plus.css', __FILE__ ), null, '1.0' );
+	}
+
+	public function enqueue() {
+		wp_enqueue_script( 'prettify' );
+		wp_enqueue_style( 'prettify' );
+		wp_enqueue_style( 'prettify-plus' );
 	}
 
 	public function remove_html() {
-		if ( get_post_type() == $this->labels->slug ) return false;
+		if ( get_post_type() == $this->slug ) return false;
 		return true;
 	}
 
 	public function title( $title ){
 
 		$screen = get_current_screen();
-		if ( $screen->post_type == $this->labels->slug ) {
+		if ( $screen->post_type == $this->slug ) {
 			$title = 'Snippet Title';
 		}
 
@@ -86,7 +104,7 @@ class Snippet_CPT_Setup {
 	public function text( $translation, $text ) {
 		global $pagenow;
 
-		if ( ( $pagenow == 'post-new.php' && isset( $_GET['post_type'] ) && $_GET['post_type'] == $this->labels->slug ) || ( $pagenow == 'post.php' && isset( $_GET['post'] ) && get_post_type( $_GET['post'] ) == $this->labels->slug ) || ( $pagenow == 'edit.php' && isset( $_GET['post_type'] ) && $_GET['post_type'] == $this->labels->slug ) ) {
+		if ( ( $pagenow == 'post-new.php' && isset( $_GET['post_type'] ) && $_GET['post_type'] == $this->slug ) || ( $pagenow == 'post.php' && isset( $_GET['post'] ) && get_post_type( $_GET['post'] ) == $this->slug ) || ( $pagenow == 'edit.php' && isset( $_GET['post_type'] ) && $_GET['post_type'] == $this->slug ) ) {
 
 			switch ($text) {
 				case 'Excerpt';
@@ -106,9 +124,9 @@ class Snippet_CPT_Setup {
 	public function meta_boxes() {
 
 		global $_wp_post_type_features;
-		unset( $_wp_post_type_features[$this->labels->slug]['editor'] );
+		unset( $_wp_post_type_features[$this->slug]['editor'] );
 
-		add_meta_box( 'snippet_content', __('Snippet'), array( &$this, 'content_editor_meta_box' ), $this->labels->slug, 'normal', 'core' );
+		add_meta_box( 'snippet_content', __('Snippet'), array( &$this, 'content_editor_meta_box' ), $this->slug, 'normal', 'core' );
 	}
 
 	public function content_editor_meta_box( $post ) {
@@ -122,6 +140,12 @@ class Snippet_CPT_Setup {
 		);
 		wp_editor( $post->post_content, 'content', $settings );
 
+	}
+
+	public function prettify_content( $content ) {
+		if ( get_post_type() != $this->slug ) return $content;
+
+		return '<pre class="prettyprint linenums">'. htmlentities( $content ) .'</pre>';
 	}
 
 }
