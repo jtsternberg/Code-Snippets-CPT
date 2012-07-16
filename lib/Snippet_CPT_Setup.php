@@ -67,6 +67,8 @@ class Snippet_CPT_Setup extends CPT_Setup {
 	public function columns( $columns ) {
 		$newcolumns = array(
 			'syntax_languages' => 'Syntax Languages',
+			'snippet_categories' => 'Snippet Categories',
+			'snippet_tags' => 'Snippet Tags',
 		);
 		$columns = array_merge( $columns, $newcolumns );
 		return $columns;
@@ -78,6 +80,12 @@ class Snippet_CPT_Setup extends CPT_Setup {
 		switch ($column) {
 			case 'syntax_languages':
 				$this->taxonomy_column( $post, 'languages', 'Languages' );
+			break;
+			case 'snippet_categories':
+				$this->taxonomy_column( $post, 'snippet-categories', 'Snippet Categories' );
+			break;
+			case 'snippet_tags':
+				$this->taxonomy_column( $post, 'snippet-tags', 'Snippet Tags' );
 			break;
 		}
 	}

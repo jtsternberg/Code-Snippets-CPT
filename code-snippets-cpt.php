@@ -29,9 +29,9 @@ class CodeSnippitInit {
 
 		// Custom Taxonomy Setup
 		require_once( DWSNIPPET_PATH .'lib/Snippet_Tax_Setup.php' );
-		new Snippet_Tax_Setup( 'Snippet Category', 'Snippet Categories', array( $this->cpt->labels->slug ) );
-		new Snippet_Tax_Setup( 'Snippet Tag', '', array( $this->cpt->labels->slug ), array( 'hierarchical' => false ) );
-		$language = new Snippet_Tax_Setup( 'Language', '', array( $this->cpt->labels->slug ),  array( 'public' => false, 'show_ui' => false ) );
+		new Snippet_Tax_Setup( 'Snippet Category', 'Snippet Categories', array( $this->cpt->slug ) );
+		new Snippet_Tax_Setup( 'Snippet Tag', '', array( $this->cpt->slug ), array( 'hierarchical' => false ) );
+		$language = new Snippet_Tax_Setup( 'Language', '', array( $this->cpt->slug ),  array( 'public' => false, 'show_ui' => false ) );
 		// Custom metabox for the programming languages taxonomy
 		$language->init_select_box();
 
