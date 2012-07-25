@@ -38,9 +38,9 @@ class Snippet_CPT_Setup extends CPT_Setup {
 	}
 
 	public function register_scripts_styles() {
-		wp_register_script( 'prettify', plugins_url('/js/prettify.js', __FILE__ ), null, '1.0' );
-		wp_register_style( 'prettify', plugins_url('/css/prettify.css', __FILE__ ), null, '1.0' );
-		wp_register_style( 'prettify-plus', plugins_url('/css/prettify-plus.css', __FILE__ ), null, '1.0' );
+		wp_register_script( 'prettify', DWSNIPPET_URL .'js/prettify.js', null, '1.0' );
+		wp_register_style( 'prettify', DWSNIPPET_URL .'css/prettify.css', null, '1.0' );
+		wp_register_style( 'prettify-plus', DWSNIPPET_URL .'css/prettify-plus.css', null, '1.0' );
 	}
 
 	public function enqueue() {

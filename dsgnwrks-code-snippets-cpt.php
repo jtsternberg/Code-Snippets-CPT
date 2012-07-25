@@ -17,7 +17,7 @@ class CodeSnippitInit {
 	function __construct() {
 
 		define( 'DWSNIPPET_PATH', plugin_dir_path( __FILE__ ) );
-		// define( 'DWSNIPPET_URL', plugins_url('/', __FILE__ ) );
+		define( 'DWSNIPPET_URL', plugins_url('/', __FILE__ ) );
 
 		// Custom Functions
 		require_once( DWSNIPPET_PATH .'lib/functions.php' );
@@ -111,3 +111,6 @@ class CodeSnippitInit {
 }
 
 new CodeSnippitInit;
+
+// Custom Post Types Icons
+add_action('admin_head', 'dsgnwrks_html5presentation_icons');

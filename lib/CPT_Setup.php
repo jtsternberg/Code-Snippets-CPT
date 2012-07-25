@@ -45,10 +45,16 @@ class CPT_Setup {
 		add_filter( 'post_updated_messages', array( &$this, 'messages' ) );
 		add_filter( 'manage_edit-'. $this->slug .'_columns', array( &$this, 'columns' ) );
 		add_action( 'manage_posts_custom_column', array( &$this, 'columns_display' ) );
+		add_action( 'admin_head', array( &$this, 'cpt_icons' ) );
+
 
 	}
 
 	public function cpt_loop() {
+
+		$file = DWSNIPPET_PATH .'lib/css/'. $this->registered .'.png';
+		$path = DWSNIPPET_URL .'lib/css/'. $this->registered .'.png';
+		$img = file_exists( $file ) ? $path : null;
 
 		//set default custom post type options
 		$defaults = array(
@@ -72,6 +78,7 @@ class CPT_Setup {
 			'show_ui' => true,
 			'show_in_menu' => true,
 			'query_var' => true,
+			'menu_icon' => $img,
 			'rewrite' => true,
 			'capability_type' => 'post',
 			'has_archive' => true,
@@ -113,6 +120,42 @@ class CPT_Setup {
 
 	public function columns_display( $column ) {
 		// placeholder
+	}
+
+	function cpt_icons() {
+		$screen = get_current_screen()->id;
+?>
+<style type="text/css">
+	#adminmenu li.menu-top:hover .wp-menu-image img,
+	#adminmenu li.wp-has-current-submenu .wp-menu-image img {
+		top: 0;
+	}
+	<?php
+
+	if ( $screen == 'edit-'. $this->registered || $screen == $this->registered ) {
+		$file = DWSNIPPET_PATH .'lib/css/'. $this->registered .'32.png';
+		$path = DWSNIPPET_URL .'lib/css/'. $this->registered .'32.png';
+		if ( file_exists( $file ) ) {
+	?>#icon-edit.icon32.icon32-posts-<?php echo $this->registered; ?> {
+		background-position: 0 0;
+		background-image: url('<?php echo $path; ?>');
+	}
+	<?php
+
+		}
+
+	}
+	?>#menu-posts-<?php $this->registered; ?> .wp-menu-image a {
+		overflow: hidden;
+	}
+	#menu-posts-<?php $this->registered; ?> .wp-menu-image img {
+		opacity: 1;
+		filter: alpha(opacity=100);
+		position: relative;
+		top: -24px;
+	}
+</style>
+<?php
 	}
 
 }
