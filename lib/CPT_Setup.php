@@ -148,6 +148,9 @@ class CPT_Setup {
 	?>#menu-posts-<?php $this->registered; ?> .wp-menu-image a {
 		overflow: hidden;
 	}
+	#adminmenu .menu-icon-<?php echo $this->registered; ?> div.wp-menu-image {
+		overflow: hidden;
+	}
 	#menu-posts-<?php $this->registered; ?> .wp-menu-image img {
 		opacity: 1;
 		filter: alpha(opacity=100);

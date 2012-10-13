@@ -23,9 +23,10 @@ class CodeSnippitInit {
 		require_once( DWSNIPPET_PATH .'lib/functions.php' );
 
 		// Snippet Post-Type Setup
-		require_once( DWSNIPPET_PATH .'lib/CPT_Setup.php' );
+		if ( !class_exists( 'CPT_Setup' ) )
+			require_once( DWSNIPPET_PATH .'lib/CPT_Setup.php' );
 		require_once( DWSNIPPET_PATH .'lib/Snippet_CPT_Setup.php' );
-		$this->cpt = new Snippet_CPT_Setup( 'Code Snippet' );
+		$this->cpt = new Snippet_CPT_Setup();
 
 		// Custom Taxonomy Setup
 		require_once( DWSNIPPET_PATH .'lib/Snippet_Tax_Setup.php' );
@@ -111,6 +112,3 @@ class CodeSnippitInit {
 }
 
 new CodeSnippitInit;
-
-// Custom Post Types Icons
-add_action('admin_head', 'dsgnwrks_html5presentation_icons');
