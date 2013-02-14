@@ -68,25 +68,18 @@ class CodeSnippitInit {
 			$args['name'] = $atts['slug'];
 		}
 
-		$content = '';
 		$snippet = new WP_Query( $args );
 
+		$content = get_post_field( 'post_content', $snippet->posts[0]->ID );
 
-		if( $snippet->have_posts() ) : while( $snippet->have_posts() ) : $snippet->the_post();
+		if ( is_wp_error( $content ) || empty( $content ) )
+			return;
 
-			$content = get_the_content();
-
-		endwhile; endif;
-		wp_reset_query();
-
-		if ( !empty( $content ) ) {
-			wp_enqueue_script( 'prettify' );
-			wp_enqueue_style( 'prettify' );
-			// wp_enqueue_script( 'syntax-highlighter-php', plugins_url('/lib/js/shBrushPhp.js', __FILE__ ), 'syntax-highlighter', '1.0', true );
-		}
+		wp_enqueue_script( 'prettify' );
+		wp_enqueue_style( 'prettify' );
+		// wp_enqueue_script( 'syntax-highlighter-php', plugins_url('/lib/js/shBrushPhp.js', __FILE__ ), 'syntax-highlighter', '1.0', true );
 
 		return '<pre class="prettyprint linenums">'. htmlentities( $content ) .'</pre>';
-
 	}
 
 	public function run_js() {
