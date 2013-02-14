@@ -13,6 +13,7 @@ class CodeSnippitInit {
 
 	private $plugin_name = 'Code Snippets CPT';
 	private $cpt;
+	private $languages = array( 'Python', 'HTML', 'CSS', 'JavaScript', 'PHP', 'SQL', 'Perl', 'Ruby' );
 
 	function __construct() {
 
@@ -40,20 +41,16 @@ class CodeSnippitInit {
 		add_shortcode( 'snippet', array( $this, 'shortcode' ) );
 
 		// Set default programming language taxonomy terms
-		register_activation_hook( DWSNIPPET_PATH .'code-snippets-cpt.php', array( &$this, 'add_languages_event' ) );
-		add_action( 'snippet_add_languages', array( &$this, 'add_languages' ) );
+		add_action( 'admin_init', array( $this, 'add_languages' ) );
 
 		add_action( 'wp_footer', array( $this, 'run_js' ) );
 	}
 
-	public function add_languages_event() {
-		wp_schedule_single_event( ( time() + 2 ), 'snippet_add_languages' );
-	}
-
 	public function add_languages() {
-		$languages = array( 'Python', 'HTML', 'CSS', 'JavaScript', 'PHP', 'SQL', 'Perl', 'Ruby' );
-		foreach ( $languages as $language ) {
-			wp_insert_term( $language, 'languages' );
+		// make sure our default languages exist
+		foreach ( $this->languages as $language ) {
+			if ( !term_exists( $language, 'languages' ) )
+				wp_insert_term( $language, 'languages' );
 		}
 	}
 
