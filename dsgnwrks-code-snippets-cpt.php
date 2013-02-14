@@ -43,8 +43,6 @@ class CodeSnippitInit {
 		register_activation_hook( DWSNIPPET_PATH .'code-snippets-cpt.php', array( &$this, 'add_languages_event' ) );
 		add_action( 'snippet_add_languages', array( &$this, 'add_languages' ) );
 
-
-		// add_action( 'all_admin_notices', array( $this, 'testing_testing_testing' ) );
 		add_action( 'wp_footer', array( $this, 'run_js' ) );
 	}
 
@@ -100,13 +98,6 @@ class CodeSnippitInit {
 			window.onload = function(){ prettyPrint(); };
 		</script>
 		<?php
-	}
-
-
-	public function testing_testing_testing() {
-		echo '<div id="message" class="updated"><p>';
-			echo '<pre>'. htmlentities( print_r( $this->cpt->labels->slug, true ) ) .'</pre>';
-		echo '</p></div>';
 	}
 
 }
