@@ -19,7 +19,7 @@ class Snippet_CPT_Setup extends CPT_Setup {
 
 		self::$instance = $this;
 
-		$this->CPT_Setup( 'Code Snippet' );
+		parent::__construct( 'Code Snippet' );
 
 		add_filter( 'user_can_richedit', array( &$this, 'remove_html' ), 50 );
 		add_filter( 'enter_title_here', array( &$this, 'title' ) );
