@@ -79,7 +79,7 @@ class CodeSnippitInit {
 		wp_enqueue_style( 'prettify' );
 		// wp_enqueue_script( 'syntax-highlighter-php', plugins_url('/lib/js/shBrushPhp.js', __FILE__ ), 'syntax-highlighter', '1.0', true );
 
-		$linenums = isset( $atts['line_numbers'] ) && $atts['line_numbers'] === false || $atts['line_numbers'] === 'false' ? '' : ' linenums';
+		$linenums = isset( $atts['line_numbers'] ) && ( $atts['line_numbers'] === false || $atts['line_numbers'] === 'false' ) ? '' : ' linenums';
 
 		return '<pre class="prettyprint'. $linenums .'">'. htmlentities( $content ) .'</pre>';
 	}
