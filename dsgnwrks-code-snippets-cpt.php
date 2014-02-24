@@ -6,14 +6,15 @@ Plugin URI: http://j.ustin.co/jAHRM3
 Author: Jtsternberg
 Author URI: http://about.me/jtsternberg
 Donate link: http://j.ustin.co/rYL89n
-Version: 1.0
+Version: 1.0.1
 */
 
 class CodeSnippitInit {
 
-	private $plugin_name = 'Code Snippets CPT';
-	private $cpt;
-	private $languages = array( 'Python', 'HTML', 'CSS', 'JavaScript', 'PHP', 'SQL', 'Perl', 'Ruby' );
+	protected $plugin_name = 'Code Snippets CPT';
+	protected $cpt;
+	protected $languages = array( 'Python', 'HTML', 'CSS', 'JavaScript', 'PHP', 'SQL', 'Perl', 'Ruby' );
+	const VERSION = '1.0.1';
 
 	function __construct() {
 
@@ -36,6 +37,10 @@ class CodeSnippitInit {
 		$language = new Snippet_Tax_Setup( 'Language', '', array( $this->cpt->slug ),  array( 'public' => false, 'show_ui' => false ) );
 		// Custom metabox for the programming languages taxonomy
 		$language->init_select_box();
+
+		// Include our wysiwyg button script
+		require_once( DWSNIPPET_PATH .'lib/CodeSnippitButton.php' );
+		new CodeSnippitButton( $this->cpt );
 
 		// Snippet Shortcode Setup
 		add_shortcode( 'snippet', array( $this, 'shortcode' ) );

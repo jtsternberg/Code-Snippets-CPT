@@ -1,0 +1,113 @@
+<?php
+/*
+Plugin Name: Dsgnwrks Code Snippets CPT
+Description: A code snippet custom post-type and shortcode for displaying your code snippets in your posts or pages.
+Plugin URI: http://j.ustin.co/jAHRM3
+Author: Jtsternberg
+Author URI: http://about.me/jtsternberg
+Donate link: http://j.ustin.co/rYL89n
+Version: 1.0.1
+*/
+
+class CodeSnippitButton extends CodeSnippitInit {
+
+	private $script = 'code-snippet-button';
+	private $btn = 'snippetcpt';
+
+	function __construct( $cpt ) {
+		$this->cpt = $cpt;
+		// Add button for snippet lookup
+		add_filter( 'the_editor_content', array( $this, '_enqueue_button_script' ) );
+		// script for button handler
+		add_action( 'admin_enqueue_scripts', array( $this, 'button_script' ) );
+
+		// Set default programming language taxonomy terms
+		add_action( 'admin_init', array( $this, 'admin_init' ) );
+	}
+
+	public function button_script() {
+		wp_register_script( $this->script, DWSNIPPET_URL .'/lib/js/'. $this->script .'.js' , array( 'quicktags' ), parent::VERSION, true );
+		wp_localize_script( $this->script, 'codeSnippetCPT', array(
+			'buttons' => array( 'Cancel' => 'cancel', 'Insert Shortcode' => 'insert' ),
+			'button_img' => DWSNIPPET_URL .'lib/js/icon.png',
+			'button_name' => __( 'Add Snippet', 'code-snippet-cpt' ),
+			'button_title' => __( 'Add a Code Snippet', 'code-snippet-cpt' ),
+		) );
+	}
+
+	public function admin_init() {
+		add_filter( 'mce_external_plugins', array( $this, 'add_button' ) );
+		add_filter( 'mce_buttons', array( $this, 'register_buttons' ) );
+	}
+
+	public function add_button( $plugin_array ) {
+		$plugin_array[ $this->btn ] = DWSNIPPET_URL .'/lib/js/'. $this->script .'-mce.js';
+		return $plugin_array;
+	}
+
+	public function register_buttons( $buttons ) {
+		array_push( $buttons, $this->btn );
+		return $buttons;
+	}
+
+	public function _enqueue_button_script( $content ) {
+		// We know wp_editor was called, so add our CSS/JS to the footer
+		add_action( 'admin_footer', array( $this, 'quicktag_button_script' ) );
+		return $content;
+	}
+
+	public function quicktag_button_script() {
+		wp_enqueue_script( $this->script );
+
+		// wp_die( '<xmp style="padding: 50px; background: #eee; color: #000;">$this: '. print_r( $this, true ) .'</xmp>' );
+
+		// Get CPT posts
+		$snippets = get_posts( array(
+			'post_type' => $this->cpt->slug,
+			'posts_per_page' => 30,
+		) );
+		// Shortcode button popup form
+		?>
+		<style type="text/css">
+			#snippet-cpt-form {
+				padding: 0 10px;
+			}
+			#snippet-cpt-form table {
+				width: 100%;
+			}
+			#snippet-cpt-form input, #snippet-cpt-form select {
+				width: 100%;
+				max-width: 100%;
+			}
+		</style>
+		<div style="display: none;" id="snippet-cpt-form" title="<?php esc_attr_e( 'Code Snippets', 'code-snippet-cpt' ); ?>">
+			<div class="snippet-cpt-errors"><p></p></div>
+			<form>
+			<fieldset>
+				<table>
+					<?php if ( ! empty( $snippets ) ) : ?>
+					<tr>
+						<th><label for="snippet-cpt-posts"><?php _e( 'Choose a Snippet', 'code-snippet-cpt' ); ?></label></th>
+					</tr>
+					<tr>
+						<td>
+							<select name="snippet-cpt-posts" id="snippet-cpt-posts" value="left" class="text ui-widget-content ui-corner-all">
+								<?php foreach ( $snippets as $snippet ) : ?>
+									<option value="<?php echo $snippet->ID; ?>"><?php echo $snippet->post_title; ?></option>
+								<?php endforeach; ?>
+							</select>
+						</td>
+					</tr>
+					<?php else : ?>
+					<tr>
+						<th><label id="no-snippets-exist"><?php _e( 'No Snippets Yet!', 'code-snippet-cpt' ); ?></label></th>
+					</tr>
+					<?php endif; ?>
+				</table>
+			</fieldset>
+			</form>
+		</div>
+		<?php
+	}
+
+}
