@@ -75,10 +75,18 @@ class CodeSnippitButton extends CodeSnippitInit {
 			#snippet-cpt-form table {
 				width: 100%;
 			}
-			#snippet-cpt-form input, #snippet-cpt-form select {
+			#snippet-cpt-form select {
 				width: 100%;
 				max-width: 100%;
 			}
+			#snippet-cpt-form .th {
+				width: 50%;
+			}
+			#snippet-cpt-form .th label {
+				padding-right: 9px;
+				text-align: right;
+			}
+
 		</style>
 		<div style="display: none;" id="snippet-cpt-form" title="<?php esc_attr_e( 'Code Snippets', 'code-snippet-cpt' ); ?>">
 			<div class="snippet-cpt-errors"><p></p></div>
@@ -87,10 +95,10 @@ class CodeSnippitButton extends CodeSnippitInit {
 				<table>
 					<?php if ( ! empty( $snippets ) ) : ?>
 					<tr>
-						<th><label for="snippet-cpt-posts"><?php _e( 'Choose a Snippet', 'code-snippet-cpt' ); ?></label></th>
+						<th colspan="2"><label for="snippet-cpt-posts"><?php _e( 'Choose a Snippet', 'code-snippet-cpt' ); ?></label></th>
 					</tr>
 					<tr>
-						<td>
+						<td colspan="2">
 							<select name="snippet-cpt-posts" id="snippet-cpt-posts" value="left" class="text ui-widget-content ui-corner-all">
 								<?php foreach ( $snippets as $snippet ) : ?>
 									<option value="<?php echo $snippet->ID; ?>"><?php echo $snippet->post_title; ?></option>
@@ -98,6 +106,11 @@ class CodeSnippitButton extends CodeSnippitInit {
 							</select>
 						</td>
 					</tr>
+					<tr>
+						<td class="th"><label for="snippet-cpt-line-nums"><?php _e( 'Display Line Numbers?', 'tv-msnbc' ); ?></label></td>
+						<td><input type="checkbox" name="snippet-cpt-line-nums" id="snippet-cpt-line-nums" value="1" checked="checked" class="text ui-widget-content ui-corner-all" /></td>
+					</tr>
+
 					<?php else : ?>
 					<tr>
 						<th><label id="no-snippets-exist"><?php _e( 'No Snippets Yet!', 'code-snippet-cpt' ); ?></label></th>
