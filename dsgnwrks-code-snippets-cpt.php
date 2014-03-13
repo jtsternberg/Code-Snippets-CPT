@@ -69,7 +69,7 @@ class CodeSnippitInit {
 
 		if ( isset( $atts['id'] ) && is_numeric( $atts['id'] ) ) {
 			$args['p'] = $atts['id'];
-		} elseif ( isset( $atts['slug'] ) && is_numeric( $atts['slug'] ) ) {
+		} elseif ( isset( $atts['slug'] ) && is_string( $atts['slug'] ) ) {
 			$args['name'] = $atts['slug'];
 		}
 
