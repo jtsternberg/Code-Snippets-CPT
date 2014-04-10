@@ -86,7 +86,7 @@ class CodeSnippitInit {
 
 		$linenums = isset( $atts['line_numbers'] ) && ( $atts['line_numbers'] === false || $atts['line_numbers'] === 'false' ) ? '' : ' linenums';
 
-		return '<pre class="prettyprint'. $linenums .'">'. htmlentities( $content ) .'</pre>';
+		return '<pre class="prettyprint'. $linenums .'">'. htmlentities( $content, ENT_COMPAT, 'UTF-8' ) .'</pre>';
 	}
 
 	public function run_js() {
