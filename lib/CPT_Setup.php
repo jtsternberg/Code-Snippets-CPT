@@ -48,10 +48,6 @@ class CPT_Setup {
 
 	public function cpt_loop() {
 
-		$file = DWSNIPPET_PATH .'lib/css/'. $this->registered .'.png';
-		$path = DWSNIPPET_URL .'lib/css/'. $this->registered .'.png';
-		$img = file_exists( $file ) ? $path : null;
-
 		//set default custom post type options
 		$defaults = array(
 			'labels' => array(
@@ -74,7 +70,7 @@ class CPT_Setup {
 			'show_ui' => true,
 			'show_in_menu' => true,
 			'query_var' => true,
-			'menu_icon' => $img,
+			'menu_icon' => 'dashicons-editor-code',
 			'rewrite' => true,
 			'capability_type' => 'post',
 			'has_archive' => true,
