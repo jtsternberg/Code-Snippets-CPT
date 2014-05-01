@@ -26,7 +26,7 @@ class CodeSnippitButton extends CodeSnippitInit {
 	}
 
 	public function button_script() {
-		wp_register_script( $this->script, DWSNIPPET_URL .'/lib/js/'. $this->script .'.js' , array( 'quicktags' ), parent::VERSION, true );
+		wp_register_script( $this->script, DWSNIPPET_URL .'/lib/js/'. $this->script .'.js' , array( 'quicktags', 'wpdialogs' ), parent::VERSION, true );
 		wp_localize_script( $this->script, 'codeSnippetCPT', array(
 			'buttons' => array( 'Cancel' => 'cancel', 'Insert Shortcode' => 'insert' ),
 			'button_img' => DWSNIPPET_URL .'lib/js/icon.png',
@@ -57,6 +57,7 @@ class CodeSnippitButton extends CodeSnippitInit {
 	}
 
 	public function quicktag_button_script() {
+		wp_enqueue_style( 'wp-jquery-ui-dialog' );
 		wp_enqueue_script( $this->script );
 
 		// wp_die( '<xmp style="padding: 50px; background: #eee; color: #000;">$this: '. print_r( $this, true ) .'</xmp>' );
@@ -70,7 +71,7 @@ class CodeSnippitButton extends CodeSnippitInit {
 		?>
 		<style type="text/css">
 			#snippet-cpt-form {
-				padding: 0 10px;
+				padding: 0 10px 20px;
 			}
 			#snippet-cpt-form table {
 				width: 100%;
