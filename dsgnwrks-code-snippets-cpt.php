@@ -6,15 +6,15 @@ Plugin URI: http://j.ustin.co/jAHRM3
 Author: Jtsternberg
 Author URI: http://about.me/jtsternberg
 Donate link: http://j.ustin.co/rYL89n
-Version: 1.0.1
+Version: 1.0.2
 */
 
 class CodeSnippitInit {
 
 	protected $plugin_name = 'Code Snippets CPT';
 	protected $cpt;
-	protected $languages = array( 'Python', 'HTML', 'CSS', 'JavaScript', 'PHP', 'SQL', 'Perl', 'Ruby' );
-	const VERSION = '1.0.1';
+	protected $languages = array( 'Python', 'HTML', 'CSS', 'JavaScript', 'PHP', 'SQL', 'Perl', 'Ruby', 'Bash', 'C', 'HTML', 'Java', 'XHTML', 'XML', );
+	const VERSION = '1.0.2';
 
 	function __construct() {
 
@@ -34,13 +34,13 @@ class CodeSnippitInit {
 		require_once( DWSNIPPET_PATH .'lib/Snippet_Tax_Setup.php' );
 		new Snippet_Tax_Setup( 'Snippet Category', 'Snippet Categories', array( $this->cpt->slug ) );
 		new Snippet_Tax_Setup( 'Snippet Tag', '', array( $this->cpt->slug ), array( 'hierarchical' => false ) );
-		$language = new Snippet_Tax_Setup( 'Language', '', array( $this->cpt->slug ),  array( 'public' => false, 'show_ui' => false ) );
+		$this->language = new Snippet_Tax_Setup( 'Language', '', array( $this->cpt->slug ),  array( 'public' => false, 'show_ui' => false ) );
 		// Custom metabox for the programming languages taxonomy
-		$language->init_select_box();
+		$this->language->init_select_box();
 
 		// Include our wysiwyg button script
 		require_once( DWSNIPPET_PATH .'lib/CodeSnippitButton.php' );
-		new CodeSnippitButton( $this->cpt );
+		new CodeSnippitButton( $this->cpt, $this->language );
 
 		// Snippet Shortcode Setup
 		add_shortcode( 'snippet', array( $this, 'shortcode' ) );
@@ -48,7 +48,6 @@ class CodeSnippitInit {
 		// Set default programming language taxonomy terms
 		add_action( 'admin_init', array( $this, 'add_languages' ) );
 
-		add_action( 'wp_footer', array( $this, 'run_js' ) );
 	}
 
 	public function add_languages() {
@@ -61,40 +60,58 @@ class CodeSnippitInit {
 
 	public function shortcode( $atts, $context ) {
 
+		$atts = shortcode_atts( array(
+			'id'           => false,
+			'slug'         => '',
+			'line_numbers' => true,
+			'lang'         => '',
+		), $atts, 'snippet' );
+
 		$args = array(
-			'post_type' => 'code-snippets',
-			'showposts' => 1,
-			'post_status' => 'published'
+			'post_type'   => 'code-snippets',
+			'showposts'   => 1,
+			'post_status' => 'published',
 		);
 
-		if ( isset( $atts['id'] ) && is_numeric( $atts['id'] ) ) {
+		if ( $atts['id'] && is_numeric( $atts['id'] ) ) {
 			$args['p'] = $atts['id'];
-		} elseif ( isset( $atts['slug'] ) && is_string( $atts['slug'] ) ) {
+		} elseif ( $atts['slug'] && is_string( $atts['slug'] ) ) {
 			$args['name'] = $atts['slug'];
 		}
 
-		$snippet = new WP_Query( $args );
+		$snippet = get_posts( $args );
+		if ( is_wp_error( $snippet ) || empty( $snippet ) )
+			return;
 
-		$content = get_post_field( 'post_content', $snippet->posts[0]->ID );
+		$snippet_id = $snippet[0]->ID;
+		$content = get_post_field( 'post_content', $snippet_id );
 
 		if ( is_wp_error( $content ) || empty( $content ) )
 			return;
 
-		wp_enqueue_script( 'prettify' );
-		wp_enqueue_style( 'prettify' );
-		// wp_enqueue_script( 'syntax-highlighter-php', plugins_url('/lib/js/shBrushPhp.js', __FILE__ ), 'syntax-highlighter', '1.0', true );
+		$this->cpt->enqueue_prettify();
 
-		$linenums = isset( $atts['line_numbers'] ) && ( $atts['line_numbers'] === false || $atts['line_numbers'] === 'false' ) ? '' : ' linenums';
+		$class = 'prettyprint';
 
-		return '<pre class="prettyprint'. $linenums .'">'. htmlentities( $content, ENT_COMPAT, 'UTF-8' ) .'</pre>';
-	}
+		$line_nums = !$atts['line_numbers'] || false === $atts['line_numbers'] || $atts['line_numbers'] === 'false' ? false : $atts['line_numbers'];
 
-	public function run_js() {
-		?>
-		<script type="text/javascript">
-			window.onload = function(){ prettyPrint(); };
-		</script>
-		<?php
+		if ( $line_nums ) {
+			$class .= ' linenums';
+			if ( is_numeric( $line_nums ) && 0 !== absint( $line_nums ) ) {
+				$class .= ':' . absint( $line_nums );
+			}
+		}
+
+		if ( ! empty( $atts['lang'] ) ) {
+			$class .= ' lang-'. sanitize_html_class( $atts['lang'] );
+		}
+		elseif ( $lang_slug = $this->language->language_slug_from_post( $snippet_id ) ) {
+			$class .= ' lang-'. $lang_slug;
+		}
+
+		$snippet_content = apply_filters( 'dsgnwrks_snippet_content', htmlentities( $content, ENT_COMPAT, 'UTF-8' ), $atts );
+
+		return sprintf( '<pre class="%1$s">%2$s</pre>', $class, $snippet_content );
 	}
 
 }

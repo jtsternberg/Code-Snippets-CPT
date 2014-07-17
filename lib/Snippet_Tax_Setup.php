@@ -99,6 +99,52 @@ class Snippet_Tax_Setup {
 
 	}
 
+	public function language_slug_from_post( $post_id ) {
+		if ( $lang = $this->get_lang( $post_id ) ) {
+			return $this->language_slug( $lang->slug );
+		}
+		return false;
+	}
+
+	public function language_slug( $slug_to_check ) {
+		$slug_to_check = sanitize_html_class( strtolower( $slug_to_check ) );
+		$slugs = array(
+			'bsh' => 'bash',
+			'c' => 'c',
+			'cc' => '',
+			'cpp' => '',
+			'cs' => 'css',
+			'csh' => '',
+			'cyc' => '',
+			'cv' => '',
+			'htm' => '',
+			'html' => 'html',
+			'java' => '',
+			'js' => 'javascript',
+			'm' => '',
+			'mxml' => '',
+			'perl' => 'perl',
+			'php' => 'php',
+			'pl' => '',
+			'pm' => '',
+			'py' => 'python',
+			'rb' => 'ruby',
+			'sh' => '',
+			'xhtml' => '',
+			'xml' => '',
+			'xsl' => '',
+		);
+		$key = array_search( $slug_to_check, $slugs );
+		return $key ? $key : $slug_to_check;
+	}
+
+	public function get_lang( $post_id ) {
+		$langs = get_the_terms( $post_id, 'languages' );
+		$lang = !empty( $langs ) ? array_pop( $langs ) : false;
+		return $lang;
+	}
+
+
 }
 
 // new Snippet_Tax_Setup;

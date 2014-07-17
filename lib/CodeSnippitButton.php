@@ -14,8 +14,9 @@ class CodeSnippitButton extends CodeSnippitInit {
 	private $script = 'code-snippet-button';
 	private $btn = 'snippetcpt';
 
-	function __construct( $cpt ) {
+	function __construct( $cpt, $language ) {
 		$this->cpt = $cpt;
+		$this->language = $language;
 		// Add button for snippet lookup
 		add_filter( 'the_editor_content', array( $this, '_enqueue_button_script' ) );
 		// script for button handler
@@ -101,8 +102,13 @@ class CodeSnippitButton extends CodeSnippitInit {
 					<tr>
 						<td colspan="2">
 							<select name="snippet-cpt-posts" id="snippet-cpt-posts" value="left" class="text ui-widget-content ui-corner-all">
-								<?php foreach ( $snippets as $snippet ) : ?>
-									<option value="<?php echo $snippet->ID; ?>"><?php echo $snippet->post_title; ?></option>
+								<?php foreach ( $snippets as $snippet ) :
+									$lang_slug	= '';
+									if ( $has_slug = $this->language->language_slug_from_post( $snippet->ID ) ) {
+										$lang_slug = $has_slug;
+									}
+								?>
+									<option value="<?php echo $snippet->ID;?>" data-lang="<?php echo $lang_slug; ?>"><?php echo $snippet->post_title; ?></option>
 								<?php endforeach; ?>
 							</select>
 						</td>

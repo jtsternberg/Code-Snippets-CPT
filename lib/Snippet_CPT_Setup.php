@@ -21,14 +21,14 @@ class Snippet_CPT_Setup extends CPT_Setup {
 
 		parent::__construct( 'Code Snippet' );
 
-		add_filter( 'user_can_richedit', array( &$this, 'remove_html' ), 50 );
-		add_filter( 'enter_title_here', array( &$this, 'title' ) );
-		add_action( 'add_meta_boxes', array( &$this, 'meta_boxes' ) );
-		add_filter( 'gettext', array( &$this, 'text' ), 20, 2 );
-		add_action( 'init', array( &$this, 'register_scripts_styles' ) );
-		add_action( 'wp_enqueue_scripts', array( &$this, 'enqueue' ) );
-		add_action( 'template_redirect', array( &$this, 'remove_filter' ) );
-		add_filter( 'the_content', array( &$this, 'prettify_content' ), 20, 2 );
+		add_filter( 'user_can_richedit', array( $this, 'remove_html' ), 50 );
+		add_filter( 'enter_title_here', array( $this, 'title' ) );
+		add_action( 'add_meta_boxes', array( $this, 'meta_boxes' ) );
+		add_filter( 'gettext', array( $this, 'text' ), 20, 2 );
+		add_action( 'init', array( $this, 'register_scripts_styles' ) );
+		// add_action( 'admin_enqueue_scripts', array( $this, 'maybe_enqueue' ) );
+		add_action( 'template_redirect', array( $this, 'remove_filter' ) );
+		add_filter( 'the_content', array( $this, 'prettify_content' ), 20, 2 );
 	}
 
 	public function remove_filter() {
@@ -43,10 +43,32 @@ class Snippet_CPT_Setup extends CPT_Setup {
 		wp_register_style( 'prettify-plus', DWSNIPPET_URL .'lib/css/prettify-plus.css', null, '1.0' );
 	}
 
-	public function enqueue() {
+	public function maybe_enqueue() {
+		$screen = get_current_screen();
+		if ( ! $screen || ! isset( $screen->id ) || 'code-snippets' != $screen->id ) {
+			return;
+		}
+		$this->enqueue_prettify();
+	}
+
+	public function enqueue_prettify() {
 		wp_enqueue_script( 'prettify' );
 		wp_enqueue_style( 'prettify' );
 		wp_enqueue_style( 'prettify-plus' );
+		add_action( 'wp_footer', array( $this, 'run_js' ) );
+	}
+
+	public function run_js() {
+		if ( isset( $this->js_done ) ) {
+			return;
+		}
+		?>
+		<script type="text/javascript">
+			window.onload = function(){ prettyPrint(); };
+		</script>
+		<?php
+
+		$this->js_done = true;
 	}
 
 	public function remove_html() {
@@ -134,7 +156,7 @@ class Snippet_CPT_Setup extends CPT_Setup {
 		global $_wp_post_type_features;
 		unset( $_wp_post_type_features[$this->slug]['editor'] );
 
-		add_meta_box( 'snippet_content', __('Snippet'), array( &$this, 'content_editor_meta_box' ), $this->slug, 'normal', 'core' );
+		add_meta_box( 'snippet_content', __('Snippet'), array( $this, 'content_editor_meta_box' ), $this->slug, 'normal', 'core' );
 	}
 
 	public function content_editor_meta_box( $post ) {
