@@ -19,14 +19,15 @@ class CodeSnippitInit {
 	function __construct() {
 
 		define( 'DWSNIPPET_PATH', plugin_dir_path( __FILE__ ) );
-		define( 'DWSNIPPET_URL', plugins_url('/', __FILE__ ) );
+		define( 'DWSNIPPET_URL', plugins_url( '/', __FILE__ ) );
 
 		// Custom Functions
 		require_once( DWSNIPPET_PATH .'lib/functions.php' );
 
 		// Snippet Post-Type Setup
-		if ( !class_exists( 'CPT_Setup' ) )
+		if ( ! class_exists( 'CPT_Setup' ) ) {
 			require_once( DWSNIPPET_PATH .'lib/CPT_Setup.php' );
+		}
 		require_once( DWSNIPPET_PATH .'lib/Snippet_CPT_Setup.php' );
 		$this->cpt = new Snippet_CPT_Setup();
 
@@ -47,15 +48,26 @@ class CodeSnippitInit {
 
 		// Set default programming language taxonomy terms
 		add_action( 'admin_init', array( $this, 'add_languages' ) );
-
+		add_filter( 'content_save_pre', array( $this, 'allow_unfiltered' ), 5 );
 	}
 
 	public function add_languages() {
 		// make sure our default languages exist
 		foreach ( $this->languages as $language ) {
-			if ( !term_exists( $language, 'languages' ) )
+			if ( ! term_exists( $language, 'languages' ) ) {
 				wp_insert_term( $language, 'languages' );
+			}
 		}
+	}
+
+	public function allow_unfiltered( $value ) {
+		global $post;
+
+		if ( isset( $post->post_type ) && $this->cpt->slug == $post->post_type && current_user_can( 'edit_others_posts' ) ) {
+			kses_remove_filters();
+		}
+
+		return $value;
 	}
 
 	public function shortcode( $atts, $context ) {
@@ -93,7 +105,7 @@ class CodeSnippitInit {
 
 		$class = 'prettyprint';
 
-		$line_nums = !$atts['line_numbers'] || false === $atts['line_numbers'] || $atts['line_numbers'] === 'false' ? false : $atts['line_numbers'];
+		$line_nums = ! $atts['line_numbers'] || false === $atts['line_numbers'] || $atts['line_numbers'] === 'false' ? false : $atts['line_numbers'];
 
 		if ( $line_nums ) {
 			$class .= ' linenums';
