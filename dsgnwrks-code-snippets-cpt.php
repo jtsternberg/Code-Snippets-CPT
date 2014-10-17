@@ -63,7 +63,7 @@ class CodeSnippitInit {
 	public function allow_unfiltered( $value ) {
 		global $post;
 
-		if ( isset( $post->post_type ) && $this->cpt->slug == $post->post_type && current_user_can( 'edit_others_posts' ) ) {
+		if ( isset( $post->post_type ) && $this->cpt->slug == $post->post_type && current_user_can( 'edit_posts' ) ) {
 			kses_remove_filters();
 		}
 
