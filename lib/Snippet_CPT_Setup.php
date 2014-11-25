@@ -1,9 +1,16 @@
 <?php
 /**
  * Plugin class that registers the Code Snipet CPT.
- *
  */
-class Snippet_CPT_Setup extends CPT_Setup {
+class Snippet_CPT_Setup {
+
+	private $post_type;
+	public $single;
+	private $plural;
+	public $plurals;
+	private $registered;
+	public $slug;
+	private $args;
 
 	/**
 	 * Holds copy of instance, so other plugins can remove our hooks.
@@ -15,11 +22,22 @@ class Snippet_CPT_Setup extends CPT_Setup {
 	 */
 	static $instance;
 
+
 	function __construct() {
 
 		self::$instance = $this;
 
-		parent::__construct( 'Code Snippet' );
+		$this->post_type = __( 'Code Snippet', 'code-snippets-cpt' );
+		$this->single = $this->post_type;
+		$this->plural = __( 'Code Snippets', 'code-snippets-cpt' );
+		$this->plurals = $this->plural;
+		$this->registered = 'code-snippets';
+		$this->slug = $this->registered;
+
+		add_action( 'init', array( $this, 'register_post_type' ) );
+		add_filter( 'post_updated_messages', array( $this, 'messages' ) );
+		add_filter( 'manage_edit-'. $this->slug .'_columns', array( $this, 'columns' ) );
+		add_action( 'manage_posts_custom_column', array( $this, 'columns_display' ) );
 
 		add_filter( 'user_can_richedit', array( $this, 'remove_html' ), 50 );
 		add_filter( 'enter_title_here', array( $this, 'title' ) );
@@ -29,6 +47,90 @@ class Snippet_CPT_Setup extends CPT_Setup {
 		// add_action( 'admin_enqueue_scripts', array( $this, 'maybe_enqueue' ) );
 		add_action( 'template_redirect', array( $this, 'remove_filter' ) );
 		add_filter( 'the_content', array( $this, 'prettify_content' ), 20, 2 );
+
+	}
+
+	public function register_post_type() {
+		// set default custom post type options
+		register_post_type( $this->registered, apply_filters( 'snippet_cpt_registration_args', array(
+			'labels' => array(
+				'name' => $this->plural,
+				'singular_name' => $this->post_type,
+				'add_new' => 'Add New ' .$this->post_type,
+				'add_new_item' => 'Add New ' .$this->post_type,
+				'edit_item' => 'Edit ' .$this->post_type,
+				'new_item' => 'New ' .$this->post_type,
+				'all_items' => 'All ' .$this->plural,
+				'view_item' => 'View ' .$this->post_type,
+				'search_items' => 'Search ' .$this->plural,
+				'not_found' =>  'No ' .$this->plural .' found',
+				'not_found_in_trash' => 'No ' .$this->plural .' found in Trash',
+				'parent_item_colon' => '',
+				'menu_name' => $this->plural
+			),
+			'public' => true,
+			'publicly_queryable' => true,
+			'show_ui' => true,
+			'show_in_menu' => true,
+			'query_var' => true,
+			'menu_icon' => 'dashicons-editor-code',
+			'rewrite' => true,
+			'capability_type' => 'post',
+			'has_archive' => true,
+			'hierarchical' => false,
+			'menu_position' => null,
+			'supports' => array( 'title', 'editor', 'excerpt' )
+		) ) );
+	}
+
+	public function messages( $messages ) {
+		global $post, $post_ID;
+
+		$messages[$this->registered] = array(
+			0 => '', // Unused. Messages start at index 1.
+			1 => sprintf( __( '%1$s updated. <a href="%2$s">View %1$s</a>' ), $this->post_type, esc_url( get_permalink( $post_ID ) ) ),
+			2 => __( 'Custom field updated.' ),
+			3 => __( 'Custom field deleted.' ),
+			4 => sprintf( __( '%1$s updated.' ), $this->post_type ),
+			/* translators: %s: date and time of the revision */
+			5 => isset( $_GET['revision'] ) ? sprintf( __( '%1$s restored to revision from %2$s' ), $this->post_type , wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
+			6 => sprintf( __( '%1$s published. <a href="%2$s">View %1$s</a>' ), $this->post_type, esc_url( get_permalink( $post_ID ) ) ),
+			7 => sprintf( __( '%1$s saved.' ), $this->post_type ),
+			8 => sprintf( __( '%1$s submitted. <a target="_blank" href="%2$s">Preview %1$s</a>' ), $this->post_type, esc_url( add_query_arg( 'preview', 'true', get_permalink( $post_ID ) ) ) ),
+			9 => sprintf( __( '%1$s scheduled for: <strong>%2$s</strong>. <a target="_blank" href="%3$s">Preview %1$s</a>' ), $this->post_type,
+					// translators: Publish box date format, see http://php.net/date
+					date_i18n( __( 'M j, Y @ G:i' ), strtotime( $post->post_date ) ), esc_url( get_permalink( $post_ID ) ) ),
+			10 => sprintf( __( '%1$s draft updated. <a target="_blank" href="%2$s">Preview %1$s</a>' ), $this->post_type, esc_url( add_query_arg( 'preview', 'true', get_permalink( $post_ID ) ) ) ),
+		);
+
+		return $messages;
+
+	}
+
+	public function columns( $columns ) {
+		$newcolumns = array(
+			'syntax_languages' => 'Syntax Languages',
+			'snippet_categories' => 'Snippet Categories',
+			'snippet_tags' => 'Snippet Tags',
+		);
+		$columns = array_merge( $columns, $newcolumns );
+		return $columns;
+		// $this->taxonomy_column( $post, 'uses', 'Uses' );
+	}
+
+	public function columns_display( $column ) {
+		global $post;
+		switch ($column) {
+			case 'syntax_languages':
+				$this->taxonomy_column( $post, 'languages', 'Languages' );
+			break;
+			case 'snippet_categories':
+				$this->taxonomy_column( $post, 'snippet-categories', 'Snippet Categories' );
+			break;
+			case 'snippet_tags':
+				$this->taxonomy_column( $post, 'snippet-tags', 'Snippet Tags' );
+			break;
+		}
 	}
 
 	public function remove_filter() {
@@ -84,32 +186,6 @@ class Snippet_CPT_Setup extends CPT_Setup {
 		}
 
 		return $title;
-	}
-
-	public function columns( $columns ) {
-		$newcolumns = array(
-			'syntax_languages' => 'Syntax Languages',
-			'snippet_categories' => 'Snippet Categories',
-			'snippet_tags' => 'Snippet Tags',
-		);
-		$columns = array_merge( $columns, $newcolumns );
-		return $columns;
-		// $this->taxonomy_column( $post, 'uses', 'Uses' );
-	}
-
-	public function columns_display( $column ) {
-		global $post;
-		switch ($column) {
-			case 'syntax_languages':
-				$this->taxonomy_column( $post, 'languages', 'Languages' );
-			break;
-			case 'snippet_categories':
-				$this->taxonomy_column( $post, 'snippet-categories', 'Snippet Categories' );
-			break;
-			case 'snippet_tags':
-				$this->taxonomy_column( $post, 'snippet-tags', 'Snippet Tags' );
-			break;
-		}
 	}
 
 	public function taxonomy_column( $post = '', $tax = '', $name = '' ) {

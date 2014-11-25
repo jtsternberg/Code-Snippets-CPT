@@ -25,9 +25,6 @@ class CodeSnippitInit {
 		require_once( DWSNIPPET_PATH .'lib/functions.php' );
 
 		// Snippet Post-Type Setup
-		if ( ! class_exists( 'CPT_Setup' ) ) {
-			require_once( DWSNIPPET_PATH .'lib/CPT_Setup.php' );
-		}
 		require_once( DWSNIPPET_PATH .'lib/Snippet_CPT_Setup.php' );
 		$this->cpt = new Snippet_CPT_Setup();
 
