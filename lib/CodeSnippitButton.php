@@ -65,7 +65,7 @@ class CodeSnippitButton extends CodeSnippitInit {
 
 		// Get CPT posts
 		$snippets = get_posts( array(
-			'post_type' => $this->cpt->slug,
+			'post_type' => $this->cpt->post_type,
 			'posts_per_page' => 30,
 		) );
 		// Shortcode button popup form

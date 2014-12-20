@@ -30,9 +30,9 @@ class CodeSnippitInit {
 
 		// Custom Taxonomy Setup
 		require_once( DWSNIPPET_PATH .'lib/Snippet_Tax_Setup.php' );
-		new Snippet_Tax_Setup( 'Snippet Category', 'Snippet Categories', array( $this->cpt->slug ) );
-		new Snippet_Tax_Setup( 'Snippet Tag', '', array( $this->cpt->slug ), array( 'hierarchical' => false ) );
-		$this->language = new Snippet_Tax_Setup( 'Language', '', array( $this->cpt->slug ),  array( 'public' => false, 'show_ui' => false ) );
+		new Snippet_Tax_Setup( 'Snippet Category', 'Snippet Categories', array( $this->cpt->post_type ) );
+		new Snippet_Tax_Setup( 'Snippet Tag', '', array( $this->cpt->post_type ), array( 'hierarchical' => false ) );
+		$this->language = new Snippet_Tax_Setup( 'Language', '', array( $this->cpt->post_type ),  array( 'public' => false, 'show_ui' => false ) );
 		// Custom metabox for the programming languages taxonomy
 		$this->language->init_select_box();
 
@@ -60,7 +60,7 @@ class CodeSnippitInit {
 	public function allow_unfiltered( $value ) {
 		global $post;
 
-		if ( isset( $post->post_type ) && $this->cpt->slug == $post->post_type && current_user_can( 'edit_posts' ) ) {
+		if ( isset( $post->post_type ) && $this->cpt->post_type == $post->post_type && current_user_can( 'edit_posts' ) ) {
 			kses_remove_filters();
 		}
 

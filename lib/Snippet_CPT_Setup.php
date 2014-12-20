@@ -4,39 +4,20 @@
  */
 class Snippet_CPT_Setup {
 
-	private $post_type;
-	public $single;
+	private $singular;
 	private $plural;
-	public $plurals;
-	private $registered;
-	public $slug;
+	private $post_type;
 	private $args;
-
-	/**
-	 * Holds copy of instance, so other plugins can remove our hooks.
-	 *
-	 * @since 1.0
-	 * @link http://core.trac.wordpress.org/attachment/ticket/16149/query-standard-format-posts.php
-	 * @link http://twitter.com/#!/markjaquith/status/66862769030438912
-	 *
-	 */
-	static $instance;
-
 
 	function __construct() {
 
-		self::$instance = $this;
-
-		$this->post_type = __( 'Code Snippet', 'code-snippets-cpt' );
-		$this->single = $this->post_type;
-		$this->plural = __( 'Code Snippets', 'code-snippets-cpt' );
-		$this->plurals = $this->plural;
-		$this->registered = 'code-snippets';
-		$this->slug = $this->registered;
+		$this->singular  = __( 'Code Snippet', 'code-snippets-cpt' );
+		$this->plural    = __( 'Code Snippets', 'code-snippets-cpt' );
+		$this->post_type = 'code-snippets';
 
 		add_action( 'init', array( $this, 'register_post_type' ) );
 		add_filter( 'post_updated_messages', array( $this, 'messages' ) );
-		add_filter( 'manage_edit-'. $this->slug .'_columns', array( $this, 'columns' ) );
+		add_filter( 'manage_edit-'. $this->post_type .'_columns', array( $this, 'columns' ) );
 		add_action( 'manage_posts_custom_column', array( $this, 'columns_display' ) );
 
 		add_filter( 'user_can_richedit', array( $this, 'remove_html' ), 50 );
@@ -52,55 +33,55 @@ class Snippet_CPT_Setup {
 
 	public function register_post_type() {
 		// set default custom post type options
-		register_post_type( $this->registered, apply_filters( 'snippet_cpt_registration_args', array(
+		register_post_type( $this->post_type, apply_filters( 'snippet_cpt_registration_args', array(
 			'labels' => array(
-				'name' => $this->plural,
-				'singular_name' => $this->post_type,
-				'add_new' => 'Add New ' .$this->post_type,
-				'add_new_item' => 'Add New ' .$this->post_type,
-				'edit_item' => 'Edit ' .$this->post_type,
-				'new_item' => 'New ' .$this->post_type,
-				'all_items' => 'All ' .$this->plural,
-				'view_item' => 'View ' .$this->post_type,
-				'search_items' => 'Search ' .$this->plural,
-				'not_found' =>  'No ' .$this->plural .' found',
+				'name'               => $this->plural,
+				'singular_name'      => $this->singular,
+				'add_new'            => 'Add New ' .$this->singular,
+				'add_new_item'       => 'Add New ' .$this->singular,
+				'edit_item'          => 'Edit ' .$this->singular,
+				'new_item'           => 'New ' .$this->singular,
+				'all_items'          => 'All ' .$this->plural,
+				'view_item'          => 'View ' .$this->singular,
+				'search_items'       => 'Search ' .$this->plural,
+				'not_found'          =>  'No ' .$this->plural .' found',
 				'not_found_in_trash' => 'No ' .$this->plural .' found in Trash',
-				'parent_item_colon' => '',
-				'menu_name' => $this->plural
+				'parent_item_colon'  => '',
+				'menu_name'          => $this->plural
 			),
-			'public' => true,
+			'public'             => true,
 			'publicly_queryable' => true,
-			'show_ui' => true,
-			'show_in_menu' => true,
-			'query_var' => true,
-			'menu_icon' => 'dashicons-editor-code',
-			'rewrite' => true,
-			'capability_type' => 'post',
-			'has_archive' => true,
-			'hierarchical' => false,
-			'menu_position' => null,
-			'supports' => array( 'title', 'editor', 'excerpt' )
+			'show_ui'            => true,
+			'show_in_menu'       => true,
+			'query_var'          => true,
+			'menu_icon'          => 'dashicons-editor-code',
+			'rewrite'            => true,
+			'capability_type'    => 'post',
+			'has_archive'        => true,
+			'hierarchical'       => false,
+			'menu_position'      => null,
+			'supports'           => array( 'title', 'editor', 'excerpt' )
 		) ) );
 	}
 
 	public function messages( $messages ) {
 		global $post, $post_ID;
 
-		$messages[$this->registered] = array(
+		$messages[$this->post_type] = array(
 			0 => '', // Unused. Messages start at index 1.
-			1 => sprintf( __( '%1$s updated. <a href="%2$s">View %1$s</a>' ), $this->post_type, esc_url( get_permalink( $post_ID ) ) ),
+			1 => sprintf( __( '%1$s updated. <a href="%2$s">View %1$s</a>' ), $this->singular, esc_url( get_permalink( $post_ID ) ) ),
 			2 => __( 'Custom field updated.' ),
 			3 => __( 'Custom field deleted.' ),
-			4 => sprintf( __( '%1$s updated.' ), $this->post_type ),
+			4 => sprintf( __( '%1$s updated.' ), $this->singular ),
 			/* translators: %s: date and time of the revision */
-			5 => isset( $_GET['revision'] ) ? sprintf( __( '%1$s restored to revision from %2$s' ), $this->post_type , wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
-			6 => sprintf( __( '%1$s published. <a href="%2$s">View %1$s</a>' ), $this->post_type, esc_url( get_permalink( $post_ID ) ) ),
-			7 => sprintf( __( '%1$s saved.' ), $this->post_type ),
-			8 => sprintf( __( '%1$s submitted. <a target="_blank" href="%2$s">Preview %1$s</a>' ), $this->post_type, esc_url( add_query_arg( 'preview', 'true', get_permalink( $post_ID ) ) ) ),
-			9 => sprintf( __( '%1$s scheduled for: <strong>%2$s</strong>. <a target="_blank" href="%3$s">Preview %1$s</a>' ), $this->post_type,
+			5 => isset( $_GET['revision'] ) ? sprintf( __( '%1$s restored to revision from %2$s' ), $this->singular , wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
+			6 => sprintf( __( '%1$s published. <a href="%2$s">View %1$s</a>' ), $this->singular, esc_url( get_permalink( $post_ID ) ) ),
+			7 => sprintf( __( '%1$s saved.' ), $this->singular ),
+			8 => sprintf( __( '%1$s submitted. <a target="_blank" href="%2$s">Preview %1$s</a>' ), $this->singular, esc_url( add_query_arg( 'preview', 'true', get_permalink( $post_ID ) ) ) ),
+			9 => sprintf( __( '%1$s scheduled for: <strong>%2$s</strong>. <a target="_blank" href="%3$s">Preview %1$s</a>' ), $this->singular,
 					// translators: Publish box date format, see http://php.net/date
 					date_i18n( __( 'M j, Y @ G:i' ), strtotime( $post->post_date ) ), esc_url( get_permalink( $post_ID ) ) ),
-			10 => sprintf( __( '%1$s draft updated. <a target="_blank" href="%2$s">Preview %1$s</a>' ), $this->post_type, esc_url( add_query_arg( 'preview', 'true', get_permalink( $post_ID ) ) ) ),
+			10 => sprintf( __( '%1$s draft updated. <a target="_blank" href="%2$s">Preview %1$s</a>' ), $this->singular, esc_url( add_query_arg( 'preview', 'true', get_permalink( $post_ID ) ) ) ),
 		);
 
 		return $messages;
@@ -134,7 +115,7 @@ class Snippet_CPT_Setup {
 	}
 
 	public function remove_filter() {
-		if ( get_post_type() != $this->slug ) return;
+		if ( get_post_type() != $this->post_type ) return;
 		remove_filter('the_content', 'wptexturize');
 		remove_filter ('the_content','wpautop');
 	}
@@ -174,14 +155,14 @@ class Snippet_CPT_Setup {
 	}
 
 	public function remove_html() {
-		if ( get_post_type() == $this->slug ) return false;
+		if ( get_post_type() == $this->post_type ) return false;
 		return true;
 	}
 
 	public function title( $title ){
 
 		$screen = get_current_screen();
-		if ( $screen->post_type == $this->slug ) {
+		if ( $screen->post_type == $this->post_type ) {
 			$title = 'Snippet Title';
 		}
 
@@ -210,7 +191,7 @@ class Snippet_CPT_Setup {
 	public function text( $translation, $text ) {
 		global $pagenow;
 
-		if ( ( $pagenow == 'post-new.php' && isset( $_GET['post_type'] ) && $_GET['post_type'] == $this->slug ) || ( $pagenow == 'post.php' && isset( $_GET['post'] ) && get_post_type( $_GET['post'] ) == $this->slug ) || ( $pagenow == 'edit.php' && isset( $_GET['post_type'] ) && $_GET['post_type'] == $this->slug ) ) {
+		if ( ( $pagenow == 'post-new.php' && isset( $_GET['post_type'] ) && $_GET['post_type'] == $this->post_type ) || ( $pagenow == 'post.php' && isset( $_GET['post'] ) && get_post_type( $_GET['post'] ) == $this->post_type ) || ( $pagenow == 'edit.php' && isset( $_GET['post_type'] ) && $_GET['post_type'] == $this->post_type ) ) {
 
 			switch ($text) {
 				case 'Excerpt';
@@ -230,9 +211,9 @@ class Snippet_CPT_Setup {
 	public function meta_boxes() {
 
 		global $_wp_post_type_features;
-		unset( $_wp_post_type_features[$this->slug]['editor'] );
+		unset( $_wp_post_type_features[$this->post_type]['editor'] );
 
-		add_meta_box( 'snippet_content', __('Snippet'), array( $this, 'content_editor_meta_box' ), $this->slug, 'normal', 'core' );
+		add_meta_box( 'snippet_content', __('Snippet'), array( $this, 'content_editor_meta_box' ), $this->post_type, 'normal', 'core' );
 	}
 
 	public function content_editor_meta_box( $post ) {
@@ -249,9 +230,21 @@ class Snippet_CPT_Setup {
 	}
 
 	public function prettify_content( $content ) {
-		if ( get_post_type() != $this->slug ) return $content;
+		if ( get_post_type() != $this->post_type ) return $content;
 
 		return '<pre class="prettyprint linenums">'. htmlentities( $content ) .'</pre>';
+	}
+
+	public function __get( $property ) {
+		switch( $property ) {
+			case 'singular':
+			case 'plural':
+			case 'post_type':
+			case 'args':
+				return $this->{$property};
+			default:
+				throw new Exception( 'Invalid '. __CLASS__ .' property: ' . $property );
+		}
 	}
 
 }
