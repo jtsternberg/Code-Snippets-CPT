@@ -49,18 +49,19 @@ class Snippet_CPT_Setup {
 				'parent_item_colon'  => '',
 				'menu_name'          => $this->plural
 			),
-			'public'             => true,
-			'publicly_queryable' => true,
-			'show_ui'            => true,
-			'show_in_menu'       => true,
-			'query_var'          => true,
-			'menu_icon'          => 'dashicons-editor-code',
-			'rewrite'            => true,
-			'capability_type'    => 'post',
-			'has_archive'        => true,
-			'hierarchical'       => false,
-			'menu_position'      => null,
-			'supports'           => array( 'title', 'editor', 'excerpt' )
+			'public'              => true,
+			'publicly_queryable'  => true,
+			'show_ui'             => true,
+			'show_in_menu'        => true,
+			'query_var'           => true,
+			'menu_icon'           => 'dashicons-editor-code',
+			'rewrite'             => true,
+			'capability_type'     => 'post',
+			'has_archive'         => true,
+			'hierarchical'        => false,
+			'menu_position'       => null,
+			'exclude_from_search' => true,
+			'supports'            => array( 'title', 'editor', 'excerpt' )
 		) ) );
 	}
 
