@@ -1,6 +1,5 @@
 Code Snippets CPT
 =================
-![Code Snippets CPT Banner](https://ps.w.org/code-snippets-cpt/assets/banner-772x250.png?rev=1050047)
 
 A WordPress plugin for managing and displaying code snippets
 
