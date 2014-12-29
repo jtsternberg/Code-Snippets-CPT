@@ -108,7 +108,7 @@ class CodeSnippitButton extends CodeSnippitInit {
 										$lang_slug = $has_slug;
 									}
 								?>
-									<option value="<?php echo $snippet->ID;?>" data-lang="<?php echo $lang_slug; ?>"><?php echo $snippet->post_title; ?></option>
+									<option value="<?php echo $snippet->post_name;?>" data-lang="<?php echo $lang_slug; ?>"><?php echo $snippet->post_title; ?></option>
 								<?php endforeach; ?>
 							</select>
 						</td>
