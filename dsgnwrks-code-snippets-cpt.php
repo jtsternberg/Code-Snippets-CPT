@@ -6,7 +6,7 @@ Plugin URI: http://j.ustin.co/jAHRM3
 Author: Jtsternberg
 Author URI: http://about.me/jtsternberg
 Donate link: http://j.ustin.co/rYL89n
-Version: 1.0.2
+Version: 1.0.3
 */
 
 class CodeSnippitInit {
@@ -16,7 +16,22 @@ class CodeSnippitInit {
 	protected $languages = array( 'Python', 'HTML', 'CSS', 'JavaScript', 'PHP', 'SQL', 'Perl', 'Ruby', 'Bash', 'C', 'HTML', 'Java', 'XHTML', 'XML', );
 	const VERSION = '1.0.2';
 
-	function __construct() {
+	public static $single_instance = null;
+
+	/**
+	 * Creates or returns an instance of this class.
+	 * @since  0.1.0
+	 * @return CodeSnippitInit A single instance of this class.
+	 */
+	public static function get_instance() {
+		if ( null === self::$single_instance ) {
+			self::$single_instance = new self();
+		}
+
+		return self::$single_instance;
+	}
+
+	private function __construct() {
 
 		define( 'DWSNIPPET_PATH', plugin_dir_path( __FILE__ ) );
 		define( 'DWSNIPPET_URL', plugins_url( '/', __FILE__ ) );
@@ -130,9 +145,29 @@ class CodeSnippitInit {
 		return apply_filters( 'dsgnwrks_snippet_display', sprintf( '<pre class="%1$s"%2$s>%3$s</pre>', $class, $title_attr, $snippet_content ), $atts, $snippet );
 	}
 
+	/**
+	 * Magic getter for our object.
+	 *
+	 * @param string $field
+	 *
+	 * @throws Exception Throws an exception if the field is invalid.
+	 *
+	 * @return mixed
+	 */
+	public function __get( $field ) {
+		switch ( $field ) {
+			case 'plugin_name':
+			case 'cpt':
+			case 'languages':
+				return $this->{$field};
+			default:
+				throw new Exception( 'Invalid '. __CLASS__ .' property: ' . $field );
+		}
+	}
+
 }
 
-new CodeSnippitInit;
+CodeSnippitInit::get_instance();
 
 add_filter( 'dsgnwrks_snippet_content', 'html_entity_decode' );
 
