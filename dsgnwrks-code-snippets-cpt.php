@@ -74,6 +74,7 @@ class CodeSnippitInit {
 			'slug'         => '',
 			'line_numbers' => true,
 			'lang'         => '',
+			'title_attr'   => true,
 		), $atts, 'snippet' );
 
 		$args = array(
@@ -89,14 +90,16 @@ class CodeSnippitInit {
 		}
 
 		$snippet = get_posts( $args );
-		if ( is_wp_error( $snippet ) || empty( $snippet ) )
+		if ( is_wp_error( $snippet ) || empty( $snippet ) ) {
 			return;
+		}
 
-		$snippet_id = $snippet[0]->ID;
-		$content = get_post_field( 'post_content', $snippet_id );
+		$snippet = $snippet[0];
+		$snippet_id = $snippet->ID;
 
-		if ( is_wp_error( $content ) || empty( $content ) )
+		if ( empty( $snippet->post_content ) ) {
 			return;
+		}
 
 		$this->cpt->enqueue_prettify();
 
@@ -118,11 +121,25 @@ class CodeSnippitInit {
 			$class .= ' lang-'. $lang_slug;
 		}
 
-		$snippet_content = apply_filters( 'dsgnwrks_snippet_content', htmlentities( $content, ENT_COMPAT, 'UTF-8' ), $atts );
+		$snippet_content = apply_filters( 'dsgnwrks_snippet_content', htmlentities( $snippet->post_content, ENT_COMPAT, 'UTF-8' ), $atts, $snippet );
 
-		return sprintf( '<pre class="%1$s">%2$s</pre>', $class, $snippet_content );
+		if ( $atts['title_attr'] && ! in_array( $atts['title_attr'], array( 'no', 'false' ), true ) ) {
+			$title_attr = sprintf( ' title="%s"', esc_attr( $snippet->post_title ) );
+		}
+
+		return apply_filters( 'dsgnwrks_snippet_display', sprintf( '<pre class="%1$s"%2$s>%3$s</pre>', $class, $title_attr, $snippet_content ), $atts, $snippet );
 	}
 
 }
 
 new CodeSnippitInit;
+
+add_filter( 'dsgnwrks_snippet_content', 'html_entity_decode' );
+
+function dsgnwrks_snippet_content_replace_tabs( $snippet_content ) {
+	// Replace tabs w/ spaces as it is more readable
+	$snippet_content = str_replace( "\t", "    ", $snippet_content );
+
+	return $snippet_content;
+}
+add_filter( 'dsgnwrks_snippet_content', 'dsgnwrks_snippet_content_replace_tabs' );
