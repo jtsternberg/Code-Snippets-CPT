@@ -9,7 +9,7 @@ Author: Jtsternberg
 Tags snippets, code, code snippets, syntax highlighting, shortcode  
 Requires at least: 3.8.0  
 Tested up to: 4.1.0  
-Stable tag: 1.0.2  
+Stable tag: 1.0.3  
 License: GPLv2 or later  
 License URI: http://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -39,6 +39,13 @@ Feel free to [fork or contribute on Github](https://github.com/jtsternberg/Code-
 
 == Changelog ==
 
+= 1.0.3 =
+* Replace shortcode button's usage of ids with slugs because ids can change during a migration.
+* Added filter, 'dsgnwrks_snippet_display'.
+* Better handling of WordPress-converted html entities.
+* By default, convert tabs to spaces for better readability. Can be disabled with: `remove_filter( 'dsgnwrks_snippet_content', 'dsgnwrks_snippet_content_replace_tabs' );`
+* Added title attribute to `pre` element to display title of snippet on hover.
+
 = 1.0.2 =
 * Add more languages
 * Add lang parameter to shortcode attributes.
@@ -53,11 +60,12 @@ Feel free to [fork or contribute on Github](https://github.com/jtsternberg/Code-
 
 == Upgrade Notice ==
 
+
+= 1.0.3 =
+* Shortcodes now use slugs, new filter added, 'dsgnwrks_snippet_display', Better handling of WordPress-converted html entities, convert tabs to spaces for better readability, & Added title attribute to `pre` element to display title of snippet on hover.
+
 = 1.0.2 =
-* Add more languages
-* Add lang parameter to shortcode attributes.
-* Use selected snippet language to set the shortcode lang parameter.
-* Allow shortcode to specify line number to start with
+* Add more languages, add lang parameter to shortcode attributes, selected snippet language is set on shortcode lang parameter automatically, and allow shortcode to specify line number to start with.
 
 = 1.0.1 =
 * WP editor buttons for inserting snippet shortcodes
