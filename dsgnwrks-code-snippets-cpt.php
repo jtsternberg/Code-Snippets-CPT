@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: Dsgnwrks Code Snippets CPT
+Plugin Name: Code Snippets CPT
 Description: A code snippet custom post-type and shortcode for displaying your code snippets in your posts or pages.
 Plugin URI: http://j.ustin.co/jAHRM3
 Author: Jtsternberg
