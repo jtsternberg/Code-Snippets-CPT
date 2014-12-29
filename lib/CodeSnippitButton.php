@@ -1,15 +1,5 @@
 <?php
-/*
-Plugin Name: Dsgnwrks Code Snippets CPT
-Description: A code snippet custom post-type and shortcode for displaying your code snippets in your posts or pages.
-Plugin URI: http://j.ustin.co/jAHRM3
-Author: Jtsternberg
-Author URI: http://about.me/jtsternberg
-Donate link: http://j.ustin.co/rYL89n
-Version: 1.0.1
-*/
-
-class CodeSnippitButton extends CodeSnippitInit {
+class CodeSnippitButton {
 
 	private $script = 'code-snippet-button';
 	private $btn = 'snippetcpt';
@@ -27,7 +17,7 @@ class CodeSnippitButton extends CodeSnippitInit {
 	}
 
 	public function button_script() {
-		wp_register_script( $this->script, DWSNIPPET_URL .'/lib/js/'. $this->script .'.js' , array( 'quicktags', 'wpdialogs' ), parent::VERSION, true );
+		wp_register_script( $this->script, DWSNIPPET_URL .'/lib/js/'. $this->script .'.js' , array( 'quicktags', 'wpdialogs' ), CodeSnippitInit::VERSION, true );
 		wp_localize_script( $this->script, 'codeSnippetCPT', array(
 			'buttons' => array( 'Cancel' => 'cancel', 'Insert Shortcode' => 'insert' ),
 			'button_img' => DWSNIPPET_URL .'lib/js/icon.png',
