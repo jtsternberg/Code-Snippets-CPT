@@ -9,7 +9,7 @@ Author: Jtsternberg
 Tags snippets, code, code snippets, syntax highlighting, shortcode  
 Requires at least: 3.8.0  
 Tested up to: 4.1.0  
-Stable tag: 1.0.3  
+Stable tag: 1.0.4  
 License: GPLv2 or later  
 License URI: http://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -39,6 +39,9 @@ Feel free to [fork or contribute on Github](https://github.com/jtsternberg/Code-
 
 == Changelog ==
 
+= 1.0.4 =
+* BUG FIX: Remove 'html_entity_decode' around snippet output, as it will cause the page display to break under certain circumstances.
+
 = 1.0.3 =
 * Replace shortcode button's usage of ids with slugs because ids can change during a migration.
 * Added filter, 'dsgnwrks_snippet_display'.
@@ -60,6 +63,8 @@ Feel free to [fork or contribute on Github](https://github.com/jtsternberg/Code-
 
 == Upgrade Notice ==
 
+= 1.0.4 =
+* BUG FIX: Remove 'html_entity_decode' around snippet output, as it will cause the page display to break under certain circumstances.
 
 = 1.0.3 =
 * Shortcodes now use slugs, new filter added, 'dsgnwrks_snippet_display', Better handling of WordPress-converted html entities, convert tabs to spaces for better readability, & Added title attribute to `pre` element to display title of snippet on hover.

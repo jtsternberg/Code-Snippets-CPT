@@ -9,6 +9,9 @@ Adds a custom post type for managing your code snippets with taxonomies for clas
 
 ## Change Log
 
+### 1.0.4
+* BUG FIX: Remove 'html_entity_decode' around snippet output, as it will cause the page display to break under certain circumstances.
+
 ### 1.0.3
 * Replace shortcode button's usage of ids with slugs because ids can change during a migration.
 * Added filter, 'dsgnwrks_snippet_display'.

@@ -6,7 +6,7 @@ Plugin URI: http://j.ustin.co/jAHRM3
 Author: Jtsternberg
 Author URI: http://about.me/jtsternberg
 Donate link: http://j.ustin.co/rYL89n
-Version: 1.0.3
+Version: 1.0.4
 */
 
 class CodeSnippitInit {
@@ -14,7 +14,7 @@ class CodeSnippitInit {
 	protected $plugin_name = 'Code Snippets CPT';
 	protected $cpt;
 	protected $languages = array( 'Python', 'HTML', 'CSS', 'JavaScript', 'PHP', 'SQL', 'Perl', 'Ruby', 'Bash', 'C', 'HTML', 'Java', 'XHTML', 'XML', );
-	const VERSION = '1.0.2';
+	const VERSION = '1.0.4';
 
 	public static $single_instance = null;
 
@@ -168,8 +168,6 @@ class CodeSnippitInit {
 }
 
 CodeSnippitInit::get_instance();
-
-add_filter( 'dsgnwrks_snippet_content', 'html_entity_decode' );
 
 function dsgnwrks_snippet_content_replace_tabs( $snippet_content ) {
 	// Replace tabs w/ spaces as it is more readable
