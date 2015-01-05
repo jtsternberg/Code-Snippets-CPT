@@ -111,6 +111,7 @@ class Snippet_Tax_Setup {
 		$slugs = array(
 			'bsh' => 'bash',
 			'c' => 'c',
+			'c-sharp' => 'c#',
 			'cc' => '',
 			'cpp' => '',
 			'cs' => 'css',

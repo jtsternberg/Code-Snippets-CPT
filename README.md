@@ -9,6 +9,9 @@ Adds a custom post type for managing your code snippets with taxonomies for clas
 
 ## Change Log
 
+### 1.0.5
+* Add C# as available language.
+
 ### 1.0.4
 * BUG FIX: Remove 'html_entity_decode' around snippet output, as it will cause the page display to break under certain circumstances.
 

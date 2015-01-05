@@ -9,7 +9,7 @@ Author: Jtsternberg
 Tags snippets, code, code snippets, syntax highlighting, shortcode  
 Requires at least: 3.8.0  
 Tested up to: 4.1.0  
-Stable tag: 1.0.4  
+Stable tag: 1.0.5  
 License: GPLv2 or later  
 License URI: http://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -39,6 +39,9 @@ Feel free to [fork or contribute on Github](https://github.com/jtsternberg/Code-
 
 == Changelog ==
 
+= 1.0.5 =
+* Add C# as available language.
+
 = 1.0.4 =
 * BUG FIX: Remove 'html_entity_decode' around snippet output, as it will cause the page display to break under certain circumstances.
 
@@ -62,6 +65,9 @@ Feel free to [fork or contribute on Github](https://github.com/jtsternberg/Code-
 * First Release
 
 == Upgrade Notice ==
+
+= 1.0.5 =
+* Add C# as available language.
 
 = 1.0.4 =
 * BUG FIX: Remove 'html_entity_decode' around snippet output, as it will cause the page display to break under certain circumstances.

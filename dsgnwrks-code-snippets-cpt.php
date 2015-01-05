@@ -6,14 +6,30 @@ Plugin URI: http://j.ustin.co/jAHRM3
 Author: Jtsternberg
 Author URI: http://about.me/jtsternberg
 Donate link: http://j.ustin.co/rYL89n
-Version: 1.0.4
+Version: 1.0.5
 */
 
 class CodeSnippitInit {
 
 	protected $plugin_name = 'Code Snippets CPT';
 	protected $cpt;
-	protected $languages = array( 'Python', 'HTML', 'CSS', 'JavaScript', 'PHP', 'SQL', 'Perl', 'Ruby', 'Bash', 'C', 'HTML', 'Java', 'XHTML', 'XML', );
+	protected $languages = array(
+		'Python',
+		'HTML',
+		'CSS',
+		'JavaScript',
+		'PHP',
+		'SQL',
+		'Perl',
+		'Ruby',
+		'Bash',
+		'C',
+		'c-sharp' => 'C#',
+		'HTML',
+		'Java',
+		'XHTML',
+		'XML',
+	);
 	const VERSION = '1.0.4';
 
 	public static $single_instance = null;
@@ -65,9 +81,13 @@ class CodeSnippitInit {
 
 	public function add_languages() {
 		// make sure our default languages exist
-		foreach ( $this->languages as $language ) {
-			if ( ! term_exists( $language, 'languages' ) ) {
-				wp_insert_term( $language, 'languages' );
+		foreach ( $this->languages as $key => $language ) {
+			$exists = is_numeric( $key )
+				? get_term_by( 'name', $language, 'languages' )
+				: get_term_by( 'slug', $key, 'languages' );
+			if ( empty( $exists ) ) {
+				$args = ! is_numeric( $key ) ? array( 'slug' => $key ) : array();
+				wp_insert_term( $language, 'languages', $args );
 			}
 		}
 	}
