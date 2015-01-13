@@ -6,7 +6,7 @@ Plugin URI: http://j.ustin.co/jAHRM3
 Author: Jtsternberg
 Author URI: http://about.me/jtsternberg
 Donate link: http://j.ustin.co/rYL89n
-Version: 1.0.5
+Version: 1.0.6
 */
 
 class CodeSnippitInit {

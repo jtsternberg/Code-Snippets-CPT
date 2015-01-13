@@ -9,7 +9,7 @@ Author: Jtsternberg
 Tags snippets, code, code snippets, syntax highlighting, shortcode  
 Requires at least: 3.8.0  
 Tested up to: 4.1.0  
-Stable tag: 1.0.5  
+Stable tag: 1.0.6  
 License: GPLv2 or later  
 License URI: http://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -38,6 +38,11 @@ Feel free to [fork or contribute on Github](https://github.com/jtsternberg/Code-
 4. Code snippet insert button/modal
 
 == Changelog ==
+
+= 1.0.6 =
+* Add extra dialog structure to allow users to create snippets in-post, fixes [#3](https://github.com/jtsternberg/Code-Snippets-CPT/issues/3)
+* Fix rogue text-domain
+* Reset form after closing it
 
 = 1.0.5 =
 * Add C# as available language.

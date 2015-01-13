@@ -9,6 +9,11 @@ Adds a custom post type for managing your code snippets with taxonomies for clas
 
 ## Change Log
 
+### 1.0.6
+* Add extra dialog structure to allow users to create snippets in-post, fixes [#3](https://github.com/jtsternberg/Code-Snippets-CPT/issues/3)
+* Fix rogue text-domain
+* Reset form after closing it
+
 ### 1.0.5
 * Add C# as available language.
 
