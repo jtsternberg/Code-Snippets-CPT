@@ -14,21 +14,73 @@ class CodeSnippitButton {
 
 		// Set default programming language taxonomy terms
 		add_action( 'admin_init', array( $this, 'admin_init' ) );
+
+		add_action( 'wp_ajax_insert_snippet', array( $this, 'ajax_insert_snippet' ) );
 	}
 
 	public function button_script() {
 		wp_register_script( $this->script, DWSNIPPET_URL .'/lib/js/'. $this->script .'.js' , array( 'quicktags', 'wpdialogs' ), CodeSnippitInit::VERSION, true );
 		wp_localize_script( $this->script, 'codeSnippetCPT', array(
-			'buttons' => array( 'Cancel' => 'cancel', 'Insert Shortcode' => 'insert' ),
-			'button_img' => DWSNIPPET_URL .'lib/js/icon.png',
-			'button_name' => __( 'Add Snippet', 'code-snippet-cpt' ),
+			'buttons'      => array( 'Cancel' => 'cancel', 'Insert Shortcode' => 'insert' ),
+			'button_img'   => DWSNIPPET_URL .'lib/js/icon.png',
+			'button_name'  => __( 'Add Snippet', 'code-snippet-cpt' ),
 			'button_title' => __( 'Add a Code Snippet', 'code-snippet-cpt' ),
+			'snippet_nonce'   => wp_create_nonce( 'insert_snippet_post' ),
 		) );
 	}
 
 	public function admin_init() {
 		add_filter( 'mce_external_plugins', array( $this, 'add_button' ) );
 		add_filter( 'mce_buttons', array( $this, 'register_buttons' ) );
+	}
+
+	public function ajax_insert_snippet(){
+		if ( ! wp_verify_nonce( $_REQUEST['nonce'], 'insert_snippet_post' ) ){
+			wp_send_json_error( array( 'message' => __( 'Security Failure', 'code-snippet-cpt') ) );
+		}
+
+		// Need to create a new nonce.
+		$output = array( 'nonce' => wp_create_nonce( 'insert_snippet_post' ) );
+
+		$form_data = array();
+		parse_str( $_POST['form_data'], $form_data );
+
+		$title         = $form_data['new-snippet-title'];
+		$content       = $form_data['new-snippet-content'];
+		$categories    = $form_data['tax_input']['snippet-categories'];
+		$tags          = $form_data['tax_input']['snippet-tags'];
+		$language      = $form_data['snippet-language'];
+		$language_data = get_term( $language, 'languages' );
+
+		if ( is_wp_error( $language_data ) ){
+			$output['message'] = $language_data->get_error_message();
+			wp_send_json_error( $output );
+		}
+
+		$post_result = wp_insert_post( array(
+			'post_title'   => $title,
+			'post_content' => $content,
+			'post_status'  => 'publish',
+			'post_type'    => 'code-snippets',
+			'tax_input'    => array(
+				'snippet-categories' => $categories,
+				'snippet-tags'       => $tags,
+				'languages'			 => $language,
+			),
+		), true );
+
+		if( is_wp_error( $post_result ) ){
+			$output['message'] = $post_result->get_error_message();
+			wp_send_json_error( $output );
+		}
+		$post_data = get_post( $post_result );
+
+		$output['line_numbers'] = $form_data['line_numbers'];
+		$output['language']     = $this->language->language_slug( $language_data->name );
+		$output['slug']         = $post_data->post_name;
+
+		// Finally end it all
+		wp_send_json_success( $output );
 	}
 
 	public function add_button( $plugin_array ) {
@@ -93,7 +145,7 @@ class CodeSnippitButton {
 		</style>
 		<div style="display: none;" id="snippet-cpt-form" title="<?php esc_attr_e( 'Code Snippets', 'code-snippet-cpt' ); ?>">
 			<div class="snippet-cpt-errors"><p></p></div>
-			<form>
+			<form id="snippet_form">
 			<fieldset class="select_a_snippet">
 				<table>
 					<?php if ( ! empty( $snippets ) ) : ?>
@@ -145,19 +197,8 @@ class CodeSnippitButton {
 				</div>
 
 				<div>
-					<label for="snippet-content"><?php _e( 'Snippet', 'code-snippet-cpt' ); ?></label><br />
-					<hr />
-				<?php
-					$settings = array(
-						'media_buttons' => false,
-						'textarea_name'=>'snippet-content',
-						'textarea_rows' => 15,
-						'tabindex' => '4',
-						'dfw' => true,
-						'quicktags' => array( 'buttons' => 'link,ul,ol,li,close,fullscreen' )
-					);
-					wp_editor( '', 'snippet-content', $settings );
-				?>
+					<label for="new-snippet-content"><?php _e( 'Snippet', 'code-snippet-cpt' ); ?></label><br />
+					<textarea name="new-snippet-content" id="new-snippet-content" class="widefat new-snippet-content" rows="15"></textarea>
 				</div>
 				<hr />
 				<div>
