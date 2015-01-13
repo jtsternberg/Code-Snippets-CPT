@@ -79,11 +79,22 @@ class CodeSnippitButton {
 				text-align: right;
 			}
 
+			.add_new_snippet{
+				display:none;
+			}
+
+			.add_new_snippet > div{
+				margin-top: 0.5em;
+			}
+
+			.add_new_snippet label{
+				font-weight: bold;
+			}
 		</style>
 		<div style="display: none;" id="snippet-cpt-form" title="<?php esc_attr_e( 'Code Snippets', 'code-snippet-cpt' ); ?>">
 			<div class="snippet-cpt-errors"><p></p></div>
 			<form>
-			<fieldset>
+			<fieldset class="select_a_snippet">
 				<table>
 					<?php if ( ! empty( $snippets ) ) : ?>
 					<tr>
@@ -114,6 +125,84 @@ class CodeSnippitButton {
 					</tr>
 					<?php endif; ?>
 				</table>
+				<hr />
+			</fieldset>
+			<fieldset>
+				<div style="text-align:right;">
+					<input type='button' class="add_new_snippet_btn button button-secondary" value="<?php _e( 'Add New', 'code-snippet-cpt' ); ?> " />
+					<input type='button' class="cancel_new_snippet_btn button button-secondary hidden" value="<?php _e( 'Cancel', 'code-snippet-cpt' ); ?>">
+				</div>
+			</fieldset>
+			<fieldset class="add_new_snippet">
+				<div>
+					<label for="snippet-title"><?php _e( 'Snippet Title', 'code-snippet-cpt' ); ?></label><br />
+					<input type="text" name="new-snippet-title" class="new-snippet-title widefat">
+				</div>
+
+
+				<div>
+					<label for="snippet-content"><?php _e( 'Snippet', 'code-snippet-cpt' ); ?></label><br />
+					<hr />
+				<?php
+					$settings = array(
+						'media_buttons' => false,
+						'textarea_name'=>'snippet-content',
+						'textarea_rows' => 15,
+						'tabindex' => '4',
+						'dfw' => true,
+						'quicktags' => array( 'buttons' => 'link,ul,ol,li,close,fullscreen' )
+					);
+					wp_editor( '', 'snippet-content', $settings );
+				?>
+				</div>
+				<hr />
+				<div>
+					<label for="snippet-categories"><?php _e( 'Snippet Categories', 'code-snippet-cpt' ); ?></label><br />
+					<?php
+						global $post;
+						$cat_box_config = array(
+							'snippet-categories',
+							__( 'Snippet Categories', 'code-snippet-cpt' ),
+							'args' => array(
+								'taxonomy' => 'snippet-categories',
+							),
+						);
+						post_categories_meta_box( $post, $cat_box_config );
+					?>
+				</div>
+				<hr />
+				<div>
+					<label for="snippet-categories"><?php _e( 'Snippet Tags', 'code-snippet-cpt' ); ?></label><br />
+					<?php
+						global $post;
+						$cat_box_config = array(
+							'id' => 'snippet-tags',
+							'title' => __( 'Snippet Tags', 'code-snippet-cpt' ),
+							'args' => array(
+								'taxonomy' => 'snippet-tags',
+							),
+						);
+						post_tags_meta_box( $post, $cat_box_config );
+					?>
+				</div>
+				<hr />
+				<div>
+					<label for="snippet-language"><?php _e( 'Programming Language', 'code-snippet-cpt' ); ?></label>
+					<?php
+						$languages = get_terms( 'languages', array(
+							'hide_empty' => 0,
+						) );
+					?>
+					<select name="snippet-language" id="snippet-language">
+						<option value=""><?php _e( 'Select One', 'code-snippet-cpt' ); ?></option>
+					<?php if ( ! empty( $languages ) ) : ?>
+						<?php foreach ( $languages as $language ): ?>
+							<option value="<?php echo $language->term_id; ?>" data-slug="<?php echo $language->slug; ?>"><?php echo $language->name; ?></option>
+						<?php endforeach; ?>
+					<?php endif; ?>
+					</select>
+				</div>
+
 			</fieldset>
 			</form>
 		</div>
