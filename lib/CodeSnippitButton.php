@@ -103,6 +103,7 @@ class CodeSnippitButton {
 					<tr>
 						<td colspan="2">
 							<select name="snippet-cpt-posts" id="snippet-cpt-posts" value="left" class="text ui-widget-content ui-corner-all">
+								<option value=""><?php _e( 'Select a Snippet', 'code-snippet-cpt' ); ?></option>
 								<?php foreach ( $snippets as $snippet ) :
 									$lang_slug	= '';
 									if ( $has_slug = $this->language->language_slug_from_post( $snippet->ID ) ) {
@@ -115,7 +116,7 @@ class CodeSnippitButton {
 						</td>
 					</tr>
 					<tr>
-						<td class="th"><label for="snippet-cpt-line-nums"><?php _e( 'Display Line Numbers?', 'tv-msnbc' ); ?></label></td>
+						<td class="th"><label for="snippet-cpt-line-nums"><?php _e( 'Display Line Numbers?', 'code-snippet-cpt' ); ?></label></td>
 						<td><input type="checkbox" name="snippet-cpt-line-nums" id="snippet-cpt-line-nums" value="1" checked="checked" class="text ui-widget-content ui-corner-all" /></td>
 					</tr>
 
@@ -139,6 +140,9 @@ class CodeSnippitButton {
 					<input type="text" name="new-snippet-title" class="new-snippet-title widefat">
 				</div>
 
+				<div>
+					<label for="line_numbers"><input type="checkbox" name="line_numbers" id="line_numbers" value="1" checked="checked" class="text ui-widget-content ui-corner-all" /><span><?php _e( 'Display Line Numbers?', 'code-snippet-cpt' ); ?></span></label>
+				</div>
 
 				<div>
 					<label for="snippet-content"><?php _e( 'Snippet', 'code-snippet-cpt' ); ?></label><br />
