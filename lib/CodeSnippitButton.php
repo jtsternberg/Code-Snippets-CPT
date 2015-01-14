@@ -21,7 +21,7 @@ class CodeSnippitButton {
 	public function button_script() {
 		wp_register_script( $this->script, DWSNIPPET_URL .'/lib/js/'. $this->script .'.js' , array( 'quicktags', 'wpdialogs' ), CodeSnippitInit::VERSION, true );
 		wp_localize_script( $this->script, 'codeSnippetCPT', array(
-			'buttons'      => array( 'Cancel' => 'cancel', 'Insert Shortcode' => 'insert' ),
+			'buttons'      => array( 'cancel' => __( 'Cancel', 'code-snippet-cpt' ), 'insert' => __( 'Insert Shortcode', 'code-snippet-cpt' ) ),
 			'button_img'   => DWSNIPPET_URL .'lib/js/icon.png',
 			'button_name'  => __( 'Add Snippet', 'code-snippet-cpt' ),
 			'button_title' => __( 'Add a Code Snippet', 'code-snippet-cpt' ),
