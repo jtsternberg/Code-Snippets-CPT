@@ -21,11 +21,17 @@ class CodeSnippitButton {
 	public function button_script() {
 		wp_register_script( $this->script, DWSNIPPET_URL .'/lib/js/'. $this->script .'.js' , array( 'quicktags', 'wpdialogs' ), CodeSnippitInit::VERSION, true );
 		wp_localize_script( $this->script, 'codeSnippetCPT', array(
-			'buttons'      => array( 'cancel' => __( 'Cancel', 'code-snippet-cpt' ), 'insert' => __( 'Insert Shortcode', 'code-snippet-cpt' ) ),
-			'button_img'   => DWSNIPPET_URL .'lib/js/icon.png',
-			'button_name'  => __( 'Add Snippet', 'code-snippet-cpt' ),
-			'button_title' => __( 'Add a Code Snippet', 'code-snippet-cpt' ),
+			'buttons'         => array( 'cancel' => __( 'Cancel', 'code-snippet-cpt' ), 'insert' => __( 'Insert Shortcode', 'code-snippet-cpt' ) ),
+			'button_img'      => DWSNIPPET_URL .'lib/js/icon.png',
+			'button_name'     => __( 'Add Snippet', 'code-snippet-cpt' ),
+			'button_title'    => __( 'Add a Code Snippet', 'code-snippet-cpt' ),
 			'snippet_nonce'   => wp_create_nonce( 'insert_snippet_post' ),
+			'error_messages'  => array(
+				'no_title_or_content' => __( 'If you are creating a new snippet, you are required to have at minimum a title and content for the snippet.', 'code-snippet-cpt' ),
+				'general'             => __( 'There has been an error processing your request, please close the dialog and try again.', 'code-snippet-cpt' ),
+				'no_snippets'		  => __( "Silly rabbit, there are no snippets, you cannot add what doesn't exist.  Try the adding a snippet first.", 'code-snippet-cpt' ),
+				'select_a_snippet'    => __( 'You must select a snippet to add to the shortcode.', 'code-snippet-cpt' ),
+			),
 		) );
 	}
 
@@ -129,6 +135,13 @@ class CodeSnippitButton {
 			#snippet-cpt-form .th label {
 				padding-right: 9px;
 				text-align: right;
+			}
+
+			.snippet-cpt-errors p{
+				display: none;
+				background: rgba( 255, 0, 0, 0.5 );
+				padding: 5px;
+				border: 1px solid #F00;
 			}
 
 			.add_new_snippet{
