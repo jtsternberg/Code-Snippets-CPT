@@ -15,7 +15,7 @@ class CodeSnippitButton {
 		// Set default programming language taxonomy terms
 		add_action( 'admin_init', array( $this, 'admin_init' ) );
 
-		add_action( 'wp_ajax_insert_snippet', array( $this, 'ajax_insert_snippet' ) );
+		add_action( 'wp_ajax_snippetcpt_insert_snippet', array( $this, 'ajax_insert_snippet' ) );
 	}
 
 	public function button_script() {
