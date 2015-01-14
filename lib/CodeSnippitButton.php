@@ -42,7 +42,7 @@ class CodeSnippitButton {
 
 	public function ajax_insert_snippet(){
 		if ( ! wp_verify_nonce( $_REQUEST['nonce'], 'insert_snippet_post' ) ){
-			wp_send_json_error( array( 'message' => __( 'Security Failure', 'code-snippet-cpt') ) );
+			wp_send_json_error( array( 'message' => __( 'Security Failure', 'code-snippet-cpt' ) ) );
 		}
 
 		// Need to create a new nonce.
@@ -75,7 +75,7 @@ class CodeSnippitButton {
 			),
 		), true );
 
-		if( is_wp_error( $post_result ) ){
+		if ( is_wp_error( $post_result ) ){
 			$output['message'] = $post_result->get_error_message();
 			wp_send_json_error( $output );
 		}
