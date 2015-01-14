@@ -59,7 +59,7 @@ class CodeSnippitButton {
 		$language_data = get_term( $language, 'languages' );
 
 		if ( is_wp_error( $language_data ) ){
-			$output['message'] = $language_data->get_error_message();
+			$output['message'] = __( 'Make sure you select a language for this snippet.', 'code-snippet-cpt' );
 			wp_send_json_error( $output );
 		}
 
@@ -155,6 +155,26 @@ class CodeSnippitButton {
 			.add_new_snippet label{
 				font-weight: bold;
 			}
+
+			.snippet-overlay{
+				display:none;
+				position: absolute;
+				top: 0;
+				left: 0;
+				height: 100%;
+				width: 100%;
+				background-color: rgba( 0,0,0,0.25 );
+			}
+
+			.snippet-overlay img{
+				position: absolute;
+				top: 0;
+				left: 0;
+				bottom: 0;
+				right: 0;
+				margin: auto;
+			}
+
 		</style>
 		<div style="display: none;" id="snippet-cpt-form" title="<?php esc_attr_e( 'Code Snippets', 'code-snippet-cpt' ); ?>">
 			<div class="snippet-cpt-errors"><p></p></div>
@@ -263,6 +283,9 @@ class CodeSnippitButton {
 
 			</fieldset>
 			</form>
+			<div class="snippet-overlay">
+				<img src="<?php echo plugins_url( '/css/ajax-loader.gif', __FILE__ ); ?>" height="32" width="32" >
+			</div>
 		</div>
 		<?php
 	}
