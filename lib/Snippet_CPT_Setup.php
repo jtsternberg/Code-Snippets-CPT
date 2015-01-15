@@ -134,17 +134,17 @@ class Snippet_CPT_Setup {
 	}
 
 	public function ace_scripts(){
-
 		$current_user = wp_get_current_user();
 		wp_enqueue_style( 'ace_css' );
 		wp_enqueue_script( 'ace_editor' );
 		wp_localize_script( 'snippet-cpt-admin-js', 'ace_editor_globals', array(
-			'nonce' => wp_create_nonce( 'ace_editor_nonce' ),
+			'nonce'  => wp_create_nonce( 'ace_editor_nonce' ),
 			'labels' => array(
 				'default' => __( 'Change Theme:', 'code-snippets-cpt' ),
-				'saving' => __( 'Saving...', 'code-snippets-cpt' ),
+				'saving'  => __( 'Saving...', 'code-snippets-cpt' ),
 			),
-			'theme' => get_user_meta( $current_user->ID, 'snippetscpt-ace-editor-theme', true ),
+			'theme'  => get_user_meta( $current_user->ID, 'snippetscpt-ace-editor-theme', true ),
+			'default_lang' => apply_filters( 'snippetcpt_default_ace_lang', 'text' ),
 		) );
 		wp_enqueue_script( 'snippet-cpt-admin-js' );
 	}

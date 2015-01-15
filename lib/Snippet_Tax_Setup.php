@@ -85,15 +85,15 @@ class Snippet_Tax_Setup {
 		}
 
 		echo "<div style='margin-bottom: 5px;'>",
-		"<select name='tax_input[". $this->slug ."][]'>";
+		"<select name='tax_input[". $this->slug ."][]' class='snippetcpt-language-selector'>";
 
 		foreach ( $terms as $term ) {
-
+			$ace_data = $this->lang_slug_ace_association( $term->slug );
 			echo "<option value='" . $term->term_id . "'";
 			if ( !empty( $existing ) && in_array( $term->term_id, $existing ) ) {
 				echo " selected";
 			}
-			echo ">" . $term->name . "</option>";
+			echo " data-language='$ace_data'>" . $term->name . "</option>";
 		}
 		echo "</select></div>\n";
 
@@ -137,6 +137,36 @@ class Snippet_Tax_Setup {
 		);
 		$key = array_search( $slug_to_check, $slugs );
 		return $key ? $key : $slug_to_check;
+	}
+
+	public function lang_slug_ace_association( $slug_to_check ){
+		$slug_to_check = sanitize_html_class( strtolower( $slug_to_check ) );
+		$slugs = apply_filters( 'snippetcpt_ace_lang_associations', array(
+			'python' => '',
+			'html' => '',
+			'css' => '',
+			'javascript' => '',
+			'php' => '',
+			'sql' => '',
+			'perl' => '',
+			'ruby' => '',
+			'c' => 'c_cpp',
+			'c-sharp' => 'csharp',
+			'java' => '',
+			'xhtml' => '',
+			'xml' => '',
+		) );
+		// Defautl text
+		$output = apply_filters( 'snippetcpt_default_ace_lang', 'text' );
+		if ( array_key_exists( $slug_to_check, $slugs ) ){
+			if( !empty( $slugs[ $slug_to_check ] ) ){
+				// We have a re-write value, so use it
+				$output = $slugs[ $slug_to_check ];
+			} else {
+				$output = $slug_to_check;
+			}
+		}
+		return $output;
 	}
 
 	public function get_lang( $post_id ) {
