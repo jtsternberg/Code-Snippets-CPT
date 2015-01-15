@@ -25,7 +25,11 @@ class Snippet_CPT_Setup {
 		add_action( 'add_meta_boxes', array( $this, 'meta_boxes' ) );
 		add_filter( 'gettext', array( $this, 'text' ), 20, 2 );
 		add_action( 'init', array( $this, 'register_scripts_styles' ) );
-		// add_action( 'admin_enqueue_scripts', array( $this, 'maybe_enqueue' ) );
+		//add_action( 'admin_enqueue_scripts', array( $this, 'maybe_enqueue' ) );
+
+		add_action( 'admin_enqueue_scripts', array( $this, 'ace_scripts' ) );
+		add_action( 'wp_ajax_snippetscpt-ace-ajax', array( $this, 'ace_ajax' ) );
+
 		add_action( 'template_redirect', array( $this, 'remove_filter' ) );
 		add_filter( 'the_content', array( $this, 'prettify_content' ), 20, 2 );
 
@@ -124,6 +128,49 @@ class Snippet_CPT_Setup {
 		wp_register_script( 'prettify', DWSNIPPET_URL .'lib/js/prettify.js', null, '1.0' );
 		wp_register_style( 'prettify', DWSNIPPET_URL .'lib/css/prettify.css', null, '1.0' );
 		wp_register_style( 'prettify-plus', DWSNIPPET_URL .'lib/css/prettify-plus.css', null, '1.0' );
+		wp_register_style( 'ace_css', DWSNIPPET_URL .'lib/css/ace.css', null, '1.0' );
+		wp_register_script( 'ace_editor', DWSNIPPET_URL . 'lib/ace/src-min-noconflict/ace.js', array( 'jquery' ), '1.0', true );
+		wp_register_script( 'snippet-cpt-admin-js', DWSNIPPET_URL . 'lib/js/code-snippet-admin.js', array( 'jquery', 'ace_editor' ), '1.0', true );
+	}
+
+	public function ace_scripts(){
+
+		$current_user = wp_get_current_user();
+		wp_enqueue_style( 'ace_css' );
+		wp_enqueue_script( 'ace_editor' );
+		wp_localize_script( 'snippet-cpt-admin-js', 'ace_editor_globals', array(
+			'nonce' => wp_create_nonce( 'ace_editor_nonce' ),
+			'labels' => array(
+				'default' => __( 'Change Theme:', 'code-snippets-cpt' ),
+				'saving' => __( 'Saving...', 'code-snippets-cpt' ),
+			),
+			'theme' => get_user_meta( $current_user->ID, 'snippetscpt-ace-editor-theme', true ),
+		) );
+		wp_enqueue_script( 'snippet-cpt-admin-js' );
+	}
+
+	public function ace_ajax(){
+		if( ! wp_verify_nonce( $_REQUEST['nonce'], 'ace_editor_nonce' ) ){
+			wp_send_json_error( array(
+				'message' => __( 'Security failure', 'code-snippets-cpt' ),
+			) );
+		}
+
+		$current_user = wp_get_current_user();
+		$new_theme = $_POST['theme'];
+		$nonce = wp_create_nonce( 'ace_editor_nonce' );
+		$result = update_user_meta( $current_user->ID, 'snippetscpt-ace-editor-theme', $new_theme );
+		if ( false === $result ){
+			wp_send_json_error( array(
+				'nonce' => $nonce,
+				'message' => __( 'Error inserting user data', 'code-snippets-cpt' ),
+			) );
+		}
+
+		wp_send_json_success( array(
+			'nonce' => $nonce,
+			'theme' => $new_theme,
+		) );
 	}
 
 	public function maybe_enqueue() {
@@ -131,6 +178,7 @@ class Snippet_CPT_Setup {
 		if ( ! $screen || ! isset( $screen->id ) || 'code-snippets' != $screen->id ) {
 			return;
 		}
+			
 		$this->enqueue_prettify();
 	}
 
@@ -138,7 +186,6 @@ class Snippet_CPT_Setup {
 		wp_enqueue_script( 'prettify' );
 		wp_enqueue_style( 'prettify' );
 		wp_enqueue_style( 'prettify-plus' );
-		add_action( 'wp_footer', array( $this, 'run_js' ) );
 	}
 
 	public function run_js() {
@@ -217,16 +264,90 @@ class Snippet_CPT_Setup {
 	}
 
 	public function content_editor_meta_box( $post ) {
-		$settings = array(
-			'media_buttons' => false,
-			'textarea_name'=>'content',
-			'textarea_rows' => 30,
-			'tabindex' => '4',
-			'dfw' => true,
-			'quicktags' => array( 'buttons' => 'link,ul,ol,li,close,fullscreen' )
-		);
-		wp_editor( $post->post_content, 'content', $settings );
+		$content = ! empty( $post->post_content ) ? $post->post_content : '';
+		?>
+		<div class="ace_editor_settings">
+			<label for="ace_theme_settings" id="ace_label"><?php _e( 'Change Theme:', 'code-snippets-cpt' ); ?></label>
+			<select id="ace_theme_settings" size="1">          
+				<?php echo $this->ace_theme_selector_options(); ?>
+			</select>
+		</div>
+		<div id="snippet-content"><?php echo $content; ?></div>
+		<textarea name="content" class="widefat snippet-main-content" class="hidden"><?php echo $content; ?></textarea>
+		<?php
+	}
 
+	/**
+	 * Ace theme selector options
+	 *
+	 * Put this in it's own method so we can add/remove themes more easily should
+	 * the ACE devs decide to include more.  Also added a filter so others can hook
+	 * into the available themes to add/remove them on a user by user basis.
+	 * 
+	 * @return string HTML Option Selectors
+	 */
+	public function ace_theme_selector_options(){
+
+		$current_user = wp_get_current_user();
+		$theme = get_user_meta( $current_user->ID, 'snippetscpt-ace-editor-theme', true );
+
+		$available_themes = apply_filters( 'snippetcpts_available_ace_themes', array(
+			array(
+				'label' => __( 'Bright', 'code-snippets-cpt' ),
+				'options' => array(
+					'ace/theme/chrome'          => __( 'Chrome', 'code-snippets-cpt' ), 
+					'ace/theme/clouds'          => __( 'Clouds', 'code-snippets-cpt' ), 
+					'ace/theme/crimson_editor'  => __( 'Crimson Editor', 'code-snippets-cpt' ), 
+					'ace/theme/dawn'            => __( 'Dawn', 'code-snippets-cpt' ), 
+					'ace/theme/dreamweaver'     => __( 'Dreamweaver', 'code-snippets-cpt' ), 
+					'ace/theme/eclipse'         => __( 'Eclipse', 'code-snippets-cpt' ), 
+					'ace/theme/github'          => __( 'GitHub', 'code-snippets-cpt' ), 
+					'ace/theme/solarized_light' => __( 'Solarized Light', 'code-snippets-cpt' ), 
+					'ace/theme/textmate'        => __( 'TextMate', 'code-snippets-cpt' ), 
+					'ace/theme/tomorrow'        => __( 'Tomorrow', 'code-snippets-cpt' ), 
+					'ace/theme/xcode'           => __( 'XCode', 'code-snippets-cpt' ), 
+					'ace/theme/kuroir'          => __( 'Kuroir', 'code-snippets-cpt' ), 
+					'ace/theme/katzenmilch'     => __( 'KatzenMilch', 'code-snippets-cpt' ), 
+				),
+			),
+			array(
+				'label' => __( 'Dark', 'code-snippets-cpt' ),
+				'options' => array(
+					'ace/theme/ambiance'                => __( 'Ambiance', 'code-snippets-cpt' ),
+					'ace/theme/chaos'                   => __( 'Chaos', 'code-snippets-cpt' ),
+					'ace/theme/clouds_midnight'         => __( 'Clouds Midnight', 'code-snippets-cpt' ),
+					'ace/theme/cobalt'                  => __( 'Cobalt', 'code-snippets-cpt' ),
+					'ace/theme/idle_fingers'            => __( 'idle Fingers', 'code-snippets-cpt' ),
+					'ace/theme/kr_theme'                => __( 'krTheme', 'code-snippets-cpt' ),
+					'ace/theme/merbivore'               => __( 'Merbivore', 'code-snippets-cpt' ),
+					'ace/theme/merbivore_soft'          => __( 'Merbivore Soft', 'code-snippets-cpt' ),
+					'ace/theme/mono_industrial'         => __( 'Mono Industrial', 'code-snippets-cpt' ),
+					'ace/theme/monokai'                 => __( 'Monokai', 'code-snippets-cpt' ),
+					'ace/theme/pastel_on_dark'          => __( 'Pastel on dark', 'code-snippets-cpt' ),
+					'ace/theme/solarized_dark'          => __( 'Solarized Dark', 'code-snippets-cpt' ),
+					'ace/theme/terminal'                => __( 'Terminal', 'code-snippets-cpt' ),
+					'ace/theme/tomorrow_night'          => __( 'Tomorrow Night', 'code-snippets-cpt' ),
+					'ace/theme/tomorrow_night_blue'     => __( 'Tomorrow Night Blue', 'code-snippets-cpt' ),
+					'ace/theme/tomorrow_night_bright'   => __( 'Tomorrow Night Bright', 'code-snippets-cpt' ),
+					'ace/theme/tomorrow_night_eighties' => __( 'Tomorrow Night 80s', 'code-snippets-cpt' ),
+					'ace/theme/twilight'                => __( 'Twilight', 'code-snippets-cpt' ),
+					'ace/theme/vibrant_ink'             => __( 'Vibrant Ink', 'code-snippets-cpt' ),
+				),
+			),
+		) );
+
+		$output = '';
+		foreach ( $available_themes as $theme_group ){
+			$options = $theme_group['options'];
+			$output .= "<optgroup label='{$theme_group['label']}' >";
+			foreach ( $options as $value => $name ){
+				$selected = selected( $theme, $value, false );
+				$output .= "<option value='$value' $selected >$name</option>";
+			}
+			$output .= "</optgroup>";
+		}
+
+		return $output;
 	}
 
 	public function prettify_content( $content ) {

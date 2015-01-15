@@ -1,0 +1,22 @@
+/* ACE Custom CSS */
+.ace_editor{
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	height: 500px;
+}
+
+textarea.snippet-main-content{
+	display:none;
+}
+
+.ace_editor_settings{
+	margin-bottom: 5px;
+	text-align: right;
+}
+
+.ace_editor_settings label{
+	font-weight: bold;
+}
