@@ -129,7 +129,7 @@ class Snippet_CPT_Setup {
 		wp_register_style( 'prettify', DWSNIPPET_URL .'lib/css/prettify.css', null, '1.0' );
 		wp_register_style( 'prettify-plus', DWSNIPPET_URL .'lib/css/prettify-plus.css', null, '1.0' );
 		wp_register_style( 'ace_css', DWSNIPPET_URL .'lib/css/ace.css', null, '1.0' );
-		wp_register_script( 'ace_editor', DWSNIPPET_URL . 'lib/ace/src-min-noconflict/ace.js', array( 'jquery' ), '1.0', true );
+		wp_register_script( 'ace_editor', DWSNIPPET_URL . 'lib/js/ace/src-min-noconflict/ace.js', array( 'jquery' ), '1.0', true );
 		wp_register_script( 'snippet-cpt-admin-js', DWSNIPPET_URL . 'lib/js/code-snippet-admin.js', array( 'jquery', 'ace_editor' ), '1.0', true );
 	}
 
