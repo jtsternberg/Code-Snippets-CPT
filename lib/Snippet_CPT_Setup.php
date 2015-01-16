@@ -28,7 +28,9 @@ class Snippet_CPT_Setup {
 		//add_action( 'admin_enqueue_scripts', array( $this, 'maybe_enqueue' ) );
 
 		add_action( 'admin_enqueue_scripts', array( $this, 'ace_scripts' ) );
+		add_action( 'wp_enqueue_scripts', array( $this, 'ace_front_end_scripts' ) );
 		add_action( 'wp_ajax_snippetscpt-ace-ajax', array( $this, 'ace_ajax' ) );
+		add_filter( 'dsgnwrks_snippet_display', array( $this, 'snippet_controller' ), 10, 3 );
 
 		add_action( 'template_redirect', array( $this, 'remove_filter' ) );
 		add_filter( 'the_content', array( $this, 'prettify_content' ), 20, 2 );
@@ -120,17 +122,18 @@ class Snippet_CPT_Setup {
 
 	public function remove_filter() {
 		if ( get_post_type() != $this->post_type ) return;
-		remove_filter('the_content', 'wptexturize');
-		remove_filter ('the_content','wpautop');
+		remove_filter ( 'the_content', 'wptexturize' );
+		remove_filter ( 'the_content','wpautop' );
 	}
 
 	public function register_scripts_styles() {
 		wp_register_script( 'prettify', DWSNIPPET_URL .'lib/js/prettify.js', null, '1.0' );
 		wp_register_style( 'prettify', DWSNIPPET_URL .'lib/css/prettify.css', null, '1.0' );
 		wp_register_style( 'prettify-plus', DWSNIPPET_URL .'lib/css/prettify-plus.css', null, '1.0' );
-		wp_register_style( 'ace_css', DWSNIPPET_URL .'lib/css/ace.css', null, '1.0' );
+		wp_register_style( 'ace_css', DWSNIPPET_URL .'lib/css/ace.css', array( 'dashicons' ), '1.0' );
 		wp_register_script( 'ace_editor', DWSNIPPET_URL . 'lib/js/ace/src-min-noconflict/ace.js', array( 'jquery' ), '1.0', true );
 		wp_register_script( 'snippet-cpt-admin-js', DWSNIPPET_URL . 'lib/js/code-snippet-admin.js', array( 'jquery', 'ace_editor' ), '1.0', true );
+		wp_register_script( 'snippet-cpt-js', DWSNIPPET_URL . 'lib/js/code-snippet-ace.js', array( 'jquery', 'ace_editor' ), '1.0', true );
 	}
 
 	public function ace_scripts(){
@@ -147,6 +150,18 @@ class Snippet_CPT_Setup {
 			'default_lang' => apply_filters( 'snippetcpt_default_ace_lang', 'text' ),
 		) );
 		wp_enqueue_script( 'snippet-cpt-admin-js' );
+	}
+
+	public function ace_front_end_scripts(){
+		$current_user = wp_get_current_user();
+		wp_enqueue_style( 'ace_css' );
+		wp_enqueue_script( 'ace_editor' );
+		wp_localize_script( 'snippet-cpt-js', 'ace_editor_front_end_globals', array(
+			'theme'  => get_user_meta( $current_user->ID, 'snippetscpt-ace-editor-theme', true ),
+			'default_theme' => apply_filters( 'snippetcpt_default_ace_theme', 'ace/theme/monokai' ),
+			'default_lang' => apply_filters( 'snippetcpt_default_ace_lang', 'text' ),
+		) );
+		wp_enqueue_script( 'snippet-cpt-js' );
 	}
 
 	public function ace_ajax(){
@@ -171,6 +186,33 @@ class Snippet_CPT_Setup {
 			'nonce' => $nonce,
 			'theme' => $new_theme,
 		) );
+	}
+
+	/**
+	 * Snippet Controller
+	 * So far will only collapse the snippet and show/hide
+	 * line numbers. But should do WAY more.
+	 * @param  string 	$output      	HTML Output of original shortcode
+	 * @param  array 	$atts        	shortcode attributes
+	 * @param  obj 		$snippet_obj 	post object similar to get_post
+	 * @return string              		HTML output for display.
+	 */
+	public function snippet_controller( $output, $atts, $snippet_obj ){
+
+		
+		$tmp  = '<div class="snippetcpt-ace-controller">';
+
+		if ( $atts['title_attr'] && ! in_array( $atts['title_attr'], array( 'no', 'false' ), true ) ) {
+			$title_attr = esc_attr( $snippet_obj->post_title );
+			$tmp .= '	<div class="snippetcpt_title">' . $title_attr . '</div>';
+		}
+
+		$tmp .= '	<div class="snippetcpt_controls">';
+		$tmp .= '		<a href="#" class="dashicons dashicons-sort collapse"></a>';
+		$tmp .= '		<a href="#" class="dashicons dashicons-editor-ol line_numbers"></a>';
+		$tmp .= '	</div>';
+		$tmp .= '</div>';
+		return $tmp.$output;
 	}
 
 	public function maybe_enqueue() {
