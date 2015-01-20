@@ -42,3 +42,7 @@ textarea.snippet-main-content{
 	float: left;
 	margin: 0 0.2em;
 }
+
+.snippetcpt-ace-controller .snippetcpt_controls{
+	display: none;
+}
