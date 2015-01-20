@@ -146,6 +146,7 @@ class Snippet_Tax_Setup {
 			'html' => '',
 			'css' => '',
 			'javascript' => '',
+			'js' => 'javascript',
 			'php' => '',
 			'sql' => '',
 			'perl' => '',
@@ -157,9 +158,9 @@ class Snippet_Tax_Setup {
 			'xml' => '',
 		) );
 		// Defautl text
-		$output = apply_filters( 'snippetcpt_default_ace_lang', 'text' );
+		$output = apply_filters( 'snippetcpt_default_ace_lang', $slug_to_check );
 		if ( array_key_exists( $slug_to_check, $slugs ) ){
-			if( !empty( $slugs[ $slug_to_check ] ) ){
+			if ( ! empty( $slugs[ $slug_to_check ] ) ){
 				// We have a re-write value, so use it
 				$output = $slugs[ $slug_to_check ];
 			} else {

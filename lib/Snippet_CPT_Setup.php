@@ -73,7 +73,7 @@ class Snippet_CPT_Setup {
 	public function messages( $messages ) {
 		global $post, $post_ID;
 
-		$messages[$this->post_type] = array(
+		$messages[ $this->post_type ] = array(
 			0 => '', // Unused. Messages start at index 1.
 			1 => sprintf( __( '%1$s updated. <a href="%2$s">View %1$s</a>' ), $this->singular, esc_url( get_permalink( $post_ID ) ) ),
 			2 => __( 'Custom field updated.' ),
@@ -107,7 +107,7 @@ class Snippet_CPT_Setup {
 
 	public function columns_display( $column ) {
 		global $post;
-		switch ($column) {
+		switch ( $column ) {
 			case 'syntax_languages':
 				$this->taxonomy_column( $post, 'languages', 'Languages' );
 			break;
@@ -121,9 +121,11 @@ class Snippet_CPT_Setup {
 	}
 
 	public function remove_filter() {
-		if ( get_post_type() != $this->post_type ) return;
-		remove_filter ( 'the_content', 'wptexturize' );
-		remove_filter ( 'the_content','wpautop' );
+		if ( get_post_type() != $this->post_type ){
+			return;
+		}
+		remove_filter( 'the_content', 'wptexturize' );
+		remove_filter( 'the_content','wpautop' );
 	}
 
 	public function register_scripts_styles() {
@@ -201,7 +203,7 @@ class Snippet_CPT_Setup {
 
 		$tmp  = '<div class="snippetcpt-ace-controller">';
 		$tmp .= '	<div class="snippetcpt_controls">';
-		
+
 		if ( $atts['title_attr'] && ! in_array( $atts['title_attr'], array( 'no', 'false' ), true ) ) {
 			$title_attr = esc_attr( $snippet_obj->post_title );
 			$tmp .= '	<div class="snippetcpt_title">' . $title_attr . '</div>';
