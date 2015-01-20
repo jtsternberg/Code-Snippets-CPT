@@ -165,7 +165,7 @@ class Snippet_CPT_Setup {
 	}
 
 	public function ace_ajax(){
-		if( ! wp_verify_nonce( $_REQUEST['nonce'], 'ace_editor_nonce' ) ){
+		if ( ! wp_verify_nonce( $_REQUEST['nonce'], 'ace_editor_nonce' ) ){
 			wp_send_json_error( array(
 				'message' => __( 'Security failure', 'code-snippets-cpt' ),
 			) );
@@ -199,7 +199,6 @@ class Snippet_CPT_Setup {
 	 */
 	public function snippet_controller( $output, $atts, $snippet_obj ){
 
-		
 		$tmp  = '<div class="snippetcpt-ace-controller">';
 
 		if ( $atts['title_attr'] && ! in_array( $atts['title_attr'], array( 'no', 'false' ), true ) ) {
@@ -211,18 +210,19 @@ class Snippet_CPT_Setup {
 		$tmp .= '		<a href="#" class="dashicons dashicons-sort collapse"></a>';
 		$tmp .= '		<a href="#" class="dashicons dashicons-editor-ol line_numbers"></a>';
 		$tmp .= '	</div>';
+		$tmp .= $output;
 		$tmp .= '</div>';
-		return $tmp.$output;
+		return $tmp;
 	}
 
-	public function maybe_enqueue() {
-		$screen = get_current_screen();
-		if ( ! $screen || ! isset( $screen->id ) || 'code-snippets' != $screen->id ) {
-			return;
-		}
-			
-		$this->enqueue_prettify();
-	}
+	// public function maybe_enqueue() {
+	// 	$screen = get_current_screen();
+	// 	if ( ! $screen || ! isset( $screen->id ) || 'code-snippets' != $screen->id ) {
+	// 		return;
+	// 	}
+
+	// 	$this->enqueue_prettify();
+	// }
 
 	public function enqueue_prettify() {
 		wp_enqueue_script( 'prettify' );
