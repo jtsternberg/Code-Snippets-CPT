@@ -200,13 +200,13 @@ class Snippet_CPT_Setup {
 	public function snippet_controller( $output, $atts, $snippet_obj ){
 
 		$tmp  = '<div class="snippetcpt-ace-controller">';
-
+		$tmp .= '	<div class="snippetcpt_controls">';
+		
 		if ( $atts['title_attr'] && ! in_array( $atts['title_attr'], array( 'no', 'false' ), true ) ) {
 			$title_attr = esc_attr( $snippet_obj->post_title );
 			$tmp .= '	<div class="snippetcpt_title">' . $title_attr . '</div>';
 		}
 
-		$tmp .= '	<div class="snippetcpt_controls">';
 		$tmp .= '		<a href="#" class="dashicons dashicons-sort collapse"></a>';
 		$tmp .= '		<a href="#" class="dashicons dashicons-editor-ol line_numbers"></a>';
 		$tmp .= '	</div>';
