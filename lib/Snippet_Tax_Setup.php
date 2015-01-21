@@ -13,8 +13,9 @@ class Snippet_Tax_Setup {
 
 	public function __construct( $singular, $plural = '', $object_types, $args = array() ) {
 
-		if( ! $singular )
+		if ( ! $singular ){
 			wp_die( 'No taxonomy ID given' );
+		}
 
 		$this->singular     = $singular;
 		$this->plural       = ( empty( $plural ) ) ? $singular .'s' : $plural;
@@ -29,23 +30,23 @@ class Snippet_Tax_Setup {
 	public function tax_loop() {
 
 		$labels = array(
-			'name' => $this->plural,
-			'singular_name' => $this->singular,
-			'search_items' =>  'Search '.$this->plural,
-			'all_items' => 'All '.$this->plural,
-			'parent_item' => 'Parent '.$this->singular,
+			'name'              => $this->plural,
+			'singular_name'     => $this->singular,
+			'search_items'      => 'Search '.$this->plural,
+			'all_items'         => 'All '.$this->plural,
+			'parent_item'       => 'Parent '.$this->singular,
 			'parent_item_colon' => 'Parent '.$this->singular.':',
-			'edit_item' => 'Edit '.$this->singular,
-			'update_item' => 'Update '.$this->singular,
-			'add_new_item' => 'Add New '.$this->singular,
-			'new_item_name' => 'New '.$this->singular.' Name',
+			'edit_item'         => 'Edit '.$this->singular,
+			'update_item'       => 'Update '.$this->singular,
+			'add_new_item'      => 'Add New '.$this->singular,
+			'new_item_name'     => 'New '.$this->singular.' Name',
 		);
 		$defaults = array(
 			'hierarchical' => true,
-			'labels' => $labels,
-			'show_ui' => true,
-			'query_var' => true,
-			'rewrite' => array( 'slug' => $this->slug ),
+			'labels'       => $labels,
+			'show_ui'      => true,
+			'query_var'    => true,
+			'rewrite'      => array( 'slug' => $this->slug ),
 		);
 
 		$args = wp_parse_args( $this->args, $defaults );
@@ -69,16 +70,15 @@ class Snippet_Tax_Setup {
 
 	public function select_box() {
 
-		echo '<input type="hidden" name="taxonomy_noncename" id="taxonomy_noncename" value="' .
-		wp_create_nonce( 'taxonomy_'. $this->slug ) . '" />';
+		wp_nonce_field( 'taxonomy_' . $this->slug , 'taxonomy_noncename' );
 
-		$checked = $editor_picks_checked = "";
+		$checked = $editor_picks_checked = '';
 		// Get all blog taxonomy terms
-		$terms = get_terms( $this->slug, 'hide_empty=0');
-		$names = wp_get_object_terms( get_the_ID(), $this->slug);
+		$terms = get_terms( $this->slug, 'hide_empty=0' );
+		$names = wp_get_object_terms( get_the_ID(), $this->slug );
 
 		$existing = array();
-		if ( !is_wp_error( $names ) && !empty( $names ) ) {
+		if ( ! is_wp_error( $names ) && ! empty( $names ) ) {
 			foreach ( $names as $name ) {
 				$existing[] = $name->term_id;
 			}
