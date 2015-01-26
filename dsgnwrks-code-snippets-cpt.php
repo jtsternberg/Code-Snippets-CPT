@@ -16,7 +16,7 @@ class CodeSnippitInit {
 	protected $plugin_name = 'Code Snippets CPT';
 	protected $cpt;
 	public static $single_instance = null;
-	
+
 	protected $languages = array(
 		'abap'         => 'ABAP',
 		'actionscript' => 'ActionScript',
@@ -265,8 +265,6 @@ class CodeSnippitInit {
 		if ( empty( $snippet->post_content ) ) {
 			return;
 		}
-
-		//$this->cpt->enqueue_prettify();
 
 		$class = 'snippetcpt-ace-viewer';
 

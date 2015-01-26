@@ -19,7 +19,7 @@ A WordPress plugin for managing and displaying code snippets.
 
 A WordPress plugin for managing and displaying code snippets
 
-Adds a custom post type for managing your code snippets with taxonomies for classifying the snippets. Embed snippets with syntax highlighting to posts or pages via a handy shortcode insert button that allows you to pick from the most recent snippets. Syntax highlighting provided by the [Prettify javascript library](https://code.google.com/p/google-code-prettify/).
+Adds a custom post type for managing your code snippets with taxonomies for classifying the snippets. Embed snippets with syntax highlighting to posts or pages via a handy shortcode insert button that allows you to pick from the most recent snippets. Syntax highlighting provided by the [Ace Code Editor](http://ace.c9.io/#nav=about).
 
 Feel free to [fork or contribute on Github](https://github.com/jtsternberg/Code-Snippets-CPT).
 

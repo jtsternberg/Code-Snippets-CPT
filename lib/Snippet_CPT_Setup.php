@@ -25,7 +25,6 @@ class Snippet_CPT_Setup {
 		add_action( 'add_meta_boxes', array( $this, 'meta_boxes' ) );
 		add_filter( 'gettext', array( $this, 'text' ), 20, 2 );
 		add_action( 'init', array( $this, 'register_scripts_styles' ) );
-		//add_action( 'admin_enqueue_scripts', array( $this, 'maybe_enqueue' ) );
 
 		add_action( 'admin_enqueue_scripts', array( $this, 'ace_scripts' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'ace_front_end_scripts' ) );
@@ -33,7 +32,6 @@ class Snippet_CPT_Setup {
 		add_filter( 'dsgnwrks_snippet_display', array( $this, 'snippet_controller' ), 10, 3 );
 
 		add_action( 'template_redirect', array( $this, 'remove_filter' ) );
-		add_filter( 'the_content', array( $this, 'prettify_content' ), 20, 2 );
 
 	}
 
@@ -129,9 +127,6 @@ class Snippet_CPT_Setup {
 	}
 
 	public function register_scripts_styles() {
-		wp_register_script( 'prettify', DWSNIPPET_URL .'lib/js/prettify.js', null, '1.0' );
-		wp_register_style( 'prettify', DWSNIPPET_URL .'lib/css/prettify.css', null, '1.0' );
-		wp_register_style( 'prettify-plus', DWSNIPPET_URL .'lib/css/prettify-plus.css', null, '1.0' );
 		wp_register_style( 'ace_css', DWSNIPPET_URL .'lib/css/ace.css', array( 'dashicons' ), '1.0' );
 		wp_register_script( 'ace_editor', DWSNIPPET_URL . 'lib/js/ace/src-min-noconflict/ace.js', array( 'jquery' ), '1.0', true );
 		wp_register_script( 'snippet-cpt-admin-js', DWSNIPPET_URL . 'lib/js/code-snippet-admin.js', array( 'jquery', 'ace_editor' ), '1.0', true );
@@ -215,21 +210,6 @@ class Snippet_CPT_Setup {
 		$tmp .= $output;
 		$tmp .= '</div>';
 		return $tmp;
-	}
-
-	// public function maybe_enqueue() {
-	// 	$screen = get_current_screen();
-	// 	if ( ! $screen || ! isset( $screen->id ) || 'code-snippets' != $screen->id ) {
-	// 		return;
-	// 	}
-
-	// 	$this->enqueue_prettify();
-	// }
-
-	public function enqueue_prettify() {
-		wp_enqueue_script( 'prettify' );
-		wp_enqueue_style( 'prettify' );
-		wp_enqueue_style( 'prettify-plus' );
 	}
 
 	public function run_js() {
@@ -392,12 +372,6 @@ class Snippet_CPT_Setup {
 		}
 
 		return $output;
-	}
-
-	public function prettify_content( $content ) {
-		if ( get_post_type() != $this->post_type ) return $content;
-
-		return '<pre class="prettyprint linenums">'. htmlentities( $content ) .'</pre>';
 	}
 
 	public function __get( $property ) {
