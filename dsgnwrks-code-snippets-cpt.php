@@ -11,8 +11,12 @@ Version: 1.0.5
 
 class CodeSnippitInit {
 
+	const VERSION = '1.0.4';
+
 	protected $plugin_name = 'Code Snippets CPT';
 	protected $cpt;
+	public static $single_instance = null;
+	
 	protected $languages = array(
 		'abap'         => 'ABAP',
 		'actionscript' => 'ActionScript',
@@ -134,9 +138,6 @@ class CodeSnippitInit {
 		'xquery'       => 'XQuery',
 		'yaml'         => 'YAML',
 	);
-	const VERSION = '1.0.4';
-
-	public static $single_instance = null;
 
 	/**
 	 * Creates or returns an instance of this class.
@@ -183,7 +184,10 @@ class CodeSnippitInit {
 		add_filter( 'content_save_pre', array( $this, 'allow_unfiltered' ), 5 );
 	}
 
+
+
 	public function add_languages() {
+		$this->version_check();
 		// make sure our default languages exist
 		foreach ( $this->languages as $key => $language ) {
 			$exists = is_numeric( $key )
@@ -194,6 +198,28 @@ class CodeSnippitInit {
 				wp_insert_term( $language, 'languages', $args );
 			}
 		}
+	}
+
+	public function version_check(){
+		$current_version = get_option( 'dsgnwrks_snippetcpt_version' );
+		if ( $current_version !== self::VERSION ){
+			$this->update();
+		}
+	}
+
+	function update(){
+		$terms = get_terms( 'languages', array(
+			'fields'     => 'ids',
+			'hide_empty' => false,
+		) );
+
+		if ( ! is_wp_error( $terms ) ){
+			foreach( $terms as $term ){
+				wp_delete_term( $term->term_id, 'languages' );
+			}
+		}
+
+		update_option( 'dsgnwrks_snippetcpt_version', self::VERSION );
 	}
 
 	public function allow_unfiltered( $value ) {
