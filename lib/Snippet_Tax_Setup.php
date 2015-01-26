@@ -101,11 +101,11 @@ class Snippet_Tax_Setup {
 
 	public function language_slug_from_post( $post_id ) {
 		if ( $lang = $this->get_lang( $post_id ) ) {
-			return $this->language_slug( $lang->slug );
+			return $lang->slug;
 		}
 		return false;
 	}
-	
+
 	public function language_slug( $slug_to_check ) {
 		$slug_to_check = sanitize_html_class( strtolower( $slug_to_check ) );
 		$slugs = array(
@@ -149,23 +149,15 @@ class Snippet_Tax_Setup {
 	public function get_ace_slug( $slug_to_check ){
 		$slug_to_check = sanitize_html_class( strtolower( $slug_to_check ) );
 		$slugs = apply_filters( 'snippetcpt_ace_lang_associations', array(
-			'python' => '',
-			'html' => '',
-			'css' => '',
-			'javascript' => '',
-			'js' => 'javascript',
-			'php' => '',
-			'sql' => '',
-			'perl' => '',
-			'ruby' => '',
-			'c' => 'c_cpp',
-			'c-sharp' => 'csharp',
-			'java' => '',
-			'xhtml' => '',
-			'xml' => '',
+			'js'         => 'javascript',
+			'c'          => 'c_cpp',
+			'c-sharp'    => 'csharp',
+			'c#'         => 'csharp',
+			'py'         => 'python',
+			'rb'         => 'ruby',
 		) );
-		// Defautl text
-		$output = apply_filters( 'snippetcpt_default_ace_lang', $slug_to_check );
+
+		$output = apply_filters( 'snippetcpt_default_ace_lang', 'text' );
 		if ( array_key_exists( $slug_to_check, $slugs ) ){
 			if ( ! empty( $slugs[ $slug_to_check ] ) ){
 				// We have a re-write value, so use it
@@ -176,8 +168,6 @@ class Snippet_Tax_Setup {
 		}
 		return $output;
 	}
-
-
 
 }
 

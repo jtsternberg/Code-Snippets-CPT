@@ -254,9 +254,11 @@ class CodeSnippitInit {
 			$data_sets['line_nums'] = is_numeric( $line_nums ) && 0 !== absint( $line_nums ) ? absint( $line_nums ) : true;
 		}
 
+		$data_sets['lang'] = apply_filters( 'snippetcpt_default_ace_lang', 'text' );
 		if ( ! empty( $atts['lang'] ) ){
-			// They've set the language, so respect it
-			$data_sets['lang'] = sanitize_html_class( $atts['lang'] );
+			// Need this for backwards compatability
+			$maybe_old_language = sanitize_html_class( $atts['lang'] );
+			$data_sets['lang'] = $this->language->get_ace_slug( $maybe_old_language );
 		} elseif ( $lang_slug = $this->language->language_slug_from_post( $snippet_id ) ) {
 			// Get the language linked to the current post id
 			$data_sets['lang'] = $lang_slug;
