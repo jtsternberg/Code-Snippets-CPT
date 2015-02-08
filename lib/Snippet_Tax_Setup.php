@@ -123,7 +123,7 @@ class Snippet_Tax_Setup {
 			'rb'         => 'ruby',
 		) );
 
-		$output = apply_filters( 'snippetcpt_default_ace_lang', 'text' );
+		$output = $slug_to_check;
 		if ( array_key_exists( $slug_to_check, $slugs ) ){
 			if ( ! empty( $slugs[ $slug_to_check ] ) ){
 				// We have a re-write value, so use it
