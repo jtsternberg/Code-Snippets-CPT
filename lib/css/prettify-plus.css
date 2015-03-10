@@ -8,7 +8,7 @@ pre.prettyprint {
 	overflow-x: scroll;
 	background: #272822;
 	word-wrap: normal;
-	white-space: nowrap;
+	white-space: pre;
 }
 
 .str {
