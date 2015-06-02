@@ -230,8 +230,11 @@ class Snippet_CPT_Setup {
 	}
 
 	public function prettify_content( $content ) {
-		if ( get_post_type() != $this->post_type ) return $content;
+		if ( get_post_type() != $this->post_type ) {
+			return $content;
+		}
 
+		$this->enqueue_prettify();
 		return '<pre class="prettyprint linenums">'. htmlentities( $content ) .'</pre>';
 	}
 
