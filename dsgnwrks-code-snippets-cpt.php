@@ -29,6 +29,8 @@ class CodeSnippitInit {
 		'Java',
 		'XHTML',
 		'XML',
+		'Swift',
+		'CFML',
 	);
 	const VERSION = '1.0.4';
 
