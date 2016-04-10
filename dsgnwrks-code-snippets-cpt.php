@@ -201,7 +201,7 @@ class CodeSnippitInit {
 
 	public function version_check() {
 		$current_version = get_option( 'dsgnwrks_snippetcpt_version' );
-		if ( $current_version !== self::VERSION ) {
+		if ( self::VERSION !== $current_version ) {
 			$this->update();
 		}
 	}
