@@ -301,6 +301,8 @@ class CodeSnippitInit {
 
 		if ( $atts['title_attr'] && ! in_array( $atts['title_attr'], array( 'no', 'false' ), true ) ) {
 			$title_attr = sprintf( ' title="%s"', esc_attr( $snippet->post_title ) );
+		} else {
+			$title_attr = '';
 		}
 
 		return apply_filters( 'dsgnwrks_snippet_display', sprintf( '<pre class="%1$s" %2$s %3$s>%4$s</pre>', $class, $title_attr, $data, $snippet_content ), $atts, $snippet );
