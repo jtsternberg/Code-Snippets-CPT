@@ -1,4 +1,5 @@
 <?php
+
 /*
 Plugin Name: Code Snippets CPT
 Description: A code snippet custom post-type and shortcode for displaying your code snippets in your posts or pages.
@@ -13,8 +14,8 @@ class CodeSnippitInit {
 
 	const VERSION = '1.0.4';
 
-	protected $plugin_name = 'Code Snippets CPT';
-	protected $cpt;
+	protected     $plugin_name     = 'Code Snippets CPT';
+	protected     $cpt;
 	public static $single_instance = null;
 
 	protected $languages = array(
@@ -158,22 +159,22 @@ class CodeSnippitInit {
 		define( 'DWSNIPPET_URL', plugins_url( '/', __FILE__ ) );
 
 		// Custom Functions
-		require_once( DWSNIPPET_PATH .'lib/functions.php' );
+		require_once( DWSNIPPET_PATH . 'lib/functions.php' );
 
 		// Snippet Post-Type Setup
-		require_once( DWSNIPPET_PATH .'lib/Snippet_CPT_Setup.php' );
+		require_once( DWSNIPPET_PATH . 'lib/Snippet_CPT_Setup.php' );
 		$this->cpt = new Snippet_CPT_Setup();
 
 		// Custom Taxonomy Setup
-		require_once( DWSNIPPET_PATH .'lib/Snippet_Tax_Setup.php' );
+		require_once( DWSNIPPET_PATH . 'lib/Snippet_Tax_Setup.php' );
 		new Snippet_Tax_Setup( 'Snippet Category', 'Snippet Categories', array( $this->cpt->post_type ) );
 		new Snippet_Tax_Setup( 'Snippet Tag', '', array( $this->cpt->post_type ), array( 'hierarchical' => false ) );
-		$this->language = new Snippet_Tax_Setup( 'Language', '', array( $this->cpt->post_type ),  array( 'public' => false, 'show_ui' => false ) );
+		$this->language = new Snippet_Tax_Setup( 'Language', '', array( $this->cpt->post_type ), array( 'public'  => false, 'show_ui' => false ) );
 		// Custom metabox for the programming languages taxonomy
 		$this->language->init_select_box();
 
 		// Include our wysiwyg button script
-		require_once( DWSNIPPET_PATH .'lib/CodeSnippitButton.php' );
+		require_once( DWSNIPPET_PATH . 'lib/CodeSnippitButton.php' );
 		new CodeSnippitButton( $this->cpt, $this->language );
 
 		// Snippet Shortcode Setup
@@ -183,7 +184,6 @@ class CodeSnippitInit {
 		add_action( 'admin_init', array( $this, 'add_languages' ) );
 		add_filter( 'content_save_pre', array( $this, 'allow_unfiltered' ), 5 );
 	}
-
 
 
 	public function add_languages() {
@@ -200,21 +200,21 @@ class CodeSnippitInit {
 		}
 	}
 
-	public function version_check(){
+	public function version_check() {
 		$current_version = get_option( 'dsgnwrks_snippetcpt_version' );
-		if ( $current_version !== self::VERSION ){
+		if ( $current_version !== self::VERSION ) {
 			$this->update();
 		}
 	}
 
-	function update(){
+	function update() {
 		$terms = get_terms( 'languages', array(
 			'fields'     => 'ids',
 			'hide_empty' => false,
 		) );
 
-		if ( ! is_wp_error( $terms ) ){
-			foreach( $terms as $term ){
+		if ( ! is_wp_error( $terms ) ) {
+			foreach ( $terms as $term ) {
 				wp_delete_term( $term->term_id, 'languages' );
 			}
 		}
@@ -256,33 +256,33 @@ class CodeSnippitInit {
 
 		$snippet = get_posts( $args );
 		if ( is_wp_error( $snippet ) || empty( $snippet ) ) {
-			return;
+			return '';
 		}
 
-		$snippet = $snippet[0];
+		$snippet    = $snippet[0];
 		$snippet_id = $snippet->ID;
 
 		if ( empty( $snippet->post_content ) ) {
-			return;
+			return '';
 		}
 
 		$class = 'snippetcpt-ace-viewer';
 
-		$line_nums = ! $atts['line_numbers'] || false === $atts['line_numbers'] || $atts['line_numbers'] === 'false' ? false : $atts['line_numbers'];
+		$line_nums = ! $atts['line_numbers'] || false === $atts['line_numbers'] || 'false' === $atts['line_numbers'] ? false : $atts['line_numbers'];
 
 		// Let's use data sets instead?
 		// This is just personal preference, and that I like to access the .data method in JS instead
 		// of jumping through all classes.
 		$data_sets = array();
-		if ( $line_nums ){
+		if ( $line_nums ) {
 			$data_sets['line_nums'] = is_numeric( $line_nums ) && 0 !== absint( $line_nums ) ? absint( $line_nums ) : true;
 		}
 
 		$data_sets['lang'] = apply_filters( 'snippetcpt_default_ace_lang', 'text' );
-		if ( ! empty( $atts['lang'] ) ){
-			// Need this for backwards compatability
+		if ( ! empty( $atts['lang'] ) ) {
+			// Need this for backwards compatibility
 			$maybe_old_language = sanitize_html_class( $atts['lang'] );
-			$data_sets['lang'] = $this->language->get_ace_slug( $maybe_old_language );
+			$data_sets['lang']  = $this->language->get_ace_slug( $maybe_old_language );
 		} elseif ( $lang_slug = $this->language->language_slug_from_post( $snippet_id ) ) {
 			// Get the language linked to the current post id
 			$data_sets['lang'] = $lang_slug;
@@ -292,8 +292,8 @@ class CodeSnippitInit {
 		$data_sets['snippet-id'] = $snippet_id;
 
 		$data = '';
-		if ( ! empty( $data_sets ) ){
-			foreach ( $data_sets as $data_key => $value ){
+		if ( ! empty( $data_sets ) ) {
+			foreach ( $data_sets as $data_key => $value ) {
 				$data .= " data-{$data_key}='{$value}'";
 			}
 		}
@@ -323,18 +323,18 @@ class CodeSnippitInit {
 			case 'languages':
 				return $this->{$field};
 			default:
-				throw new Exception( 'Invalid '. __CLASS__ .' property: ' . $field );
+				throw new Exception( 'Invalid ' . __CLASS__ . ' property: ' . $field );
 		}
 	}
-
 }
 
 CodeSnippitInit::get_instance();
 
 function dsgnwrks_snippet_content_replace_tabs( $snippet_content ) {
 	// Replace tabs w/ spaces as it is more readable
-	$snippet_content = str_replace( "\t", "    ", $snippet_content );
+	$snippet_content = str_replace( '\t', '    ', $snippet_content );
 
 	return $snippet_content;
 }
+
 add_filter( 'dsgnwrks_snippet_content', 'dsgnwrks_snippet_content_replace_tabs' );

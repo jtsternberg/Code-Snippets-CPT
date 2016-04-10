@@ -13,7 +13,7 @@ class Snippet_Tax_Setup {
 
 	public function __construct( $singular, $plural = '', $object_types, $args = array() ) {
 
-		if ( ! $singular ){
+		if ( ! $singular ) {
 			wp_die( 'No taxonomy ID given' );
 		}
 
@@ -72,7 +72,6 @@ class Snippet_Tax_Setup {
 
 		wp_nonce_field( 'taxonomy_' . $this->slug , 'taxonomy_noncename' );
 
-		$checked = $editor_picks_checked = '';
 		// Get all blog taxonomy terms
 		$terms = get_terms( $this->slug, 'hide_empty=0' );
 		$names = wp_get_object_terms( get_the_ID(), $this->slug );
@@ -91,9 +90,9 @@ class Snippet_Tax_Setup {
 			$ace_data = $this->get_ace_slug( $term->slug );
 			echo "<option value='" . $term->term_id . "'";
 			if ( ! empty( $existing ) && in_array( $term->term_id, $existing ) ) {
-				echo " selected";
+				echo ' selected';
 			}
-			echo " data-language='$ace_data'>" . $term->name . "</option>";
+			echo " data-language='$ace_data'>" . $term->name . '</option>';
 		}
 		echo "</select></div>\n";
 
@@ -112,7 +111,7 @@ class Snippet_Tax_Setup {
 		return $lang;
 	}
 
-	public function get_ace_slug( $slug_to_check ){
+	public function get_ace_slug( $slug_to_check ) {
 		$slug_to_check = sanitize_html_class( strtolower( $slug_to_check ) );
 		$slugs = apply_filters( 'snippetcpt_ace_lang_associations', array(
 			'js'         => 'javascript',
@@ -124,8 +123,8 @@ class Snippet_Tax_Setup {
 		) );
 
 		$output = $slug_to_check;
-		if ( array_key_exists( $slug_to_check, $slugs ) ){
-			if ( ! empty( $slugs[ $slug_to_check ] ) ){
+		if ( array_key_exists( $slug_to_check, $slugs ) ) {
+			if ( ! empty( $slugs[ $slug_to_check ] ) ) {
 				// We have a re-write value, so use it
 				$output = $slugs[ $slug_to_check ];
 			} else {
