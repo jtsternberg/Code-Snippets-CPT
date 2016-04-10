@@ -14,8 +14,7 @@ class CodeSnippitInit {
 
 	const VERSION = '1.0.4';
 
-	protected     $plugin_name     = 'Code Snippets CPT';
-	protected     $cpt;
+	public        $cpt;
 	public static $single_instance = null;
 
 	protected $languages = array(
@@ -318,8 +317,6 @@ class CodeSnippitInit {
 	 */
 	public function __get( $field ) {
 		switch ( $field ) {
-			case 'plugin_name':
-			case 'cpt':
 			case 'languages':
 				return $this->{$field};
 			default:

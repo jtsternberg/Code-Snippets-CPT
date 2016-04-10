@@ -133,7 +133,6 @@ class Snippet_Tax_Setup {
 		}
 		return $output;
 	}
-
 }
 
 // new Snippet_Tax_Setup;
