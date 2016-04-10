@@ -4,16 +4,16 @@
  */
 class Snippet_CPT_Setup {
 
+	public $post_type = 'code-snippets';
+
 	private $singular;
 	private $plural;
-	private $post_type;
 	private $args;
 
 	function __construct() {
 
 		$this->singular  = __( 'Code Snippet', 'code-snippets-cpt' );
 		$this->plural    = __( 'Code Snippets', 'code-snippets-cpt' );
-		$this->post_type = 'code-snippets';
 
 		add_action( 'init', array( $this, 'register_post_type' ) );
 		add_filter( 'post_updated_messages', array( $this, 'messages' ) );
