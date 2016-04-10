@@ -47,10 +47,10 @@ class Snippet_CPT_Setup {
 				'all_items'          => 'All ' .$this->plural,
 				'view_item'          => 'View ' .$this->singular,
 				'search_items'       => 'Search ' .$this->plural,
-				'not_found'          =>  'No ' .$this->plural .' found',
+				'not_found'          => 'No ' .$this->plural .' found',
 				'not_found_in_trash' => 'No ' .$this->plural .' found in Trash',
 				'parent_item_colon'  => '',
-				'menu_name'          => $this->plural
+				'menu_name'          => $this->plural,
 			),
 			'public'             => true,
 			'publicly_queryable' => true,
@@ -63,7 +63,7 @@ class Snippet_CPT_Setup {
 			'has_archive'        => true,
 			'hierarchical'       => false,
 			'menu_position'      => null,
-			'supports'           => array( 'title', 'editor', 'excerpt' )
+			'supports'           => array( 'title', 'editor', 'excerpt' ),
 		) ) );
 	}
 
@@ -118,7 +118,7 @@ class Snippet_CPT_Setup {
 	}
 
 	public function remove_filter() {
-		if ( get_post_type() != $this->post_type ){
+		if ( $this->post_type != get_post_type() ) {
 			return;
 		}
 		remove_filter( 'the_content', 'wptexturize' );
@@ -190,7 +190,7 @@ class Snippet_CPT_Setup {
 	 * line numbers. But should do WAY more.
 	 * @param  string 	$output      	HTML Output of original shortcode
 	 * @param  array 	$atts        	shortcode attributes
-	 * @param  obj 		$snippet_obj 	post object similar to get_post
+	 * @param  WP_Post	$snippet_obj 	post object similar to get_post
 	 * @return string              		HTML output for display.
 	 */
 	public function snippet_controller( $output, $atts, $snippet_obj ){
