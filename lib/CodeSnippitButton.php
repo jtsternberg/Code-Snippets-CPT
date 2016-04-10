@@ -40,8 +40,8 @@ class CodeSnippitButton {
 		add_filter( 'mce_buttons', array( $this, 'register_buttons' ) );
 	}
 
-	public function ajax_insert_snippet(){
-		if ( ! wp_verify_nonce( $_REQUEST['nonce'], 'insert_snippet_post' ) ){
+	public function ajax_insert_snippet() {
+		if ( ! wp_verify_nonce( $_REQUEST['nonce'], 'insert_snippet_post' ) ) {
 			wp_send_json_error( array( 'message' => __( 'Security Failure', 'code-snippet-cpt' ) ) );
 		}
 
@@ -58,7 +58,7 @@ class CodeSnippitButton {
 		$language      = $form_data['snippet-language'];
 		$language_data = get_term( $language, 'languages' );
 
-		if ( is_wp_error( $language_data ) ){
+		if ( is_wp_error( $language_data ) ) {
 			$output['message'] = __( 'Make sure you select a language for this snippet.', 'code-snippet-cpt' );
 			wp_send_json_error( $output );
 		}
@@ -75,7 +75,7 @@ class CodeSnippitButton {
 			),
 		), true );
 
-		if ( is_wp_error( $post_result ) ){
+		if ( is_wp_error( $post_result ) ) {
 			$output['message'] = $post_result->get_error_message();
 			wp_send_json_error( $output );
 		}
