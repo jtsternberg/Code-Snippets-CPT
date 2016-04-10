@@ -231,7 +231,7 @@ class CodeSnippitInit {
 		return $value;
 	}
 
-	public function shortcode( $atts, $context ) {
+	public function shortcode( $atts ) {
 
 		$atts = shortcode_atts( array(
 			'id'           => false,
