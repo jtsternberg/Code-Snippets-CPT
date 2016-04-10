@@ -8,7 +8,6 @@ class Snippet_CPT_Setup {
 
 	private $singular;
 	private $plural;
-	private $args;
 
 	function __construct() {
 
