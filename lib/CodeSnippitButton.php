@@ -274,7 +274,7 @@ class CodeSnippitButton {
 					<select name="snippet-language" id="snippet-language">
 						<option value=""><?php _e( 'Select One', 'code-snippet-cpt' ); ?></option>
 					<?php if ( ! empty( $languages ) ) : ?>
-						<?php foreach ( $languages as $language ): ?>
+						<?php foreach ( $languages as $language ) : ?>
 							<option value="<?php echo $language->term_id; ?>" data-slug="<?php echo $language->slug; ?>"><?php echo $language->name; ?></option>
 						<?php endforeach; ?>
 					<?php endif; ?>
@@ -289,5 +289,4 @@ class CodeSnippitButton {
 		</div>
 		<?php
 	}
-
 }
