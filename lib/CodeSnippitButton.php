@@ -82,7 +82,7 @@ class CodeSnippitButton {
 		$post_data = get_post( $post_result );
 
 		$output['line_numbers'] = $form_data['line_numbers'];
-		$output['language']     = $this->language->language_slug( $language_data->name );
+		$output['language']     = $language_data->slug;
 		$output['slug']         = $post_data->post_name;
 
 		// Finally end it all
