@@ -13,8 +13,9 @@ class Snippet_Tax_Setup {
 
 	public function __construct( $singular, $plural = '', $object_types, $args = array() ) {
 
-		if( ! $singular )
+		if ( ! $singular ){
 			wp_die( 'No taxonomy ID given' );
+		}
 
 		$this->singular     = $singular;
 		$this->plural       = ( empty( $plural ) ) ? $singular .'s' : $plural;
@@ -29,23 +30,23 @@ class Snippet_Tax_Setup {
 	public function tax_loop() {
 
 		$labels = array(
-			'name' => $this->plural,
-			'singular_name' => $this->singular,
-			'search_items' =>  'Search '.$this->plural,
-			'all_items' => 'All '.$this->plural,
-			'parent_item' => 'Parent '.$this->singular,
+			'name'              => $this->plural,
+			'singular_name'     => $this->singular,
+			'search_items'      => 'Search '.$this->plural,
+			'all_items'         => 'All '.$this->plural,
+			'parent_item'       => 'Parent '.$this->singular,
 			'parent_item_colon' => 'Parent '.$this->singular.':',
-			'edit_item' => 'Edit '.$this->singular,
-			'update_item' => 'Update '.$this->singular,
-			'add_new_item' => 'Add New '.$this->singular,
-			'new_item_name' => 'New '.$this->singular.' Name',
+			'edit_item'         => 'Edit '.$this->singular,
+			'update_item'       => 'Update '.$this->singular,
+			'add_new_item'      => 'Add New '.$this->singular,
+			'new_item_name'     => 'New '.$this->singular.' Name',
 		);
 		$defaults = array(
 			'hierarchical' => true,
-			'labels' => $labels,
-			'show_ui' => true,
-			'query_var' => true,
-			'rewrite' => array( 'slug' => $this->slug ),
+			'labels'       => $labels,
+			'show_ui'      => true,
+			'query_var'    => true,
+			'rewrite'      => array( 'slug' => $this->slug ),
 		);
 
 		$args = wp_parse_args( $this->args, $defaults );
@@ -69,31 +70,30 @@ class Snippet_Tax_Setup {
 
 	public function select_box() {
 
-		echo '<input type="hidden" name="taxonomy_noncename" id="taxonomy_noncename" value="' .
-		wp_create_nonce( 'taxonomy_'. $this->slug ) . '" />';
+		wp_nonce_field( 'taxonomy_' . $this->slug , 'taxonomy_noncename' );
 
-		$checked = $editor_picks_checked = "";
+		$checked = $editor_picks_checked = '';
 		// Get all blog taxonomy terms
-		$terms = get_terms( $this->slug, 'hide_empty=0');
-		$names = wp_get_object_terms( get_the_ID(), $this->slug);
+		$terms = get_terms( $this->slug, 'hide_empty=0' );
+		$names = wp_get_object_terms( get_the_ID(), $this->slug );
 
 		$existing = array();
-		if ( !is_wp_error( $names ) && !empty( $names ) ) {
+		if ( ! is_wp_error( $names ) && ! empty( $names ) ) {
 			foreach ( $names as $name ) {
 				$existing[] = $name->term_id;
 			}
 		}
 
 		echo "<div style='margin-bottom: 5px;'>",
-		"<select name='tax_input[". $this->slug ."][]'>";
+		"<select name='tax_input[". $this->slug ."][]' class='snippetcpt-language-selector'>";
 
 		foreach ( $terms as $term ) {
-
+			$ace_data = $this->get_ace_slug( $term->slug );
 			echo "<option value='" . $term->term_id . "'";
-			if ( !empty( $existing ) && in_array( $term->term_id, $existing ) ) {
+			if ( ! empty( $existing ) && in_array( $term->term_id, $existing ) ) {
 				echo " selected";
 			}
-			echo ">" . $term->name . "</option>";
+			echo " data-language='$ace_data'>" . $term->name . "</option>";
 		}
 		echo "</select></div>\n";
 
@@ -101,50 +101,39 @@ class Snippet_Tax_Setup {
 
 	public function language_slug_from_post( $post_id ) {
 		if ( $lang = $this->get_lang( $post_id ) ) {
-			return $this->language_slug( $lang->slug );
+			return $lang->slug;
 		}
 		return false;
 	}
 
-	public function language_slug( $slug_to_check ) {
-		$slug_to_check = sanitize_html_class( strtolower( $slug_to_check ) );
-		$slugs = array(
-			'bsh' => 'bash',
-			'c' => 'c',
-			'c-sharp' => 'c#',
-			'cc' => '',
-			'cpp' => '',
-			'cs' => 'css',
-			'csh' => '',
-			'cyc' => '',
-			'cv' => '',
-			'htm' => '',
-			'html' => 'html',
-			'java' => '',
-			'js' => 'javascript',
-			'm' => '',
-			'mxml' => '',
-			'perl' => 'perl',
-			'php' => 'php',
-			'pl' => '',
-			'pm' => '',
-			'py' => 'python',
-			'rb' => 'ruby',
-			'sh' => '',
-			'xhtml' => '',
-			'xml' => '',
-			'xsl' => '',
-		);
-		$key = array_search( $slug_to_check, $slugs );
-		return $key ? $key : $slug_to_check;
-	}
-
 	public function get_lang( $post_id ) {
 		$langs = get_the_terms( $post_id, 'languages' );
-		$lang = !empty( $langs ) ? array_pop( $langs ) : false;
+		$lang = ! empty( $langs ) ? array_pop( $langs ) : false;
 		return $lang;
 	}
 
+	public function get_ace_slug( $slug_to_check ){
+		$slug_to_check = sanitize_html_class( strtolower( $slug_to_check ) );
+		$slugs = apply_filters( 'snippetcpt_ace_lang_associations', array(
+			'js'         => 'javascript',
+			'c'          => 'c_cpp',
+			'c-sharp'    => 'csharp',
+			'c#'         => 'csharp',
+			'py'         => 'python',
+			'rb'         => 'ruby',
+		) );
+
+		$output = $slug_to_check;
+		if ( array_key_exists( $slug_to_check, $slugs ) ){
+			if ( ! empty( $slugs[ $slug_to_check ] ) ){
+				// We have a re-write value, so use it
+				$output = $slugs[ $slug_to_check ];
+			} else {
+				$output = $slug_to_check;
+			}
+		}
+		return $output;
+	}
 
 }
 

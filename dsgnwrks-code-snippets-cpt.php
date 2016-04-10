@@ -11,28 +11,133 @@ Version: 1.0.6
 
 class CodeSnippitInit {
 
-	protected $plugin_name = 'Code Snippets CPT';
-	protected $cpt;
-	protected $languages = array(
-		'Python',
-		'HTML',
-		'CSS',
-		'JavaScript',
-		'PHP',
-		'SQL',
-		'Perl',
-		'Ruby',
-		'Bash',
-		'C',
-		'c-sharp' => 'C#',
-		'HTML',
-		'Java',
-		'XHTML',
-		'XML',
-	);
 	const VERSION = '1.0.4';
 
+	protected $plugin_name = 'Code Snippets CPT';
+	protected $cpt;
 	public static $single_instance = null;
+
+	protected $languages = array(
+		'abap'         => 'ABAP',
+		'actionscript' => 'ActionScript',
+		'ada'          => 'ADA',
+		'apache_conf'  => 'Apache Conf',
+		'asciidoc'     => 'AsciiDoc',
+		'assembly_x86' => 'Assembly x86',
+		'autohotkey'   => 'AutoHotKey',
+		'batchfile'    => 'BatchFile',
+		'c9search'     => 'C9Search',
+		'c_cpp'        => 'C and C++',
+		'cirru'        => 'Cirru',
+		'clojure'      => 'Clojure',
+		'cobol'        => 'Cobol',
+		'coffee'       => 'CoffeeScript',
+		'coldfusion'   => 'ColdFusion',
+		'csharp'       => 'C#',
+		'css'          => 'CSS',
+		'curly'        => 'Curly',
+		'd'            => 'D',
+		'dart'         => 'Dart',
+		'diff'         => 'Diff',
+		'dockerfile'   => 'Dockerfile',
+		'dot'          => 'Dot',
+		'dummy'        => 'Dummy',
+		'dummysyntax'  => 'DummySyntax',
+		'eiffel'       => 'Eiffel',
+		'ejs'          => 'EJS',
+		'elixir'       => 'Elixir',
+		'elm'          => 'Elm',
+		'erlang'       => 'Erlang',
+		'forth'        => 'Forth',
+		'ftl'          => 'FreeMarker',
+		'gcode'        => 'Gcode',
+		'gherkin'      => 'Gherkin',
+		'gitignore'    => 'Gitignore',
+		'glsl'         => 'Glsl',
+		'golang'       => 'Go',
+		'groovy'       => 'Groovy',
+		'haml'         => 'HAML',
+		'handlebars'   => 'Handlebars',
+		'haskell'      => 'Haskell',
+		'haxe'         => 'haXe',
+		'html'         => 'HTML',
+		'html_ruby'    => 'HTML (Ruby)',
+		'ini'          => 'INI',
+		'io'           => 'Io',
+		'jack'         => 'Jack',
+		'jade'         => 'Jade',
+		'java'         => 'Java',
+		'javascript'   => 'JavaScript',
+		'json'         => 'JSON',
+		'jsoniq'       => 'JSONiq',
+		'jsp'          => 'JSP',
+		'jsx'          => 'JSX',
+		'julia'        => 'Julia',
+		'latex'        => 'LaTeX',
+		'less'         => 'LESS',
+		'liquid'       => 'Liquid',
+		'lisp'         => 'Lisp',
+		'livescript'   => 'LiveScript',
+		'logiql'       => 'LogiQL',
+		'lsl'          => 'LSL',
+		'lua'          => 'Lua',
+		'luapage'      => 'LuaPage',
+		'lucene'       => 'Lucene',
+		'makefile'     => 'Makefile',
+		'markdown'     => 'Markdown',
+		'mask'         => 'Mask',
+		'matlab'       => 'MATLAB',
+		'mel'          => 'MEL',
+		'mushcode'     => 'MUSHCode',
+		'mysql'        => 'MySQL',
+		'nix'          => 'Nix',
+		'objectivec'   => 'Objective-C',
+		'ocaml'        => 'OCaml',
+		'pascal'       => 'Pascal',
+		'perl'         => 'Perl',
+		'pgsql'        => 'pgSQL',
+		'php'          => 'PHP',
+		'powershell'   => 'Powershell',
+		'praat'        => 'Praat',
+		'prolog'       => 'Prolog',
+		'properties'   => 'Properties',
+		'protobuf'     => 'Protobuf',
+		'python'       => 'Python',
+		'r'            => 'R',
+		'rdoc'         => 'RDoc',
+		'rhtml'        => 'RHTML',
+		'ruby'         => 'Ruby',
+		'rust'         => 'Rust',
+		'sass'         => 'SASS',
+		'scad'         => 'SCAD',
+		'scala'        => 'Scala',
+		'scheme'       => 'Scheme',
+		'scss'         => 'SCSS',
+		'sh'           => 'SH',
+		'sjs'          => 'SJS',
+		'smarty'       => 'Smarty',
+		'snippets'     => 'snippets',
+		'soy_template' => 'Soy Template',
+		'space'        => 'Space',
+		'sql'          => 'SQL',
+		'stylus'       => 'Stylus',
+		'svg'          => 'SVG',
+		'tcl'          => 'Tcl',
+		'tex'          => 'Tex',
+		'text'         => 'Text',
+		'textile'      => 'Textile',
+		'toml'         => 'Toml',
+		'twig'         => 'Twig',
+		'typescript'   => 'Typescript',
+		'vala'         => 'Vala',
+		'vbscript'     => 'VBScript',
+		'velocity'     => 'Velocity',
+		'verilog'      => 'Verilog',
+		'vhdl'         => 'VHDL',
+		'xml'          => 'XML',
+		'xquery'       => 'XQuery',
+		'yaml'         => 'YAML',
+	);
 
 	/**
 	 * Creates or returns an instance of this class.
@@ -79,7 +184,10 @@ class CodeSnippitInit {
 		add_filter( 'content_save_pre', array( $this, 'allow_unfiltered' ), 5 );
 	}
 
+
+
 	public function add_languages() {
+		$this->version_check();
 		// make sure our default languages exist
 		foreach ( $this->languages as $key => $language ) {
 			$exists = is_numeric( $key )
@@ -90,6 +198,28 @@ class CodeSnippitInit {
 				wp_insert_term( $language, 'languages', $args );
 			}
 		}
+	}
+
+	public function version_check(){
+		$current_version = get_option( 'dsgnwrks_snippetcpt_version' );
+		if ( $current_version !== self::VERSION ){
+			$this->update();
+		}
+	}
+
+	function update(){
+		$terms = get_terms( 'languages', array(
+			'fields'     => 'ids',
+			'hide_empty' => false,
+		) );
+
+		if ( ! is_wp_error( $terms ) ){
+			foreach( $terms as $term ){
+				wp_delete_term( $term->term_id, 'languages' );
+			}
+		}
+
+		update_option( 'dsgnwrks_snippetcpt_version', self::VERSION );
 	}
 
 	public function allow_unfiltered( $value ) {
@@ -136,24 +266,36 @@ class CodeSnippitInit {
 			return;
 		}
 
-		$this->cpt->enqueue_prettify();
-
-		$class = 'prettyprint';
+		$class = 'snippetcpt-ace-viewer';
 
 		$line_nums = ! $atts['line_numbers'] || false === $atts['line_numbers'] || $atts['line_numbers'] === 'false' ? false : $atts['line_numbers'];
 
-		if ( $line_nums ) {
-			$class .= ' linenums';
-			if ( is_numeric( $line_nums ) && 0 !== absint( $line_nums ) ) {
-				$class .= ':' . absint( $line_nums );
-			}
+		// Let's use data sets instead?
+		// This is just personal preference, and that I like to access the .data method in JS instead
+		// of jumping through all classes.
+		$data_sets = array();
+		if ( $line_nums ){
+			$data_sets['line_nums'] = is_numeric( $line_nums ) && 0 !== absint( $line_nums ) ? absint( $line_nums ) : true;
 		}
 
-		if ( ! empty( $atts['lang'] ) ) {
-			$class .= ' lang-'. sanitize_html_class( $atts['lang'] );
+		$data_sets['lang'] = apply_filters( 'snippetcpt_default_ace_lang', 'text' );
+		if ( ! empty( $atts['lang'] ) ){
+			// Need this for backwards compatability
+			$maybe_old_language = sanitize_html_class( $atts['lang'] );
+			$data_sets['lang'] = $this->language->get_ace_slug( $maybe_old_language );
+		} elseif ( $lang_slug = $this->language->language_slug_from_post( $snippet_id ) ) {
+			// Get the language linked to the current post id
+			$data_sets['lang'] = $lang_slug;
 		}
-		elseif ( $lang_slug = $this->language->language_slug_from_post( $snippet_id ) ) {
-			$class .= ' lang-'. $lang_slug;
+
+		// Set the snippet ID, for use in the controller
+		$data_sets['snippet-id'] = $snippet_id;
+
+		$data = '';
+		if ( ! empty( $data_sets ) ){
+			foreach ( $data_sets as $data_key => $value ){
+				$data .= " data-{$data_key}='{$value}'";
+			}
 		}
 
 		$snippet_content = apply_filters( 'dsgnwrks_snippet_content', htmlentities( $snippet->post_content, ENT_COMPAT, 'UTF-8' ), $atts, $snippet );
@@ -162,7 +304,7 @@ class CodeSnippitInit {
 			$title_attr = sprintf( ' title="%s"', esc_attr( $snippet->post_title ) );
 		}
 
-		return apply_filters( 'dsgnwrks_snippet_display', sprintf( '<pre class="%1$s"%2$s>%3$s</pre>', $class, $title_attr, $snippet_content ), $atts, $snippet );
+		return apply_filters( 'dsgnwrks_snippet_display', sprintf( '<pre class="%1$s" %2$s %3$s>%4$s</pre>', $class, $title_attr, $data, $snippet_content ), $atts, $snippet );
 	}
 
 	/**

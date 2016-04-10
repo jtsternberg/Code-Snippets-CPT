@@ -1,0 +1,48 @@
+/* ACE Custom CSS */
+.ace_editor{
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	height: 500px;
+}
+
+textarea.snippet-main-content{
+	display:none;
+}
+
+.ace_editor_settings{
+	margin-bottom: 5px;
+	text-align: right;
+}
+
+.ace_editor_settings label{
+	font-weight: bold;
+}
+
+/**
+ * Controller
+ */
+.snippetcpt-ace-controller{
+	background-color: rgba( 0, 0, 0, 0.25 );
+}
+
+.snippetcpt-ace-controller .snippetcpt_controls{
+	text-align: right;
+}
+
+.snippetcpt-ace-controller a.dashicons{
+	text-decoration: none;
+	color: #555;
+	margin: 0.2em;
+}
+
+.snippetcpt-ace-controller .snippetcpt_title{
+	float: left;
+	margin: 0 0.2em;
+}
+
+.snippetcpt-ace-controller .snippetcpt_controls{
+	display: none;
+}
