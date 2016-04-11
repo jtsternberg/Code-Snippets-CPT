@@ -226,10 +226,7 @@ class Snippet_CPT_Setup {
 	}
 
 	public function remove_html() {
-		if ( get_post_type() == $this->post_type ) {
-			return false;
-		}
-		return true;
+		return get_post_type() !== $this->post_type;
 	}
 
 	public function title( $title ) {
