@@ -214,7 +214,7 @@ class CodeSnippitButton {
 				<hr />
 			</fieldset>
 			<fieldset>
-				<div style="text-align:right;">
+				<div style="text-align:right; padding: 10px 0;">
 					<input type='button' class="add_new_snippet_btn button button-secondary" value="<?php _e( 'Add New', 'code-snippet-cpt' ); ?> " />
 					<input type='button' class="cancel_new_snippet_btn button button-secondary hidden" value="<?php _e( 'Cancel', 'code-snippet-cpt' ); ?>">
 				</div>
