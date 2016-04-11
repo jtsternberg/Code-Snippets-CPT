@@ -226,7 +226,9 @@ class Snippet_CPT_Setup {
 	}
 
 	public function remove_html() {
-		if ( get_post_type() == $this->post_type ) return false;
+		if ( get_post_type() == $this->post_type ) {
+			return false;
+		}
 		return true;
 	}
 
@@ -241,15 +243,17 @@ class Snippet_CPT_Setup {
 	}
 
 	public function taxonomy_column( $post = '', $tax = '', $name = '' ) {
-		if ( empty( $post ) ) return;
+		if ( empty( $post ) ) {
+			return;
+		}
 		$id = $post->ID;
 		$categories = get_the_terms( $id, $tax );
-		if ( !empty( $categories ) ) {
+		if ( ! empty( $categories ) ) {
 			$out = array();
 			foreach ( $categories as $c ) {
 				$out[] = sprintf( '<a href="%s">%s</a>',
-				esc_url( add_query_arg( array( 'post_type' => $post->post_type, $tax => $c->slug ), 'edit.php' ) ),
-				esc_html( sanitize_term_field( 'name', $c->name, $c->term_id, 'category', 'display' ) )
+					esc_url( add_query_arg( array( 'post_type' => $post->post_type, $tax => $c->slug ), 'edit.php' ) ),
+					esc_html( sanitize_term_field( 'name', $c->name, $c->term_id, 'category', 'display' ) )
 				);
 			}
 			echo join( ', ', $out );
@@ -262,9 +266,10 @@ class Snippet_CPT_Setup {
 	public function text( $translation, $text ) {
 		global $pagenow;
 
-		if ( ( $pagenow == 'post-new.php' && isset( $_GET['post_type'] ) && $_GET['post_type'] == $this->post_type ) || ( $pagenow == 'post.php' && isset( $_GET['post'] ) && get_post_type( $_GET['post'] ) == $this->post_type ) || ( $pagenow == 'edit.php' && isset( $_GET['post_type'] ) && $_GET['post_type'] == $this->post_type ) ) {
-
-			switch ($text) {
+		if ( ( $pagenow == 'post-new.php' && isset( $_GET['post_type'] ) && $this->post_type == $_GET['post_type'] )
+		     || ( 'post.php' == $pagenow && isset( $_GET['post'] ) && $this->post_type == get_post_type( $_GET['post'] ) )
+		     || ( 'edit.php' == $pagenow && isset( $_GET['post_type'] ) && $this->post_type == $_GET['post_type'] ) ) {
+			switch ( $text ) {
 				case 'Excerpt';
 					return 'Snippet Description:';
 				break;
