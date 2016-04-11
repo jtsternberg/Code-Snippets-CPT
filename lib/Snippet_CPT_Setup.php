@@ -280,11 +280,9 @@ class Snippet_CPT_Setup {
 	}
 
 	public function meta_boxes() {
-
 		global $_wp_post_type_features;
-		unset( $_wp_post_type_features[$this->post_type]['editor'] );
-
-		add_meta_box( 'snippet_content', __('Snippet'), array( $this, 'content_editor_meta_box' ), $this->post_type, 'normal', 'core' );
+		unset( $_wp_post_type_features[ $this->post_type ]['editor'] );
+		add_meta_box( 'snippet_content', __( 'Snippet' ), array( $this, 'content_editor_meta_box' ), $this->post_type, 'normal', 'core' );
 	}
 
 	public function content_editor_meta_box( $post ) {
