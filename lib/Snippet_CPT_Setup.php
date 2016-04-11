@@ -133,7 +133,7 @@ class Snippet_CPT_Setup {
 		wp_register_script( 'snippet-cpt-js', DWSNIPPET_URL . 'lib/js/code-snippet-ace.js', array( 'jquery', 'ace_editor' ), '1.0', true );
 	}
 
-	public function ace_scripts(){
+	public function ace_scripts() {
 		$current_user = wp_get_current_user();
 		wp_enqueue_style( 'ace_css' );
 		wp_enqueue_script( 'ace_editor' );
@@ -149,7 +149,7 @@ class Snippet_CPT_Setup {
 		wp_enqueue_script( 'snippet-cpt-admin-js' );
 	}
 
-	public function ace_front_end_scripts(){
+	public function ace_front_end_scripts() {
 		$current_user = wp_get_current_user();
 		wp_enqueue_style( 'ace_css' );
 		wp_enqueue_script( 'ace_editor' );
@@ -161,8 +161,8 @@ class Snippet_CPT_Setup {
 		wp_enqueue_script( 'snippet-cpt-js' );
 	}
 
-	public function ace_ajax(){
-		if ( ! wp_verify_nonce( $_REQUEST['nonce'], 'ace_editor_nonce' ) ){
+	public function ace_ajax() {
+		if ( ! wp_verify_nonce( $_REQUEST['nonce'], 'ace_editor_nonce' ) ) {
 			wp_send_json_error( array(
 				'message' => __( 'Security failure', 'code-snippets-cpt' ),
 			) );
@@ -172,7 +172,7 @@ class Snippet_CPT_Setup {
 		$new_theme = $_POST['theme'];
 		$nonce = wp_create_nonce( 'ace_editor_nonce' );
 		$result = update_user_meta( $current_user->ID, 'snippetscpt-ace-editor-theme', $new_theme );
-		if ( false === $result ){
+		if ( false === $result ) {
 			wp_send_json_error( array(
 				'nonce' => $nonce,
 				'message' => __( 'Error inserting user data', 'code-snippets-cpt' ),
@@ -194,7 +194,7 @@ class Snippet_CPT_Setup {
 	 * @param  WP_Post	$snippet_obj 	post object similar to get_post
 	 * @return string              		HTML output for display.
 	 */
-	public function snippet_controller( $output, $atts, $snippet_obj ){
+	public function snippet_controller( $output, $atts, $snippet_obj ) {
 
 		$tmp  = '<div class="snippetcpt-ace-controller">';
 		$tmp .= '	<div class="snippetcpt_controls">';
@@ -218,7 +218,7 @@ class Snippet_CPT_Setup {
 		}
 		?>
 		<script type="text/javascript">
-			window.onload = function(){ prettyPrint(); };
+			window.onload = function() { prettyPrint(); };
 		</script>
 		<?php
 
@@ -230,7 +230,7 @@ class Snippet_CPT_Setup {
 		return true;
 	}
 
-	public function title( $title ){
+	public function title( $title ) {
 
 		$screen = get_current_screen();
 		if ( $screen->post_type == $this->post_type ) {
@@ -310,7 +310,7 @@ class Snippet_CPT_Setup {
 	 * 
 	 * @return string HTML Option Selectors
 	 */
-	public function ace_theme_selector_options(){
+	public function ace_theme_selector_options() {
 
 		$current_user = wp_get_current_user();
 		$theme = get_user_meta( $current_user->ID, 'snippetscpt-ace-editor-theme', true );
@@ -361,10 +361,10 @@ class Snippet_CPT_Setup {
 		) );
 
 		$output = '';
-		foreach ( $available_themes as $theme_group ){
+		foreach ( $available_themes as $theme_group ) {
 			$options = $theme_group['options'];
 			$output .= "<optgroup label='{$theme_group['label']}' >";
-			foreach ( $options as $value => $name ){
+			foreach ( $options as $value => $name ) {
 				$selected = selected( $theme, $value, false );
 				$output .= "<option value='$value' $selected >$name</option>";
 			}
