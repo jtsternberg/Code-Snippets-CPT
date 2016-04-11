@@ -157,6 +157,8 @@ class CodeSnippitInit {
 		define( 'DWSNIPPET_PATH', plugin_dir_path( __FILE__ ) );
 		define( 'DWSNIPPET_URL', plugins_url( '/', __FILE__ ) );
 
+		register_activation_hook( __FILE__, array( $this, '_activate' ) );
+
 		// Custom Functions
 		require_once( DWSNIPPET_PATH . 'lib/functions.php' );
 
@@ -182,6 +184,15 @@ class CodeSnippitInit {
 		// Set default programming language taxonomy terms
 		add_action( 'admin_init', array( $this, 'add_languages' ) );
 		add_filter( 'content_save_pre', array( $this, 'allow_unfiltered' ), 5 );
+
+
+	}
+
+	/**
+	 * Flush rewrite rules when the plugin activates
+	 */
+	function _activate() {
+		flush_rewrite_rules();
 	}
 
 
