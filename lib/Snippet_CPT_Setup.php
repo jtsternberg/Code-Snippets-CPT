@@ -118,7 +118,7 @@ class Snippet_CPT_Setup {
 	}
 
 	public function remove_filter() {
-		if ( $this->post_type != get_post_type() ) {
+		if ( get_post_type() != $this->post_type ) {
 			return;
 		}
 		remove_filter( 'the_content', 'wptexturize' );
@@ -263,8 +263,8 @@ class Snippet_CPT_Setup {
 	public function text( $translation, $text ) {
 		global $pagenow;
 
-		if ( ( $pagenow == 'post-new.php' && isset( $_GET['post_type'] ) && $this->post_type == $_GET['post_type'] )
-		     || ( 'post.php' == $pagenow && isset( $_GET['post'] ) && $this->post_type == get_post_type( $_GET['post'] ) )
+		if ( ( 'post-new.php' == $pagenow && isset( $_GET['post_type'] ) && $_GET['post_type'] == $this->post_type )
+		     || ( 'post.php' == $pagenow && isset( $_GET['post'] ) && get_post_type( $_GET['post'] ) == $this->post_type )
 		     || ( 'edit.php' == $pagenow && isset( $_GET['post_type'] ) && $this->post_type == $_GET['post_type'] ) ) {
 			switch ( $text ) {
 				case 'Excerpt';
