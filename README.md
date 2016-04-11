@@ -9,6 +9,11 @@ Adds a custom post type for managing your code snippets with taxonomies for clas
 
 ## Change Log
 
+### 1.0.7
+* Adds the [Ace Editor](https://ace.c9.io/#nav=about) in place of the old code editors.
+* Allows the showing & Hiding of line numbers and makes the code block collapsible.
+* Code themes, highlighting, multiple languages, more...
+
 ### 1.0.6
 * Add extra dialog structure to allow users to create snippets in-post, fixes [#3](https://github.com/jtsternberg/Code-Snippets-CPT/issues/3)
 * Fix rogue text-domain

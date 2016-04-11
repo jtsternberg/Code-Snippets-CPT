@@ -7,12 +7,12 @@ Plugin URI: http://j.ustin.co/jAHRM3
 Author: Jtsternberg
 Author URI: http://about.me/jtsternberg
 Donate link: http://j.ustin.co/rYL89n
-Version: 1.0.6
+Version: 1.0.7
 */
 
 class CodeSnippitInit {
 
-	const VERSION = '1.0.4';
+	const VERSION = '1.0.7';
 
 	public        $cpt;
 	public static $single_instance = null;
