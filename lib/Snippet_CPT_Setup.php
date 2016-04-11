@@ -307,7 +307,7 @@ class Snippet_CPT_Setup {
 	 * Put this in it's own method so we can add/remove themes more easily should
 	 * the ACE devs decide to include more.  Also added a filter so others can hook
 	 * into the available themes to add/remove them on a user by user basis.
-	 * 
+	 *
 	 * @return string HTML Option Selectors
 	 */
 	public function ace_theme_selector_options() {
@@ -317,21 +317,21 @@ class Snippet_CPT_Setup {
 
 		$available_themes = apply_filters( 'snippetcpts_available_ace_themes', array(
 			array(
-				'label' => __( 'Bright', 'code-snippets-cpt' ),
+				'label'   => __( 'Bright', 'code-snippets-cpt' ),
 				'options' => array(
-					'ace/theme/chrome'          => __( 'Chrome', 'code-snippets-cpt' ), 
-					'ace/theme/clouds'          => __( 'Clouds', 'code-snippets-cpt' ), 
-					'ace/theme/crimson_editor'  => __( 'Crimson Editor', 'code-snippets-cpt' ), 
-					'ace/theme/dawn'            => __( 'Dawn', 'code-snippets-cpt' ), 
-					'ace/theme/dreamweaver'     => __( 'Dreamweaver', 'code-snippets-cpt' ), 
-					'ace/theme/eclipse'         => __( 'Eclipse', 'code-snippets-cpt' ), 
-					'ace/theme/github'          => __( 'GitHub', 'code-snippets-cpt' ), 
-					'ace/theme/solarized_light' => __( 'Solarized Light', 'code-snippets-cpt' ), 
-					'ace/theme/textmate'        => __( 'TextMate', 'code-snippets-cpt' ), 
-					'ace/theme/tomorrow'        => __( 'Tomorrow', 'code-snippets-cpt' ), 
-					'ace/theme/xcode'           => __( 'XCode', 'code-snippets-cpt' ), 
-					'ace/theme/kuroir'          => __( 'Kuroir', 'code-snippets-cpt' ), 
-					'ace/theme/katzenmilch'     => __( 'KatzenMilch', 'code-snippets-cpt' ), 
+					'ace/theme/chrome'          => __( 'Chrome', 'code-snippets-cpt' ),
+					'ace/theme/clouds'          => __( 'Clouds', 'code-snippets-cpt' ),
+					'ace/theme/crimson_editor'  => __( 'Crimson Editor', 'code-snippets-cpt' ),
+					'ace/theme/dawn'            => __( 'Dawn', 'code-snippets-cpt' ),
+					'ace/theme/dreamweaver'     => __( 'Dreamweaver', 'code-snippets-cpt' ),
+					'ace/theme/eclipse'         => __( 'Eclipse', 'code-snippets-cpt' ),
+					'ace/theme/github'          => __( 'GitHub', 'code-snippets-cpt' ),
+					'ace/theme/solarized_light' => __( 'Solarized Light', 'code-snippets-cpt' ),
+					'ace/theme/textmate'        => __( 'TextMate', 'code-snippets-cpt' ),
+					'ace/theme/tomorrow'        => __( 'Tomorrow', 'code-snippets-cpt' ),
+					'ace/theme/xcode'           => __( 'XCode', 'code-snippets-cpt' ),
+					'ace/theme/kuroir'          => __( 'Kuroir', 'code-snippets-cpt' ),
+					'ace/theme/katzenmilch'     => __( 'KatzenMilch', 'code-snippets-cpt' ),
 				),
 			),
 			array(
