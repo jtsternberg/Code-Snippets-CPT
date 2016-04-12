@@ -45,7 +45,7 @@ To enable the ACE front-end display instead of Prettify, you can simply do this:
 
 = 1.0.7 =
 * Adds the [Ace Editor](https://ace.c9.io/#nav=about) in place of the old code editors.
-* Allows the showing & Hiding of line numbers and makes the code block collapsible.
+* Allows the showing & Hiding of line numbers and makes the code block collapsible.  ( **ACE Only** )
 * Code themes, highlighting, multiple languages, more...
 * New Filter - `snippets-cpt-ace-frontend` - Enables the ACE Front-end shortcode output.
 
