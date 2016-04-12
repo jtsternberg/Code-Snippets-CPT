@@ -280,7 +280,7 @@ class CodeSnippitInit {
 		$snippet_content = apply_filters( 'dsgnwrks_snippet_content', htmlentities( $snippet->post_content, ENT_COMPAT, 'UTF-8' ), $atts, $snippet );
 
 		if ( $atts['title_attr'] && ! in_array( $atts['title_attr'], array( 'no', 'false' ), true ) ) {
-			$title_attr = sprintf( ' title="%s"', esc_attr( $snippet->post_title ) );
+			$title_attr = sprintf( 'title="%s"', esc_attr( $snippet->post_title ) );
 		} else {
 			$title_attr = '';
 		}
@@ -320,7 +320,7 @@ class CodeSnippitInit {
 			$class .= ' lang-'. $lang_slug;
 		}
 
-		return sprintf( '<pre class="%1$s"%2$s>%3$s</pre>', $class, $title_attr, $snippet_content );
+		return sprintf( '<pre class="%1$s" %2$s>%3$s</pre>', $class, $title_attr, $snippet_content );
 	}
 
 	/**
