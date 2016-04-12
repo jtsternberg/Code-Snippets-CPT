@@ -400,7 +400,7 @@ class Snippet_CPT_Setup {
 				$selected = selected( $theme, $value, false );
 				$output .= "<option value='$value' $selected >$name</option>";
 			}
-			$output .= "</optgroup>";
+			$output .= '</optgroup>';
 		}
 
 		return $output;
@@ -416,7 +416,7 @@ class Snippet_CPT_Setup {
 	}
 
 	public function __get( $property ) {
-		switch( $property ) {
+		switch ( $property ) {
 			case 'singular':
 			case 'plural':
 			case 'post_type':
@@ -426,5 +426,4 @@ class Snippet_CPT_Setup {
 				throw new Exception( 'Invalid '. __CLASS__ .' property: ' . $property );
 		}
 	}
-
 }
