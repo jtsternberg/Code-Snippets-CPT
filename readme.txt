@@ -23,6 +23,10 @@ Adds a custom post type for managing your code snippets with taxonomies for clas
 
 Feel free to [fork or contribute on Github](https://github.com/jtsternberg/Code-Snippets-CPT).
 
+= ACE Editor =
+To enable the ACE front-end display instead of Prettify, you can simply do this:
+`add_filters( 'snippets-cpt-ace-frontend', '__return_true' );`
+
 == Installation ==
 
 1. Upload the entire `/code-snippets-cpt` directory to the `/wp-content/plugins/` directory.
@@ -43,6 +47,7 @@ Feel free to [fork or contribute on Github](https://github.com/jtsternberg/Code-
 * Adds the [Ace Editor](https://ace.c9.io/#nav=about) in place of the old code editors.
 * Allows the showing & Hiding of line numbers and makes the code block collapsible.
 * Code themes, highlighting, multiple languages, more...
+* New Filter - `snippets-cpt-ace-frontend` - Enables the ACE Front-end shortcode output.
 
 = 1.0.6 =
 * Add extra dialog structure to allow users to create snippets in-post, fixes [#3](https://github.com/jtsternberg/Code-Snippets-CPT/issues/3)
