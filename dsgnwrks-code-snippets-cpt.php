@@ -184,8 +184,6 @@ class CodeSnippitInit {
 		// Set default programming language taxonomy terms
 		add_action( 'admin_init', array( $this, 'add_languages' ) );
 		add_filter( 'content_save_pre', array( $this, 'allow_unfiltered' ), 5 );
-
-
 	}
 
 	/**
