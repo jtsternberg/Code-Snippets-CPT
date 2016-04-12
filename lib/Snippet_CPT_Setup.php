@@ -125,6 +125,13 @@ class Snippet_CPT_Setup {
 		remove_filter( 'the_content','wpautop' );
 	}
 
+	public function enqueue_prettify() {
+		wp_enqueue_script( 'prettify' );
+		wp_enqueue_style( 'prettify' );
+		wp_enqueue_style( 'prettify-plus' );
+		add_action( 'wp_footer', array( $this, 'run_js' ) );
+	}
+
 	public function register_scripts_styles() {
 		$ace_min = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '-min';
 		wp_register_style( 'ace_css', DWSNIPPET_URL .'lib/css/ace.css', array( 'dashicons' ), '1.0' );

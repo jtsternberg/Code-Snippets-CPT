@@ -276,10 +276,64 @@ class CodeSnippitInit {
 			return '';
 		}
 
-		$class = 'snippetcpt-ace-viewer';
-
 		$line_nums = ! $atts['line_numbers'] || false === $atts['line_numbers'] || 'false' === $atts['line_numbers'] ? false : $atts['line_numbers'];
+		$snippet_content = apply_filters( 'dsgnwrks_snippet_content', htmlentities( $snippet->post_content, ENT_COMPAT, 'UTF-8' ), $atts, $snippet );
 
+		if ( $atts['title_attr'] && ! in_array( $atts['title_attr'], array( 'no', 'false' ), true ) ) {
+			$title_attr = sprintf( ' title="%s"', esc_attr( $snippet->post_title ) );
+		} else {
+			$title_attr = '';
+		}
+
+		if ( apply_filters( 'snippets-cpt-ace-frontend', false ) ) {
+			$output = $this->get_ace_output( $title_attr, $snippet_content, $snippet_id, $line_nums );
+		} else {
+			$output = $this->get_old_output( $title_attr, $snippet_content, $snippet_id, $line_nums );
+		}
+
+		return apply_filters( 'dsgnwrks_snippet_display', $output, $atts, $snippet );
+	}
+
+	/**
+	 * Gets the Legacy output as to not break the old code/display
+	 *
+	 * @param $title_attr
+	 * @param $snippet_content
+	 * @param $snippet_id
+	 * @param $line_nums
+	 *
+	 * @return string
+	 */
+	public function get_old_output( $title_attr, $snippet_content, $snippet_id, $line_nums ) {
+		$this->cpt->enqueue_prettify();
+		$class = 'prettyprint';
+		if ( $line_nums ) {
+			$class .= ' linenums';
+			if ( is_numeric( $line_nums ) && 0 !== absint( $line_nums ) ) {
+				$class .= ':' . absint( $line_nums );
+			}
+		}
+
+		if ( ! empty( $atts['lang'] ) ) {
+			$class .= ' lang-'. sanitize_html_class( $atts['lang'] );
+		} elseif ( $lang_slug = $this->language->language_slug_from_post( $snippet_id ) ) {
+			$class .= ' lang-'. $lang_slug;
+		}
+
+		return sprintf( '<pre class="%1$s"%2$s>%3$s</pre>', $class, $title_attr, $snippet_content );
+	}
+
+	/**
+	 * Gets the output for the ACE front-end display
+	 *
+	 * @param $title_attr
+	 * @param $snippet_content
+	 * @param $snippet_id
+	 * @param $line_nums
+	 *
+	 * @return string
+	 */
+	public function get_ace_output( $title_attr, $snippet_content, $snippet_id, $line_nums ) {
 		// Let's use data sets instead?
 		// This is just personal preference, and that I like to access the .data method in JS instead
 		// of jumping through all classes.
@@ -308,15 +362,7 @@ class CodeSnippitInit {
 			}
 		}
 
-		$snippet_content = apply_filters( 'dsgnwrks_snippet_content', htmlentities( $snippet->post_content, ENT_COMPAT, 'UTF-8' ), $atts, $snippet );
-
-		if ( $atts['title_attr'] && ! in_array( $atts['title_attr'], array( 'no', 'false' ), true ) ) {
-			$title_attr = sprintf( ' title="%s"', esc_attr( $snippet->post_title ) );
-		} else {
-			$title_attr = '';
-		}
-
-		return apply_filters( 'dsgnwrks_snippet_display', sprintf( '<pre class="%1$s" %2$s %3$s>%4$s</pre>', $class, $title_attr, $data, $snippet_content ), $atts, $snippet );
+		return sprintf( '<pre class="%1$s" %2$s %3$s>%4$s</pre>', 'snippetcpt-ace-viewer', $title_attr, $data, $snippet_content );
 	}
 
 	/**
