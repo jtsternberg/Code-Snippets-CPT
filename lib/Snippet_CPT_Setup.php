@@ -30,7 +30,7 @@ class Snippet_CPT_Setup {
 		add_action( 'admin_enqueue_scripts', array( $this, 'ace_scripts' ) );
 		add_action( 'wp_ajax_snippetscpt-ace-ajax', array( $this, 'ace_ajax' ) );
 
-		add_filter( 'dsgnwrks_snippet_display', array( $this, 'snippet_controller' ), 10, 3 );
+		add_filter( 'dsgnwrks_snippet_display', array( $this, 'add_ace_snippet_controls' ), 10, 3 );
 		add_action( 'template_redirect', array( $this, 'remove_filter' ) );
 
 		if ( $this->is_ace_enabled() ) {
@@ -148,18 +148,16 @@ class Snippet_CPT_Setup {
 	}
 
 	public function register_scripts_styles() {
-		if ( $this->is_ace_enabled() ) {
-			$ace_min = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '-min';
-			wp_register_style( 'ace_css', DWSNIPPET_URL . 'lib/css/ace.css', array( 'dashicons' ), '1.0' );
-			wp_register_script( 'ace_editor', DWSNIPPET_URL . "lib/js/ace/src{$ace_min}-noconflict/ace.js", array( 'jquery' ), '1.0', true );
-			wp_register_script( 'snippet-cpt-admin-js', DWSNIPPET_URL . 'lib/js/code-snippet-admin.js', array( 'jquery', 'ace_editor' ), '1.0', true );
-			wp_register_script( 'snippet-cpt-js', DWSNIPPET_URL . 'lib/js/code-snippet-ace.js', array( 'jquery', 'ace_editor' ), '1.0', true );
-		} else {
-			wp_register_script( 'prettify', DWSNIPPET_URL .'lib/js/prettify.js', null, '1.1' );
-			wp_register_style( 'prettify', DWSNIPPET_URL .'lib/css/prettify.css', null, '1.0' );
-			wp_register_style( 'prettify-plus', DWSNIPPET_URL .'lib/css/prettify-plus.css', null, '1.0' );
-		}
+		$ace_min = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '-min';
+		wp_register_script( 'ace_editor', DWSNIPPET_URL . "lib/js/ace/src{$ace_min}-noconflict/ace.js", array( 'jquery' ), '1.0', true );
+		wp_register_script( 'snippet-cpt-admin-js', DWSNIPPET_URL . 'lib/js/code-snippet-admin.js', array( 'jquery', 'ace_editor' ), '1.0', true );
 
+		wp_register_style( 'ace_css', DWSNIPPET_URL . 'lib/css/ace.css', array( 'dashicons' ), '1.0' );
+		wp_register_script( 'snippet-cpt-js', DWSNIPPET_URL . 'lib/js/code-snippet-ace.js', array( 'jquery', 'ace_editor' ), '1.0', true );
+
+		wp_register_script( 'prettify', DWSNIPPET_URL .'lib/js/prettify.js', null, '1.1' );
+		wp_register_style( 'prettify', DWSNIPPET_URL .'lib/css/prettify.css', null, '1.0' );
+		wp_register_style( 'prettify-plus', DWSNIPPET_URL .'lib/css/prettify-plus.css', null, '1.0' );
 	}
 
 	public function ace_scripts() {
@@ -179,15 +177,17 @@ class Snippet_CPT_Setup {
 	}
 
 	public function ace_front_end_scripts() {
-		$current_user = wp_get_current_user();
-		wp_enqueue_style( 'ace_css' );
-		wp_enqueue_script( 'ace_editor' );
-		wp_localize_script( 'snippet-cpt-js', 'ace_editor_front_end_globals', array(
-			'theme'  => get_user_meta( $current_user->ID, 'snippetscpt-ace-editor-theme', true ),
-			'default_theme' => apply_filters( 'snippetcpt_default_ace_theme', 'ace/theme/monokai' ),
-			'default_lang' => apply_filters( 'snippetcpt_default_ace_lang', 'text' ),
-		) );
-		wp_enqueue_script( 'snippet-cpt-js' );
+		if ( $this->is_ace_enabled() ) {
+			$current_user = wp_get_current_user();
+			wp_enqueue_style( 'ace_css' );
+			wp_enqueue_script( 'ace_editor' );
+			wp_localize_script( 'snippet-cpt-js', 'ace_editor_front_end_globals', array(
+				'theme'         => get_user_meta( $current_user->ID, 'snippetscpt-ace-editor-theme', true ),
+				'default_theme' => apply_filters( 'snippetcpt_default_ace_theme', 'ace/theme/monokai' ),
+				'default_lang'  => apply_filters( 'snippetcpt_default_ace_lang', 'text' ),
+			) );
+			wp_enqueue_script( 'snippet-cpt-js' );
+		}
 	}
 
 	public function ace_ajax() {
@@ -223,7 +223,10 @@ class Snippet_CPT_Setup {
 	 * @param  WP_Post	$snippet_obj 	post object similar to get_post
 	 * @return string              		HTML output for display.
 	 */
-	public function snippet_controller( $output, $atts, $snippet_obj ) {
+	public function add_ace_snippet_controls( $output, $atts, $snippet_obj ) {
+		if ( ! $this->is_ace_enabled() ) {
+			return $output;
+		}
 
 		$tmp  = '<div class="snippetcpt-ace-controller">';
 		$tmp .= '	<div class="snippetcpt_controls">';
