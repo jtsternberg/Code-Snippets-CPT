@@ -25,13 +25,28 @@ class Snippet_CPT_Setup {
 		add_filter( 'gettext', array( $this, 'text' ), 20, 2 );
 		add_action( 'init', array( $this, 'register_scripts_styles' ) );
 
-		add_action( 'admin_enqueue_scripts', array( $this, 'ace_scripts' ) );
-		add_action( 'wp_enqueue_scripts', array( $this, 'ace_front_end_scripts' ) );
-		add_action( 'wp_ajax_snippetscpt-ace-ajax', array( $this, 'ace_ajax' ) );
-		add_filter( 'dsgnwrks_snippet_display', array( $this, 'snippet_controller' ), 10, 3 );
 
+		// ACE Scripts
+		add_action( 'admin_enqueue_scripts', array( $this, 'ace_scripts' ) );
+		add_action( 'wp_ajax_snippetscpt-ace-ajax', array( $this, 'ace_ajax' ) );
+
+		add_filter( 'dsgnwrks_snippet_display', array( $this, 'snippet_controller' ), 10, 3 );
 		add_action( 'template_redirect', array( $this, 'remove_filter' ) );
 
+		if ( $this->is_ace_enabled() ) {
+			add_action( 'wp_enqueue_scripts', array( $this, 'ace_front_end_scripts' ) );
+		} else {
+			add_filter( 'the_content', array( $this, 'prettify_content' ), 20, 2 );
+		}
+
+	}
+
+	/**
+	 * Determines rather or not we are using the ACE front-end editor.
+	 * @return mixed|void
+	 */
+	public function is_ace_enabled() {
+		return apply_filters( 'snippets-cpt-ace-frontend', false );
 	}
 
 	public function register_post_type() {
@@ -133,11 +148,18 @@ class Snippet_CPT_Setup {
 	}
 
 	public function register_scripts_styles() {
-		$ace_min = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '-min';
-		wp_register_style( 'ace_css', DWSNIPPET_URL .'lib/css/ace.css', array( 'dashicons' ), '1.0' );
-		wp_register_script( 'ace_editor', DWSNIPPET_URL . "lib/js/ace/src{$ace_min}-noconflict/ace.js", array( 'jquery' ), '1.0', true );
-		wp_register_script( 'snippet-cpt-admin-js', DWSNIPPET_URL . 'lib/js/code-snippet-admin.js', array( 'jquery', 'ace_editor' ), '1.0', true );
-		wp_register_script( 'snippet-cpt-js', DWSNIPPET_URL . 'lib/js/code-snippet-ace.js', array( 'jquery', 'ace_editor' ), '1.0', true );
+		if ( $this->is_ace_enabled() ) {
+			$ace_min = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '-min';
+			wp_register_style( 'ace_css', DWSNIPPET_URL . 'lib/css/ace.css', array( 'dashicons' ), '1.0' );
+			wp_register_script( 'ace_editor', DWSNIPPET_URL . "lib/js/ace/src{$ace_min}-noconflict/ace.js", array( 'jquery' ), '1.0', true );
+			wp_register_script( 'snippet-cpt-admin-js', DWSNIPPET_URL . 'lib/js/code-snippet-admin.js', array( 'jquery', 'ace_editor' ), '1.0', true );
+			wp_register_script( 'snippet-cpt-js', DWSNIPPET_URL . 'lib/js/code-snippet-ace.js', array( 'jquery', 'ace_editor' ), '1.0', true );
+		} else {
+			wp_register_script( 'prettify', DWSNIPPET_URL .'lib/js/prettify.js', null, '1.1' );
+			wp_register_style( 'prettify', DWSNIPPET_URL .'lib/css/prettify.css', null, '1.0' );
+			wp_register_style( 'prettify-plus', DWSNIPPET_URL .'lib/css/prettify-plus.css', null, '1.0' );
+		}
+
 	}
 
 	public function ace_scripts() {
@@ -379,6 +401,15 @@ class Snippet_CPT_Setup {
 		}
 
 		return $output;
+	}
+
+	public function prettify_content( $content ) {
+		if ( get_post_type() != $this->post_type ) {
+			return $content;
+		}
+
+		$this->enqueue_prettify();
+		return '<pre class="prettyprint linenums">'. htmlentities( $content ) .'</pre>';
 	}
 
 	public function __get( $property ) {
