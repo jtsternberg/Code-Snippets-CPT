@@ -48,6 +48,13 @@ class CodeSnippitButton {
 	}
 
 	public function quicktag_button_script() {
+		global $pagenow;
+		
+		// bail early if not adding/editing a post
+		if ( ! ( 'post-new.php' === $pagenow ) && ! ( 'post.php' === $pagenow ) ) {
+			return;
+		}
+		
 		wp_enqueue_style( 'wp-jquery-ui-dialog' );
 		wp_enqueue_script( $this->script );
 
