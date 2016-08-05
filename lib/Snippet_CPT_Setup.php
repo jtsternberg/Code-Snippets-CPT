@@ -121,7 +121,7 @@ class Snippet_CPT_Setup {
 	}
 
 	public function register_scripts_styles() {
-		wp_register_script( 'prettify', DWSNIPPET_URL .'lib/js/prettify.js', null, '1.0' );
+		wp_register_script( 'prettify', DWSNIPPET_URL .'lib/js/prettify.js', null, '1.1' );
 		wp_register_style( 'prettify', DWSNIPPET_URL .'lib/css/prettify.css', null, '1.0' );
 		wp_register_style( 'prettify-plus', DWSNIPPET_URL .'lib/css/prettify-plus.css', null, '1.0' );
 	}
