@@ -35,6 +35,13 @@ class CodeSnippitInit {
 	public static $single_instance = null;
 
 	/**
+	 * $shortcode_tag
+	 * holds the name of the shortcode tag
+	 * @var string
+	 */
+	protected $shortcode_tag = 'snippet';
+
+	/**
 	 * Creates or returns an instance of this class.
 	 * @since  0.1.0
 	 * @return CodeSnippitInit A single instance of this class.
@@ -72,7 +79,7 @@ class CodeSnippitInit {
 		new CodeSnippitButton( $this->cpt, $this->language );
 
 		// Snippet Shortcode Setup
-		add_shortcode( 'snippet', array( $this, 'shortcode' ) );
+		add_shortcode( $this->shortcode_tag, array( $this, 'shortcode' ) );
 
 		// Set default programming language taxonomy terms
 		add_action( 'admin_init', array( $this, 'add_languages' ) );
@@ -179,6 +186,7 @@ class CodeSnippitInit {
 			case 'plugin_name':
 			case 'cpt':
 			case 'languages':
+			case 'shortcode_tag':
 				return $this->{$field};
 			default:
 				throw new Exception( 'Invalid '. __CLASS__ .' property: ' . $field );
