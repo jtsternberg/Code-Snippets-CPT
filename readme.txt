@@ -4,22 +4,34 @@ Plugin Name: Code Snippets CPT
 Plugin URI: http://dsgnwrks.pro/plugins/code-snippets-cpt  
 Contributors: jtsternberg  
 Donate link: http://j.ustin.co/rYL89n  
-Author URI: http://jtsternberg.com/about  
+Author URI: http://dsgnwrks.pro  
 Author: Jtsternberg  
 Tags snippets, code, code snippets, syntax highlighting, shortcode  
 Requires at least: 3.8.0  
-Tested up to: 4.1.0  
-Stable tag: 1.0.5  
+Tested up to: 4.6  
+Stable tag: 2.0.0  
 License: GPLv2 or later  
 License URI: http://www.gnu.org/licenses/gpl-2.0.html  
 
-A WordPress plugin for managing and displaying code snippets.
+A WordPress plugin for elegantly managing and displaying code snippets.
 
 == Description ==
 
-A WordPress plugin for managing and displaying code snippets
+A WordPress plugin for elegantly managing and displaying code snippets
 
-Adds a custom post type for managing your code snippets with taxonomies for classifying the snippets. Embed snippets with syntax highlighting to posts or pages via a handy shortcode insert button that allows you to pick from the most recent snippets. Syntax highlighting provided by the [Prettify javascript library](https://code.google.com/p/google-code-prettify/).
+Adds a custom post type for managing your code snippets with taxonomies for classifying the snippets. Embed snippets with syntax highlighting to posts or pages via a handy shortcode insert button that allows you to pick from the most recent snippets. Syntax highlighting provided by the [Prettify javascript library](https://github.com/google/code-prettify).
+
+Features:
+
+* Host your own snippet library.
+* Button for easy-copying of snippet (disable with: `add_filter( 'snippet_cpt_do_click_to_copy', '__return_false' )`).
+* Button to enable full-screen snippet view (disable with: `add_filter( 'snippet_cpt_enable_full_screen_view', '__return_false' )`).
+* Monokai theme (disable with: `add_filter( 'snippet_cpt_monokai_theme', '__return_false' )`).
+* WordPress editor shortcode button for embedding snippets in your content.
+* Live (tinymce) previews of the snippets in your content editor.
+* Programming language picker (for syntax).
+* Snippet tags and categories.
+
 
 Feel free to [fork or contribute on Github](https://github.com/jtsternberg/Code-Snippets-CPT).
 
@@ -38,6 +50,14 @@ Feel free to [fork or contribute on Github](https://github.com/jtsternberg/Code-
 4. Code snippet insert button/modal
 
 == Changelog ==
+
+= 2.0.0 =
+* Button for opening modal for easy-copying of snippet.
+* Button to enable full-screen snippet view.
+* View individual snippet pages, and link to full-screen snippets.
+* Snippet edit button (if logged-in).
+* Live (tinymce) previews of the snippets in your content editor, and edit them in-place.
+* `'dsgnwrks_snippet_display'` filter which filters the snippet output.
 
 = 1.0.5 =
 * Add C# as available language.
@@ -65,6 +85,14 @@ Feel free to [fork or contribute on Github](https://github.com/jtsternberg/Code-
 * First Release
 
 == Upgrade Notice ==
+
+= 2.0.0 =
+* Button for opening modal for easy-copying of snippet.
+* Button to enable full-screen snippet view.
+* View individual snippet pages, and link to full-screen snippets.
+* Snippet edit button (if logged-in).
+* Live (tinymce) previews of the snippets in your content editor, and edit them in-place.
+* `'dsgnwrks_snippet_display'` filter which filters the snippet output.
 
 = 1.0.5 =
 * Add C# as available language.

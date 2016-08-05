@@ -1,15 +1,29 @@
 <?php
 /*
 Plugin Name: Code Snippets CPT
-Description: A code snippet custom post-type and shortcode for displaying your code snippets in your posts or pages.
+Description: A code snippet custom post-type and shortcode for elegantly managing and displaying your code snippets.
+elegantly managing and displaying code snippets
 Plugin URI: http://j.ustin.co/jAHRM3
 Author: Jtsternberg
 Author URI: http://about.me/jtsternberg
 Donate link: http://j.ustin.co/rYL89n
-Version: 1.0.5
+Version: 2.0.0
 */
 
+/**
+ * Plugin setup master class.
+ * @todo shortcode parameters for description/taxonomy data
+ * @todo Minify/concatenate CSS/JS
+ */
 class CodeSnippitInit {
+
+	const VERSION = '2.0.0';
+
+	/**
+	 * The name of the shortcode tag
+	 * @var string
+	 */
+	const SHORTCODE_TAG = 'snippet';
 
 	protected $plugin_name = 'Code Snippets CPT';
 	protected $cpt;
@@ -32,16 +46,7 @@ class CodeSnippitInit {
 		'Swift',
 		'CFML',
 	);
-	const VERSION = '1.0.4';
-
 	public static $single_instance = null;
-
-	/**
-	 * $shortcode_tag
-	 * holds the name of the shortcode tag
-	 * @var string
-	 */
-	protected $shortcode_tag = 'snippet';
 
 	private function __construct() {
 
@@ -49,9 +54,6 @@ class CodeSnippitInit {
 		define( 'DWSNIPPET_URL', plugins_url( '/', __FILE__ ) );
 
 		register_activation_hook( __FILE__, array( $this, '_activate' ) );
-
-		// Custom Functions
-		require_once( DWSNIPPET_PATH .'lib/functions.php' );
 
 		// Snippet Post-Type Setup
 		require_once( DWSNIPPET_PATH .'lib/Snippet_CPT_Setup.php' );
@@ -61,16 +63,18 @@ class CodeSnippitInit {
 		require_once( DWSNIPPET_PATH .'lib/Snippet_Tax_Setup.php' );
 		new Snippet_Tax_Setup( 'Snippet Category', 'Snippet Categories', array( $this->cpt->post_type ) );
 		new Snippet_Tax_Setup( 'Snippet Tag', '', array( $this->cpt->post_type ), array( 'hierarchical' => false ) );
+
 		$this->language = new Snippet_Tax_Setup( 'Language', '', array( $this->cpt->post_type ),  array( 'public' => false, 'show_ui' => false ) );
 		// Custom metabox for the programming languages taxonomy
 		$this->language->init_select_box();
+		$this->cpt->set_language( $this->language );
 
 		// Include our wysiwyg button script
 		require_once( DWSNIPPET_PATH .'lib/CodeSnippitButton.php' );
 		new CodeSnippitButton( $this->cpt, $this->language );
 
 		// Snippet Shortcode Setup
-		add_shortcode( $this->shortcode_tag, array( $this, 'shortcode' ) );
+		add_shortcode( self::SHORTCODE_TAG, array( $this, 'shortcode' ) );
 
 		// Set default programming language taxonomy terms
 		add_action( 'admin_init', array( $this, 'add_languages' ) );
@@ -112,20 +116,20 @@ class CodeSnippitInit {
 		return $value;
 	}
 
-	public function shortcode( $atts, $context ) {
-
+	public function shortcode( $atts ) {
 		$atts = shortcode_atts( array(
 			'id'           => false,
 			'slug'         => '',
 			'line_numbers' => true,
 			'lang'         => '',
 			'title_attr'   => true,
+			// @todo Offer to output snippet description/taxonomies
 		), $atts, 'snippet' );
 
 		$args = array(
-			'post_type'   => 'code-snippets',
-			'showposts'   => 1,
-			'post_status' => 'published',
+			'post_type'      => 'code-snippets',
+			'posts_per_page' => 1,
+			'post_status'    => 'published',
 		);
 
 		if ( $atts['id'] && is_numeric( $atts['id'] ) ) {
@@ -134,13 +138,12 @@ class CodeSnippitInit {
 			$args['name'] = $atts['slug'];
 		}
 
-		$snippet = get_posts( $args );
-		if ( is_wp_error( $snippet ) || empty( $snippet ) ) {
+		$snippets = new WP_Query( $args );
+		if ( ! $snippets->have_posts() ) {
 			return;
 		}
 
-		$snippet = $snippet[0];
-		$snippet_id = $snippet->ID;
+		$snippet = $snippets->posts[0];
 
 		if ( empty( $snippet->post_content ) ) {
 			return;
@@ -148,30 +151,60 @@ class CodeSnippitInit {
 
 		$this->cpt->enqueue_prettify();
 
-		$class = 'prettyprint';
+		$atts['class'] = 'prettyprint';
 
 		$line_nums = ! $atts['line_numbers'] || false === $atts['line_numbers'] || $atts['line_numbers'] === 'false' ? false : $atts['line_numbers'];
 
 		if ( $line_nums ) {
-			$class .= ' linenums';
+			$atts['class'] .= ' linenums';
 			if ( is_numeric( $line_nums ) && 0 !== absint( $line_nums ) ) {
-				$class .= ':' . absint( $line_nums );
+				$atts['class'] .= ':' . absint( $line_nums );
 			}
 		}
 
 		if ( ! empty( $atts['lang'] ) ) {
-			$class .= ' lang-'. sanitize_html_class( $atts['lang'] );
+			$atts['class'] .= ' lang-'. sanitize_html_class( $atts['lang'] );
 		}
-		elseif ( $lang_slug = $this->language->language_slug_from_post( $snippet_id ) ) {
-			$class .= ' lang-'. $lang_slug;
-		}
-
-		$snippet_content = apply_filters( 'dsgnwrks_snippet_content', htmlentities( $snippet->post_content, ENT_COMPAT, 'UTF-8' ), $atts, $snippet );
-
-		if ( $atts['title_attr'] && ! in_array( $atts['title_attr'], array( 'no', 'false' ), true ) ) {
-			$title_attr = sprintf( ' title="%s"', esc_attr( $snippet->post_title ) );
+		elseif ( $lang_slug = $this->language->language_slug_from_post( $snippet->ID ) ) {
+			$atts['class'] .= ' lang-'. $lang_slug;
 		}
 
+		if ( is_string( $atts['title_attr'] ) && ! in_array( $atts['title_attr'], array( 'true', 'yes', '1' ), true ) ) {
+			$atts['title_attr'] = esc_attr( $atts['title_attr'] );
+		} else {
+			$atts['title_attr'] = in_array( $atts['title_attr'], array( 'no', 'false', '' ), true ) || ! $atts['title_attr'] ? '' : esc_attr( $snippet->post_title );
+		}
+
+		return self::prettyprint_html( $snippet, $atts );
+	}
+
+	public static function prettyprint_html( $snippet, $args = array() ) {
+		$edit_link = '';
+		if ( is_user_logged_in() && current_user_can( get_post_type_object( $snippet->post_type )->cap->edit_post,  $snippet->ID ) ) {
+			$edit_link = get_edit_post_link( $snippet->ID );
+		}
+
+		$args = wp_parse_args( $args, array(
+			'class'           => 'prettyprint linenums',
+			'title_attr'      => esc_attr( get_the_title( $snippet->ID ) ),
+			'snippet_content' => apply_filters( 'dsgnwrks_snippet_content', htmlentities( $snippet->post_content, ENT_COMPAT, 'UTF-8' ), $args, $snippet ),
+			'edit_link'       => $edit_link,
+			'copy_link'       => Snippet_CPT_Setup::show_code_url_base( array( 'id' => $snippet->ID ) ),
+			'fullscreen_link' => add_query_arg( 'full-screen', 1, get_permalink( $snippet->ID ) ),
+		) );
+
+		$html = sprintf(
+			'<div class="pretty-print-wrap" id="snippet-%4$s" data-id="%4$s" data-edit="%5$s" data-copy="%6$s" data-fullscreen="%7$s"><pre class="%1$s" title="%2$s">%3$s</pre></div>',
+			$args['class'],
+			$args['title_attr'],
+			$args['snippet_content'],
+			$snippet->ID,
+			esc_url( $args['edit_link'] ),
+			esc_url( $args['copy_link'] ),
+			esc_url( $args['fullscreen_link'] )
+		);
+
+		return apply_filters( 'dsgnwrks_snippet_display', $html, $args, $snippet );
 	}
 
 	/**
@@ -201,8 +234,11 @@ class CodeSnippitInit {
 			case 'plugin_name':
 			case 'cpt':
 			case 'languages':
-			case 'shortcode_tag':
 				return $this->{$field};
+			case 'shortcode_tag':
+				return self::SHORTCODE_TAG;
+			case 'version':
+				return self::VERSION;
 			default:
 				throw new Exception( 'Invalid '. __CLASS__ .' property: ' . $field );
 		}

@@ -7,6 +7,11 @@ class CodeSnippitButton {
 	function __construct( $cpt, $language ) {
 		$this->cpt = $cpt;
 		$this->language = $language;
+
+		if ( $this->cpt->is_snippet_cpt_admin_page() ) {
+			return;
+		}
+
 		// Add button for snippet lookup
 		add_filter( 'the_editor_content', array( $this, '_enqueue_button_script' ) );
 		// script for button handler
@@ -14,17 +19,24 @@ class CodeSnippitButton {
 
 		// Set default programming language taxonomy terms
 		add_action( 'admin_init', array( $this, 'admin_init' ) );
+
+		add_action( 'wp_ajax_snippet_parse_shortcode', array( $this, 'ajax_parse_shortcode' ) );
 	}
 
 	public function button_script() {
 		wp_register_script( $this->script, DWSNIPPET_URL .'/lib/js/'. $this->script .'.js' , array( 'jquery', 'quicktags', 'wpdialogs' ), CodeSnippitInit::VERSION, true );
 
-		wp_localize_script( $this->script, 'codeSnippetCPT', array(
-			'button_img'   => DWSNIPPET_URL .'lib/js/icon.png',
-			'button_name'  => __( 'Add Snippet', 'code-snippet-cpt' ),
-			'button_title' => __( 'Add a Code Snippet', 'code-snippet-cpt' ),
-			'btn_cancel'   => __( 'Cancel', 'snippet-cpt' ),
-			'btn_insert'   => __( 'Insert Shortcode', 'snippet-cpt' ),
+		wp_localize_script( $this->script, 'codeSnippetCPTButton', array(
+			'l10n' => array(
+				'button_img'   => DWSNIPPET_URL .'lib/js/icon.png',
+				'button_name'  => __( 'Add Snippet', 'code-snippet-cpt' ),
+				'button_title' => __( 'Add a Code Snippet', 'code-snippet-cpt' ),
+				'btn_cancel'   => __( 'Cancel', 'snippet-cpt' ),
+				'btn_insert'   => __( 'Insert Shortcode', 'snippet-cpt' ),
+				'btn_update'   => __( 'Update Shortcode', 'snippet-cpt' ),
+				'btn_edit'     => __( 'Edit this Snippet', 'snippet-cpt' ),
+			),
+			'version' => CodeSnippitInit::VERSION,
 		) );
 	}
 
@@ -52,8 +64,6 @@ class CodeSnippitButton {
 	public function quicktag_button_script() {
 		wp_enqueue_style( 'wp-jquery-ui-dialog' );
 		wp_enqueue_script( $this->script );
-
-		// wp_die( '<xmp style="padding: 50px; background: #eee; color: #000;">$this: '. print_r( $this, true ) .'</xmp>' );
 
 		// Get CPT posts
 		$snippets = get_posts( array(
@@ -99,8 +109,9 @@ class CodeSnippitButton {
 									if ( $has_slug = $this->language->language_slug_from_post( $snippet->ID ) ) {
 										$lang_slug = $has_slug;
 									}
+									$edit_link = get_edit_post_link( $snippet->ID );
 								?>
-									<option value="<?php echo $snippet->post_name;?>" data-lang="<?php echo $lang_slug; ?>"><?php echo $snippet->post_title; ?></option>
+									<option value="<?php echo $snippet->post_name;?>" data-lang="<?php echo $lang_slug; ?>" data-id="<?php echo $snippet->ID; ?>" data-editlink="<?php echo esc_url( $edit_link ); ?>"><?php echo $snippet->post_title; ?></option>
 								<?php endforeach; ?>
 							</select>
 						</td>
@@ -122,4 +133,49 @@ class CodeSnippitButton {
 		<?php
 	}
 
+	/**
+	 * Parse the snippet shortcode for display within a TinyMCE view.
+	 */
+	public function ajax_parse_shortcode() {
+		global $wp_scripts;
+
+		if ( empty( $_POST['shortcode'] ) ) {
+			wp_send_json_error();
+		}
+
+		$shortcode = do_shortcode( wp_unslash( $_POST['shortcode'] ) );
+
+		if ( empty( $shortcode ) ) {
+			wp_send_json_error( array(
+				'type' => 'no-items',
+				'message' => __( 'No items found.' ),
+			) );
+		}
+
+		$head  = '';
+		$styles = wpview_media_sandbox_styles();
+
+		foreach ( $styles as $style ) {
+			$head .= '<link type="text/css" rel="stylesheet" href="' . $style . '">';
+		}
+
+		$head .= '<link rel="stylesheet" href="' . DWSNIPPET_URL .'lib/css/prettify.css?v=' . CodeSnippitInit::VERSION . '">';
+		$head .= '<link rel="stylesheet" href="' . DWSNIPPET_URL .'lib/css/prettify-monokai.css?v=' . CodeSnippitInit::VERSION . '">';
+
+		if ( ! empty( $wp_scripts ) ) {
+			$wp_scripts->done = array();
+		}
+
+		ob_start();
+		echo $shortcode;
+
+		add_action( 'wp_print_scripts', array( $this->cpt, 'run_js' ) );
+
+		wp_print_scripts( 'prettify' );
+
+		wp_send_json_success( array(
+			'head' => $head,
+			'body' => ob_get_clean(),
+		) );
+	}
 }

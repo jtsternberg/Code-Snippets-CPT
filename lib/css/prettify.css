@@ -32,21 +32,114 @@
 }
 
 /* Put a border around prettyprinted code snippets. */
-pre.prettyprint { padding: 2px; border: 1px solid #888 }
+pre.prettyprint {
+  border: 1px solid #888;
+  padding: 10px 15px;
+  overflow-x: scroll;
+  word-wrap: normal;
+  white-space: pre;
+}
 
 /* Specify class=linenums on a pre to get line numbering */
-ol.linenums { margin-top: 0; margin-bottom: 0 } /* IE indents via margin-left */
-li.L0,
+ol.linenums {
+  margin-top: 0;
+  margin-bottom: 0;
+  margin: 0 -15px 0 -25px;
+  color: #888;
+}
+
+.gt100 ol.linenums li:nth-child(-n+99), .gt10 ol.linenums li:nth-child(-n+9) {
+  padding-left: 1.5em;
+}
+
+.gt100 ol.linenums li:nth-child(-n+9) {
+  padding-left: 2em;
+}
+/*li.L0,
 li.L1,
 li.L2,
 li.L3,
 li.L5,
 li.L6,
 li.L7,
-li.L8 { list-style-type: none }
+li.L8 { list-style-type: none }*/
 /* Alternate shading for lines */
 li.L1,
 li.L3,
 li.L5,
 li.L7,
-li.L9 { background: #eee }
+li.L9 { background: #f3f3f3 }
+
+.pretty-print-wrap {
+  position: relative;
+}
+
+.snippet-invisible { visibility: hidden; }
+.snippet-hidden { display: none; }
+.snippet-buttons {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.snippet-buttons .snippet-button {
+  color: #888;
+  padding: .25em .32em;
+}
+.snippet-buttons button.snippet-button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+.snippet-buttons .snippet-button:hover {
+  color: #fff;
+  background: #444;
+  opacity: .8;
+  cursor: pointer;
+  text-decoration: none;
+}
+.snippet-buttons .snippet-button::active {
+  text-decoration: underline;
+}
+.footer-prettyprint {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 99999;
+  opacity: .991;
+}
+
+.footer-prettyprint .pretty-print-wrap,
+.footer-prettyprint .prettyprint {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0 !important;
+}
+
+.footer-prettyprint .prettyprint {
+  padding-top: 32px;
+  padding-bottom: 32px;
+  height: calc( 100% - 64px ); /* Compensate for padding-top/bottom */
+  width: calc( 100% - 30px ); /* Compensate for pre.prettyprint padding */
+}
+
+.footer-prettyprint .snippet-button {
+  font-size: 32px;
+  padding: 4px 5px;
+  line-height: 32px;
+  height: 28px;
+  width: 32px;
+}
+
+body.snippet-full-screen {
+  overflow: hidden;
+  max-height: 100%;
+}

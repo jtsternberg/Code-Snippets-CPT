@@ -1,13 +1,33 @@
 Code Snippets CPT
 =================
 
-A WordPress plugin for managing and displaying code snippets
+A WordPress plugin for elegantly managing and displaying code snippets
 
-Adds a custom post type for managing your code snippets with taxonomies for classifying the snippets. Embed to posts or pages via a handy shortcode insert button that allows you to pick from the most recent snippets.
+Adds a custom post type for managing your code snippets with taxonomies for classifying the snippets. Embed snippets with syntax highlighting to posts or pages via a handy shortcode insert button that allows you to pick from the most recent snippets. Syntax highlighting provided by the [Prettify javascript library](https://github.com/google/code-prettify).
+
+Features:
+
+* Host your own snippet library.
+* Button for easy-copying of snippet (disable with: `add_filter( 'snippet_cpt_do_click_to_copy', '__return_false' )`).
+* Button to enable full-screen snippet view (disable with: `add_filter( 'snippet_cpt_enable_full_screen_view', '__return_false' )`).
+* Monokai theme (disable with: `add_filter( 'snippet_cpt_monokai_theme', '__return_false' )`).
+* WordPress editor shortcode button for embedding snippets in your content.
+* Live (tinymce) previews of the snippets in your content editor.
+* Programming language picker (for syntax).
+* Snippet tags and categories.
+
 
 [Now available on wordpress.org](https://wordpress.org/plugins/code-snippets-cpt/).
 
 ## Change Log
+
+### 2.0.0
+* Button for opening modal for easy-copying of snippet.
+* Button to enable full-screen snippet view.
+* View individual snippet pages, and link to full-screen snippets.
+* Snippet edit button (if logged-in).
+* Live (tinymce) previews of the snippets in your content editor, and edit them in-place.
+* `'dsgnwrks_snippet_display'` filter which filters the snippet output.
 
 ### 1.0.5
 * Add C# as available language.
