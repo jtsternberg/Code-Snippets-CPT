@@ -43,19 +43,6 @@ class CodeSnippitInit {
 	 */
 	protected $shortcode_tag = 'snippet';
 
-	/**
-	 * Creates or returns an instance of this class.
-	 * @since  0.1.0
-	 * @return CodeSnippitInit A single instance of this class.
-	 */
-	public static function get_instance() {
-		if ( null === self::$single_instance ) {
-			self::$single_instance = new self();
-		}
-
-		return self::$single_instance;
-	}
-
 	private function __construct() {
 
 		define( 'DWSNIPPET_PATH', plugin_dir_path( __FILE__ ) );
@@ -88,8 +75,6 @@ class CodeSnippitInit {
 		// Set default programming language taxonomy terms
 		add_action( 'admin_init', array( $this, 'add_languages' ) );
 		add_filter( 'content_save_pre', array( $this, 'allow_unfiltered' ), 5 );
-
-
 	}
 
 	/**
@@ -100,15 +85,20 @@ class CodeSnippitInit {
 	}
 
 	public function add_languages() {
-		// make sure our default languages exist
-		foreach ( $this->languages as $key => $language ) {
-			$exists = is_numeric( $key )
-				? get_term_by( 'name', $language, 'languages' )
-				: get_term_by( 'slug', $key, 'languages' );
-			if ( empty( $exists ) ) {
-				$args = ! is_numeric( $key ) ? array( 'slug' => $key ) : array();
-				wp_insert_term( $language, 'languages', $args );
+		if ( ! get_option( 'code_snippets_cpt_languages_installed' ) ) {
+
+			// make sure our default languages exist
+			foreach ( $this->languages as $key => $language ) {
+				$exists = is_numeric( $key )
+					? get_term_by( 'name', $language, 'languages' )
+					: get_term_by( 'slug', $key, 'languages' );
+				if ( empty( $exists ) ) {
+					$args = ! is_numeric( $key ) ? array( 'slug' => $key ) : array();
+					wp_insert_term( $language, 'languages', $args );
+				}
 			}
+
+			update_option( 'code_snippets_cpt_languages_installed', self::VERSION, false );
 		}
 	}
 
@@ -182,7 +172,19 @@ class CodeSnippitInit {
 			$title_attr = sprintf( ' title="%s"', esc_attr( $snippet->post_title ) );
 		}
 
-		return apply_filters( 'dsgnwrks_snippet_display', sprintf( '<pre id="%4$s" class="%1$s"%2$s>%3$s</pre>', $class, $title_attr, $snippet_content, $snippet_id ), $atts, $snippet );
+	}
+
+	/**
+	 * Creates or returns an instance of this class.
+	 * @since  0.1.0
+	 * @return CodeSnippitInit A single instance of this class.
+	 */
+	public static function get_instance() {
+		if ( null === self::$single_instance ) {
+			self::$single_instance = new self();
+		}
+
+		return self::$single_instance;
 	}
 
 	/**
@@ -210,6 +212,19 @@ class CodeSnippitInit {
 
 CodeSnippitInit::get_instance();
 
+/**
+ * Replace snippet content tabs with spaces as they are generally
+ * more readable in blog-posts.
+ *
+ * To remove:
+ * remove_filter( 'dsgnwrks_snippet_content', 'dsgnwrks_snippet_content_replace_tabs' );
+ *
+ * @since  1.0.5
+ *
+ * @param  string  $snippet_content The snippet content.
+ *
+ * @return string                   Modified snippet content.
+ */
 function dsgnwrks_snippet_content_replace_tabs( $snippet_content ) {
 	// Replace tabs w/ spaces as it is more readable
 	$snippet_content = str_replace( "\t", "    ", $snippet_content );
