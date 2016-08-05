@@ -169,7 +169,7 @@ class CodeSnippitInit {
 			$title_attr = sprintf( ' title="%s"', esc_attr( $snippet->post_title ) );
 		}
 
-		return apply_filters( 'dsgnwrks_snippet_display', sprintf( '<pre class="%1$s"%2$s>%3$s</pre>', $class, $title_attr, $snippet_content ), $atts, $snippet );
+		return apply_filters( 'dsgnwrks_snippet_display', sprintf( '<pre id="%4$s" class="%1$s"%2$s>%3$s</pre>', $class, $title_attr, $snippet_content, $snippet_id ), $atts, $snippet );
 	}
 
 	/**
