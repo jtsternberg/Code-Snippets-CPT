@@ -20,10 +20,11 @@ class CodeSnippitButton {
 		wp_register_script( $this->script, DWSNIPPET_URL .'/lib/js/'. $this->script .'.js' , array( 'jquery', 'quicktags', 'wpdialogs' ), CodeSnippitInit::VERSION, true );
 
 		wp_localize_script( $this->script, 'codeSnippetCPT', array(
-			'buttons' => array( 'Cancel' => 'cancel', 'Insert Shortcode' => 'insert' ),
-			'button_img' => DWSNIPPET_URL .'lib/js/icon.png',
-			'button_name' => __( 'Add Snippet', 'code-snippet-cpt' ),
+			'button_img'   => DWSNIPPET_URL .'lib/js/icon.png',
+			'button_name'  => __( 'Add Snippet', 'code-snippet-cpt' ),
 			'button_title' => __( 'Add a Code Snippet', 'code-snippet-cpt' ),
+			'btn_cancel'   => __( 'Cancel', 'snippet-cpt' ),
+			'btn_insert'   => __( 'Insert Shortcode', 'snippet-cpt' ),
 		) );
 	}
 
