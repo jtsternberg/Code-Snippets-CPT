@@ -17,7 +17,8 @@ class CodeSnippitButton {
 	}
 
 	public function button_script() {
-		wp_register_script( $this->script, DWSNIPPET_URL .'/lib/js/'. $this->script .'.js' , array( 'quicktags', 'wpdialogs' ), CodeSnippitInit::VERSION, true );
+		wp_register_script( $this->script, DWSNIPPET_URL .'/lib/js/'. $this->script .'.js' , array( 'jquery', 'quicktags', 'wpdialogs' ), CodeSnippitInit::VERSION, true );
+
 		wp_localize_script( $this->script, 'codeSnippetCPT', array(
 			'buttons' => array( 'Cancel' => 'cancel', 'Insert Shortcode' => 'insert' ),
 			'button_img' => DWSNIPPET_URL .'lib/js/icon.png',
