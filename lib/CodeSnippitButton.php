@@ -20,17 +20,22 @@ class CodeSnippitButton {
 
 	public function button_script() {
 		wp_register_script( $this->script, DWSNIPPET_URL .'/lib/js/'. $this->script .'.js' , array( 'quicktags', 'wpdialogs' ), CodeSnippitInit::VERSION, true );
-		wp_localize_script( $this->script, 'codeSnippetCPT', array(
-			'buttons'         => array( 'cancel' => __( 'Cancel', 'code-snippet-cpt' ), 'insert' => __( 'Insert Shortcode', 'code-snippet-cpt' ) ),
-			'button_img'      => DWSNIPPET_URL .'lib/js/icon.png',
-			'button_name'     => __( 'Add Snippet', 'code-snippet-cpt' ),
-			'button_title'    => __( 'Add a Code Snippet', 'code-snippet-cpt' ),
-			'snippet_nonce'   => wp_create_nonce( 'insert_snippet_post' ),
-			'error_messages'  => array(
-				'no_title_or_content' => __( 'If you are creating a new snippet, you are required to have at minimum a title and content for the snippet.', 'code-snippet-cpt' ),
-				'general'             => __( 'There has been an error processing your request, please close the dialog and try again.', 'code-snippet-cpt' ),
-				'no_snippets'		  => __( "Silly rabbit, there are no snippets, you cannot add what doesn't exist.  Try the adding a snippet first.", 'code-snippet-cpt' ),
-				'select_a_snippet'    => __( 'You must select a snippet to add to the shortcode.', 'code-snippet-cpt' ),
+		wp_localize_script( $this->script, 'codeSnippetCPTButton', array(
+			'snippet_nonce' => wp_create_nonce( 'insert_snippet_post' ),
+			'button_img'    => DWSNIPPET_URL .'lib/js/icon.png',
+			'version'       => CodeSnippitInit::VERSION,
+			'l10n'          => array(
+				'button_img'       => DWSNIPPET_URL .'lib/js/icon.png',
+				'button_name'      => __( 'Add Snippet', 'code-snippet-cpt' ),
+				'button_title'     => __( 'Add a Code Snippet', 'code-snippet-cpt' ),
+				'btn_cancel'       => __( 'Cancel', 'snippet-cpt' ),
+				'btn_insert'       => __( 'Insert Shortcode', 'snippet-cpt' ),
+				'btn_update'       => __( 'Update Shortcode', 'snippet-cpt' ),
+				'btn_edit'         => __( 'Edit this Snippet', 'snippet-cpt' ),
+				'missing_required' => __( 'If you are creating a new snippet, you are required to have at minimum a title and content for the snippet.', 'code-snippet-cpt' ),
+				'general_error'    => __( 'There has been an error processing your request, please close the dialog and try again.', 'code-snippet-cpt' ),
+				'no_snippets'      => __( "Silly rabbit, there are no snippets, you cannot add what doesn't exist.  Try the adding a snippet first.", 'code-snippet-cpt' ),
+				'select_snippet'   => __( 'You must select a snippet to add to the shortcode.', 'code-snippet-cpt' ),
 			),
 		) );
 	}
@@ -81,7 +86,7 @@ class CodeSnippitButton {
 		}
 		$post_data = get_post( $post_result );
 
-		$output['line_numbers'] = $form_data['line_numbers'];
+		$output['line_numbers'] = $form_data['snippet-cpt-line-nums-2'];
 		$output['language']     = $language_data->slug;
 		$output['slug']         = $post_data->post_name;
 
@@ -119,6 +124,9 @@ class CodeSnippitButton {
 		// Shortcode button popup form
 		?>
 		<style type="text/css">
+			.snippet-cpt-dialog {
+				max-width: 800px;
+			}
 			#snippet-cpt-form {
 				padding: 0 10px 20px;
 			}
@@ -144,15 +152,15 @@ class CodeSnippitButton {
 				border: 1px solid #F00;
 			}
 
-			.add_new_snippet{
+			.add-new-snippet{
 				display:none;
 			}
 
-			.add_new_snippet > div{
+			.add-new-snippet > div{
 				margin-top: 0.5em;
 			}
 
-			.add_new_snippet label{
+			.add-new-snippet label{
 				font-weight: bold;
 			}
 
@@ -175,18 +183,22 @@ class CodeSnippitButton {
 				margin: auto;
 			}
 
+			.snippet-cpt-label {
+				display: block;
+				margin-bottom: .5em;
+			}
 		</style>
 		<div style="display: none;" id="snippet-cpt-form" title="<?php esc_attr_e( 'Code Snippets', 'code-snippet-cpt' ); ?>">
 			<div class="snippet-cpt-errors"><p></p></div>
-			<form id="snippet_form">
-			<fieldset class="select_a_snippet">
+			<form id="cpt-snippet-form">
+			<fieldset class="select-a-snippet">
 				<table>
 					<?php if ( ! empty( $snippets ) ) : ?>
 					<tr>
-						<th colspan="2"><label for="snippet-cpt-posts"><?php _e( 'Choose a Snippet', 'code-snippet-cpt' ); ?></label></th>
+						<th><label for="snippet-cpt-posts"><?php _e( 'Choose a Snippet', 'code-snippet-cpt' ); ?></label></th>
 					</tr>
 					<tr>
-						<td colspan="2">
+						<td>
 							<select name="snippet-cpt-posts" id="snippet-cpt-posts" value="left" class="text ui-widget-content ui-corner-all">
 								<option value=""><?php _e( 'Select a Snippet', 'code-snippet-cpt' ); ?></option>
 								<?php foreach ( $snippets as $snippet ) :
@@ -201,8 +213,12 @@ class CodeSnippitButton {
 						</td>
 					</tr>
 					<tr>
-						<td class="th"><label for="snippet-cpt-line-nums"><?php _e( 'Display Line Numbers?', 'code-snippet-cpt' ); ?></label></td>
-						<td><input type="checkbox" name="snippet-cpt-line-nums" id="snippet-cpt-line-nums" value="1" checked="checked" class="text ui-widget-content ui-corner-all" /></td>
+						<td>
+							<p>
+								<input type="checkbox" name="snippet-cpt-line-nums" id="snippet-cpt-line-nums" value="1" checked="checked" class="text ui-widget-content ui-corner-all" />
+								<label for="snippet-cpt-line-nums"><?php _e( 'Display Line Numbers?', 'code-snippet-cpt' ); ?></label>
+							</p>
+						</td>
 					</tr>
 
 					<?php else : ?>
@@ -215,27 +231,30 @@ class CodeSnippitButton {
 			</fieldset>
 			<fieldset>
 				<div style="text-align:right; padding: 10px 0;">
-					<input type='button' class="add_new_snippet_btn button button-secondary" value="<?php _e( 'Add New', 'code-snippet-cpt' ); ?> " />
-					<input type='button' class="cancel_new_snippet_btn button button-secondary hidden" value="<?php _e( 'Cancel', 'code-snippet-cpt' ); ?>">
+					<input type='button' class="add-new-snippet-btn button button-secondary" value="<?php _e( 'Add New', 'code-snippet-cpt' ); ?> " />
+					<input type='button' class="cancel-new-snippet-btn button button-secondary hidden" value="<?php _e( 'Cancel', 'code-snippet-cpt' ); ?>">
 				</div>
 			</fieldset>
-			<fieldset class="add_new_snippet">
+			<fieldset class="add-new-snippet">
 				<div>
-					<label for="snippet-title"><?php _e( 'Snippet Title', 'code-snippet-cpt' ); ?></label><br />
-					<input type="text" name="new-snippet-title" class="new-snippet-title widefat">
+					<label class="snippet-cpt-label" for="new-snippet-title"><?php _e( 'Snippet Title', 'code-snippet-cpt' ); ?></label>
+					<input type="text" name="new-snippet-title" id="new-snippet-title" class="new-snippet-title widefat">
 				</div>
 
 				<div>
-					<label for="line_numbers"><input type="checkbox" name="line_numbers" id="line_numbers" value="1" checked="checked" class="text ui-widget-content ui-corner-all" /><span><?php _e( 'Display Line Numbers?', 'code-snippet-cpt' ); ?></span></label>
+					<p>
+						<input type="checkbox" name="snippet-cpt-line-nums-2" id="snippet-cpt-line-nums-2" value="1" checked="checked" class="text ui-widget-content ui-corner-all" />
+						<label for="snippet-cpt-line-nums-2"><span><?php _e( 'Display Line Numbers?', 'code-snippet-cpt' ); ?></span></label>
+					</p>
 				</div>
 
 				<div>
-					<label for="new-snippet-content"><?php _e( 'Snippet', 'code-snippet-cpt' ); ?></label><br />
+					<label class="snippet-cpt-label" for="new-snippet-content"><?php _e( 'Snippet', 'code-snippet-cpt' ); ?></label>
 					<textarea name="new-snippet-content" id="new-snippet-content" class="widefat new-snippet-content" rows="15"></textarea>
 				</div>
 				<hr />
 				<div>
-					<label for="snippet-categories"><?php _e( 'Snippet Categories', 'code-snippet-cpt' ); ?></label><br />
+					<label class="snippet-cpt-label" for="snippet-categories"><?php _e( 'Snippet Categories', 'code-snippet-cpt' ); ?></label>
 					<?php
 						global $post;
 						$cat_box_config = array(
@@ -250,7 +269,7 @@ class CodeSnippitButton {
 				</div>
 				<hr />
 				<div>
-					<label for="snippet-categories"><?php _e( 'Snippet Tags', 'code-snippet-cpt' ); ?></label><br />
+					<label class="snippet-cpt-label" for="snippet-categories"><?php _e( 'Snippet Tags', 'code-snippet-cpt' ); ?></label>
 					<?php
 						global $post;
 						$cat_box_config = array(
@@ -265,7 +284,7 @@ class CodeSnippitButton {
 				</div>
 				<hr />
 				<div>
-					<label for="snippet-language"><?php _e( 'Programming Language', 'code-snippet-cpt' ); ?></label>
+					<label class="snippet-cpt-label" for="snippet-language"><?php _e( 'Programming Language', 'code-snippet-cpt' ); ?></label>
 					<?php
 						$languages = get_terms( 'languages', array(
 							'hide_empty' => 0,
