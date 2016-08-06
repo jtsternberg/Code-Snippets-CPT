@@ -7,8 +7,9 @@ class CodeSnippitButton {
 	function __construct( $cpt, $language ) {
 		$this->cpt = $cpt;
 		$this->language = $language;
+
 		// Add button for snippet lookup
-		add_filter( 'the_editor_content', array( $this, '_enqueue_button_script' ) );
+		add_filter( 'the_editor_content', array( $this, 'enqueue_button_script' ) );
 		// script for button handler
 		add_action( 'admin_enqueue_scripts', array( $this, 'button_script' ) );
 
@@ -19,7 +20,8 @@ class CodeSnippitButton {
 	}
 
 	public function button_script() {
-		wp_register_script( $this->script, DWSNIPPET_URL .'/lib/js/'. $this->script .'.js' , array( 'quicktags', 'wpdialogs' ), CodeSnippitInit::VERSION, true );
+		wp_register_script( $this->script, DWSNIPPET_URL .'/lib/js/'. $this->script .'.js' , array( 'jquery', 'quicktags', 'wpdialogs' ), CodeSnippitInit::VERSION, true );
+
 		wp_localize_script( $this->script, 'codeSnippetCPTButton', array(
 			'snippet_nonce' => wp_create_nonce( 'insert_snippet_post' ),
 			'button_img'    => DWSNIPPET_URL .'lib/js/icon.png',
@@ -50,45 +52,39 @@ class CodeSnippitButton {
 			wp_send_json_error( array( 'message' => __( 'Security Failure', 'code-snippet-cpt' ) ) );
 		}
 
-		// Need to create a new nonce.
-		$output = array( 'nonce' => wp_create_nonce( 'insert_snippet_post' ) );
-
 		$form_data = array();
 		parse_str( $_POST['form_data'], $form_data );
 
-		$title         = $form_data['new-snippet-title'];
-		$content       = $form_data['new-snippet-content'];
-		$categories    = $form_data['tax_input']['snippet-categories'];
-		$tags          = $form_data['tax_input']['snippet-tags'];
-		$language      = $form_data['snippet-language'];
-		$language_data = get_term( $language, 'languages' );
+		// Need to create a new nonce.
+		$output = array( 'nonce' => wp_create_nonce( 'insert_snippet_post' ) );
 
-		if ( is_wp_error( $language_data ) ) {
-			$output['message'] = __( 'Make sure you select a language for this snippet.', 'code-snippet-cpt' );
+		$language = get_term( absint( $form_data['snippet-language'] ), 'languages' );
+
+		if ( is_wp_error( $language ) ) {
+			$output['message'] = __( 'Make sure you select a programming language for this snippet.', 'code-snippet-cpt' );
 			wp_send_json_error( $output );
 		}
 
-		$post_result = wp_insert_post( array(
-			'post_title'   => $title,
-			'post_content' => $content,
+		$post_id = wp_insert_post( array(
+			'post_title'   => sanitize_text_field( $form_data['new-snippet-title'] ),
+			'post_content' => $form_data['new-snippet-content'], // Not sure there's any sanitizing we can do here.
+			'post_type'    => $this->cpt->post_type,
 			'post_status'  => 'publish',
-			'post_type'    => 'code-snippets',
 			'tax_input'    => array(
-				'snippet-categories' => $categories,
-				'snippet-tags'       => $tags,
-				'languages'			 => $language,
+				'snippet-categories' => array_map( 'absint', $form_data['tax_input']['snippet-categories'] ),
+				'snippet-tags'       => sanitize_text_field( $form_data['tax_input']['snippet-tags'] )	,
+				'languages'          => $language->term_id,
 			),
 		), true );
 
-		if ( is_wp_error( $post_result ) ) {
-			$output['message'] = $post_result->get_error_message();
+		if ( is_wp_error( $post_id ) ) {
+			$output['message'] = $post_id->get_error_message();
 			wp_send_json_error( $output );
 		}
-		$post_data = get_post( $post_result );
 
 		$output['line_numbers'] = $form_data['snippet-cpt-line-nums-2'];
-		$output['language']     = $language_data->slug;
-		$output['slug']         = $post_data->post_name;
+		$output['language']     = $language->slug;
+		$output['slug']         = get_post( $post_id )->post_name;
 
 		// Finally end it all
 		wp_send_json_success( $output );
@@ -104,7 +100,7 @@ class CodeSnippitButton {
 		return $buttons;
 	}
 
-	public function _enqueue_button_script( $content ) {
+	public function enqueue_button_script( $content ) {
 		// We know wp_editor was called, so add our CSS/JS to the footer
 		add_action( 'admin_footer', array( $this, 'quicktag_button_script' ) );
 		return $content;
