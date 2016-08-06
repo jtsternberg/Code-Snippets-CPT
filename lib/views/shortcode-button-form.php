@@ -20,27 +20,27 @@
 		text-align: right;
 	}
 
-	.snippet-cpt-errors p{
+	.snippet-cpt-errors p {
 		display: none;
 		background: rgba( 255, 0, 0, 0.5 );
 		padding: 5px;
 		border: 1px solid #F00;
 	}
 
-	.add-new-snippet{
-		display:none;
+	.add-new-snippet {
+		display: none;
 	}
 
-	.add-new-snippet > div{
+	.add-new-snippet > div {
 		margin-top: 0.5em;
 	}
 
-	.add-new-snippet label{
+	.add-new-snippet label {
 		font-weight: bold;
 	}
 
 	.snippet-overlay {
-		display:none;
+		display: none;
 		position: absolute;
 		top: 0;
 		left: 0;
@@ -151,6 +151,6 @@
 	</fieldset>
 	</form>
 	<div class="snippet-overlay">
-		<img src="<?php echo plugins_url( '/css/ajax-loader.gif', __FILE__ ); ?>" height="32" width="32" >
+		<img src="<?php echo DWSNIPPET_URL . 'lib/css/ajax-loader.gif'; ?>" height="32" width="32" >
 	</div>
 </div>

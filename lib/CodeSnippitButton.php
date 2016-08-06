@@ -27,7 +27,6 @@ class CodeSnippitButton {
 			'button_img'    => DWSNIPPET_URL .'lib/js/icon.png',
 			'version'       => CodeSnippitInit::VERSION,
 			'l10n'          => array(
-				'button_img'       => DWSNIPPET_URL .'lib/js/icon.png',
 				'button_name'      => __( 'Add Snippet', 'code-snippet-cpt' ),
 				'button_title'     => __( 'Add a Code Snippet', 'code-snippet-cpt' ),
 				'btn_cancel'       => __( 'Cancel', 'snippet-cpt' ),
