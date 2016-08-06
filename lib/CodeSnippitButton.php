@@ -17,6 +17,7 @@ class CodeSnippitButton {
 		add_action( 'admin_init', array( $this, 'admin_init' ) );
 
 		add_action( 'wp_ajax_snippetcpt_insert_snippet', array( $this, 'ajax_insert_snippet' ) );
+		add_action( 'wp_ajax_snippet_parse_shortcode', array( $this, 'ajax_parse_shortcode' ) );
 	}
 
 	public function button_script() {
@@ -143,4 +144,56 @@ class CodeSnippitButton {
 		// Shortcode button popup form
 		include_once( DWSNIPPET_PATH .'lib/views/shortcode-button-form.php' );
 	}
+
+	/**
+	 * Parse the snippet shortcode for display within a TinyMCE view.
+	 */
+	public function ajax_parse_shortcode() {
+		global $wp_scripts;
+
+		if ( empty( $_POST['shortcode'] ) ) {
+			wp_send_json_error();
+		}
+
+		$shortcode = do_shortcode( wp_unslash( $_POST['shortcode'] ) );
+
+		if ( empty( $shortcode ) ) {
+			wp_send_json_error( array(
+				'type' => 'no-items',
+				'message' => __( 'No items found.' ),
+			) );
+		}
+
+		$head  = '';
+		$styles = wpview_media_sandbox_styles();
+
+		foreach ( $styles as $style ) {
+			$head .= '<link type="text/css" rel="stylesheet" href="' . $style . '">';
+		}
+
+		$head .= '<link rel="stylesheet" href="' . DWSNIPPET_URL .'lib/css/prettify.css?v=' . CodeSnippitInit::VERSION . '">';
+		$head .= '<link rel="stylesheet" href="' . DWSNIPPET_URL .'lib/css/prettify-monokai.css?v=' . CodeSnippitInit::VERSION . '">';
+
+		if ( ! empty( $wp_scripts ) ) {
+			$wp_scripts->done = array();
+		}
+
+		$snippet = $this->cpt->get_snippet_by_id_or_slug( array(
+			'slug' => sanitize_text_field( $_POST['slug'] ),
+		) );
+
+		ob_start();
+		echo $shortcode;
+
+		add_action( 'wp_print_scripts', array( $this->cpt, 'run_js' ) );
+
+		wp_print_scripts( 'prettify' );
+
+		wp_send_json_success( array(
+			'head'    => $head,
+			'body'    => ob_get_clean(),
+			'snippet' => $snippet,
+		) );
+	}
+
 }

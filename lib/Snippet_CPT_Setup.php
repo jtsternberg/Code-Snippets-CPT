@@ -415,6 +415,28 @@ class Snippet_CPT_Setup {
 		return '<pre class="prettyprint linenums">'. htmlentities( $content ) .'</pre>';
 	}
 
+	public function get_snippet_by_id_or_slug( $atts ) {
+		$args = array(
+			'post_type'      => $this->post_type,
+			'posts_per_page' => 1,
+			'post_status'    => 'published',
+		);
+
+		if ( isset( $atts['id'] ) && is_numeric( $atts['id'] ) ) {
+			$args['p'] = $atts['id'];
+		} elseif ( isset( $atts['slug'] ) && is_string( $atts['slug'] ) ) {
+			$args['name'] = $atts['slug'];
+		} else {
+			return false;
+		}
+
+		$snippets = new WP_Query( $args );
+
+		return $snippet = $snippets->have_posts()
+			? $snippets->posts[0]
+			: false;
+	}
+
 	public function __get( $property ) {
 		switch ( $property ) {
 			case 'singular':

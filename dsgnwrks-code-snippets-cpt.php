@@ -248,24 +248,11 @@ class CodeSnippitInit {
 			'title_attr'   => true,
 		), $atts, 'snippet' );
 
-		$args = array(
-			'post_type'   => 'code-snippets',
-			'showposts'   => 1,
-			'post_status' => 'published',
-		);
-
-		if ( $atts['id'] && is_numeric( $atts['id'] ) ) {
-			$args['p'] = $atts['id'];
-		} elseif ( $atts['slug'] && is_string( $atts['slug'] ) ) {
-			$args['name'] = $atts['slug'];
-		}
-
-		$snippet = get_posts( $args );
-		if ( is_wp_error( $snippet ) || empty( $snippet ) ) {
+		$snippet = $this->cpt->get_snippet_by_id_or_slug( $atts );
+		if ( ! $snippet ) {
 			return '';
 		}
 
-		$snippet    = $snippet[0];
 		$snippet_id = $snippet->ID;
 
 		if ( empty( $snippet->post_content ) ) {
