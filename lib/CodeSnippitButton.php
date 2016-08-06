@@ -131,6 +131,15 @@ class CodeSnippitButton {
 			),
 		);
 
+		// Tag box config options.
+		$tag_box_config = array(
+			'id'    => 'snippet-tags',
+			'title' => __( 'Snippet Tags', 'code-snippet-cpt' ),
+			'args'  => array(
+				'taxonomy' => 'snippet-tags',
+			),
+		);
+
 		// Languages terms.
 		$languages = get_terms( 'languages', array(
 			'hide_empty' => 0,

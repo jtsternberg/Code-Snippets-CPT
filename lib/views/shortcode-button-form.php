@@ -130,22 +130,12 @@
 		<hr />
 		<div>
 			<label class="snippet-cpt-label" for="snippet-categories"><?php _e( 'Snippet Categories', 'code-snippet-cpt' ); ?></label>
-			<?php
-				global $post;
-				$cat_box_config = array(
-					'snippet-categories',
-					__( 'Snippet Categories', 'code-snippet-cpt' ),
-					'args' => array(
-						'taxonomy' => 'snippet-categories',
-					),
-				);
-				post_categories_meta_box( $post, $cat_box_config );
-			?>
+			<?php post_categories_meta_box( $post, $cat_box_config ); ?>
 		</div>
 		<hr />
 		<div>
 			<label class="snippet-cpt-label" for="snippet-categories"><?php _e( 'Snippet Tags', 'code-snippet-cpt' ); ?></label>
-			<?php post_tags_meta_box( $post, $cat_box_config ); ?>
+			<?php post_tags_meta_box( $post, $tag_box_config ); ?>
 		</div>
 		<hr />
 		<div>
