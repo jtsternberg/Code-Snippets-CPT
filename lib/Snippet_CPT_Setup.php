@@ -143,7 +143,7 @@ class Snippet_CPT_Setup {
 	public function enqueue_prettify() {
 		wp_enqueue_script( 'prettify' );
 		wp_enqueue_style( 'prettify' );
-		wp_enqueue_style( 'prettify-plus' );
+		wp_enqueue_style( 'prettify-monokai' );
 		add_action( 'wp_footer', array( $this, 'run_js' ) );
 	}
 
@@ -157,7 +157,7 @@ class Snippet_CPT_Setup {
 
 		wp_register_script( 'prettify', DWSNIPPET_URL .'lib/js/prettify.js', null, '1.1' );
 		wp_register_style( 'prettify', DWSNIPPET_URL .'lib/css/prettify.css', null, '1.0' );
-		wp_register_style( 'prettify-plus', DWSNIPPET_URL .'lib/css/prettify-plus.css', null, '1.0' );
+		wp_register_style( 'prettify-monokai', DWSNIPPET_URL .'lib/css/prettify-monokai.css', null, '1.0' );
 	}
 
 	public function ace_scripts() {
@@ -324,7 +324,7 @@ class Snippet_CPT_Setup {
 		?>
 		<div class="ace_editor_settings">
 			<label for="ace_theme_settings" id="ace_label"><?php _e( 'Change Theme:', 'code-snippets-cpt' ); ?></label>
-			<select id="ace_theme_settings" size="1">          
+			<select id="ace_theme_settings" size="1">
 				<?php echo $this->ace_theme_selector_options(); ?>
 			</select>
 		</div>

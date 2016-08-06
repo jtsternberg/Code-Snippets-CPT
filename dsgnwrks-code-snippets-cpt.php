@@ -159,9 +159,6 @@ class CodeSnippitInit {
 
 		register_activation_hook( __FILE__, array( $this, '_activate' ) );
 
-		// Custom Functions
-		require_once( DWSNIPPET_PATH . 'lib/functions.php' );
-
 		// Snippet Post-Type Setup
 		require_once( DWSNIPPET_PATH . 'lib/Snippet_CPT_Setup.php' );
 		$this->cpt = new Snippet_CPT_Setup();
@@ -170,6 +167,7 @@ class CodeSnippitInit {
 		require_once( DWSNIPPET_PATH . 'lib/Snippet_Tax_Setup.php' );
 		new Snippet_Tax_Setup( 'Snippet Category', 'Snippet Categories', array( $this->cpt->post_type ) );
 		new Snippet_Tax_Setup( 'Snippet Tag', '', array( $this->cpt->post_type ), array( 'hierarchical' => false ) );
+
 		$this->language = new Snippet_Tax_Setup( 'Language', '', array( $this->cpt->post_type ), array( 'public' => false, 'show_ui' => false ) );
 		// Custom metabox for the programming languages taxonomy
 		$this->language->init_select_box();
