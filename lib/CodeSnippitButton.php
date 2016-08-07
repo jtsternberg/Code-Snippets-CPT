@@ -65,7 +65,7 @@ class CodeSnippitButton {
 			wp_send_json_error( $output );
 		}
 
-		$post_id = wp_insert_post( array(
+		$args = array(
 			'post_title'   => sanitize_text_field( $form_data['new-snippet-title'] ),
 			'post_content' => $form_data['new-snippet-content'], // Not sure there's any sanitizing we can do here.
 			'post_type'    => $this->cpt->post_type,
@@ -75,7 +75,13 @@ class CodeSnippitButton {
 				'snippet-tags'       => sanitize_text_field( $form_data['tax_input']['snippet-tags'] )	,
 				'languages'          => $language->term_id,
 			),
-		), true );
+		);
+
+		if ( isset( $form_data['new-snippet-id'] ) ) {
+			$args['ID'] = absint( $form_data['new-snippet-id'] );
+		}
+
+		$post_id = wp_insert_post( $args, true );
 
 		if ( is_wp_error( $post_id ) ) {
 			$output['message'] = $post_id->get_error_message();
@@ -181,6 +187,25 @@ class CodeSnippitButton {
 		$snippet = $this->cpt->get_snippet_by_id_or_slug( array(
 			'slug' => sanitize_text_field( $_POST['slug'] ),
 		) );
+
+		if ( $snippet ) {
+			if ( $lang = $this->language->get_lang( $snippet->ID ) ) {
+				$snippet->lang_id = $lang->term_id;
+			}
+		}
+
+		foreach( array( 'snippet-categories', 'snippet-tags' ) as $tax ) {
+			$prop = str_replace( 'snippet-', '', $tax );
+			$snippet->{$prop} = get_the_terms( $snippet->ID, $tax );
+		}
+
+		if ( $snippet->categories ) {
+			$snippet->categories = wp_list_pluck( $snippet->categories, 'term_id' );
+		}
+
+		if ( $snippet->tags ) {
+			$snippet->tags = wp_list_pluck( $snippet->tags, 'name' );
+		}
 
 		ob_start();
 		echo $shortcode;

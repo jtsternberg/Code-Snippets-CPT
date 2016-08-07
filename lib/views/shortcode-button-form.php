@@ -82,7 +82,7 @@
 								$lang_slug = $has_slug;
 							}
 						?>
-							<option value="<?php echo $snippet->post_name;?>" data-lang="<?php echo $lang_slug; ?>"><?php echo $snippet->post_title; ?></option>
+							<option value="<?php echo $snippet->post_name;?>" data-lang="<?php echo $lang_slug; ?>" data-id="<?php echo $snippet->ID; ?>"><?php echo $snippet->post_title; ?></option>
 						<?php endforeach; ?>
 					</select>
 				</td>
@@ -111,6 +111,7 @@
 		</div>
 	</fieldset>
 	<fieldset class="add-new-snippet">
+		<input type="hidden" name="new-snippet-id" id="new-snippet-id" value=""/>
 		<div>
 			<label class="snippet-cpt-label" for="new-snippet-title"><?php _e( 'Snippet Title', 'code-snippet-cpt' ); ?></label>
 			<input type="text" name="new-snippet-title" id="new-snippet-title" class="new-snippet-title widefat">
