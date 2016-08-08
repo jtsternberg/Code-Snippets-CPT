@@ -1,21 +1,32 @@
 <?php
-
 /*
 Plugin Name: Code Snippets CPT
-Description: A code snippet custom post-type and shortcode for displaying your code snippets in your posts or pages.
+Description: A code snippet custom post-type and shortcode for elegantly managing and displaying your code snippets.
+elegantly managing and displaying code snippets
 Plugin URI: http://j.ustin.co/jAHRM3
 Author: Jtsternberg
 Author URI: http://about.me/jtsternberg
 Donate link: http://j.ustin.co/rYL89n
-Version: 1.0.7
+Version: 2.0.0
 */
 
+/**
+ * Plugin setup master class.
+ * @todo shortcode parameters for description/taxonomy data
+ * @todo Minify/concatenate CSS/JS
+ */
 class CodeSnippitInit {
 
 	const VERSION = '2.0.0';
 
-	public        $cpt;
-	public static $single_instance = null;
+	/**
+	 * The name of the shortcode tag
+	 * @var string
+	 */
+	const SHORTCODE_TAG = 'snippet';
+
+	protected $cpt;
+	protected $language;
 
 	protected $languages = array(
 		'abap'         => 'ABAP',
@@ -141,20 +152,9 @@ class CodeSnippitInit {
 		'yaml'         => 'YAML',
 	);
 
-	/**
-	 * Creates or returns an instance of this class.
-	 * @since  0.1.0
-	 * @return CodeSnippitInit A single instance of this class.
-	 */
-	public static function get_instance() {
-		if ( null === self::$single_instance ) {
-			self::$single_instance = new self();
-		}
+	public static $single_instance = null;
 
-		return self::$single_instance;
-	}
-
-	private function __construct() {
+	protected function __construct() {
 
 		define( 'DWSNIPPET_PATH', plugin_dir_path( __FILE__ ) );
 		define( 'DWSNIPPET_URL', plugins_url( '/', __FILE__ ) );
@@ -180,7 +180,7 @@ class CodeSnippitInit {
 		new CodeSnippitButton( $this->cpt, $this->language );
 
 		// Snippet Shortcode Setup
-		add_shortcode( 'snippet', array( $this, 'shortcode' ) );
+		add_shortcode( self::SHORTCODE_TAG, array( $this, 'shortcode' ) );
 
 		// Set default programming language taxonomy terms
 		add_action( 'admin_init', array( $this, 'update_check' ) );
@@ -363,6 +363,19 @@ class CodeSnippitInit {
 	}
 
 	/**
+	 * Creates or returns an instance of this class.
+	 * @since  0.1.0
+	 * @return CodeSnippitInit A single instance of this class.
+	 */
+	public static function get_instance() {
+		if ( null === self::$single_instance ) {
+			self::$single_instance = new self();
+		}
+
+		return self::$single_instance;
+	}
+
+	/**
 	 * Magic getter for our object.
 	 *
 	 * @param string $field
@@ -373,8 +386,14 @@ class CodeSnippitInit {
 	 */
 	public function __get( $field ) {
 		switch ( $field ) {
+			case 'cpt':
+			case 'language':
 			case 'languages':
 				return $this->{$field};
+			case 'shortcode_tag':
+				return self::SHORTCODE_TAG;
+			case 'version':
+				return self::VERSION;
 			default:
 				throw new Exception( 'Invalid ' . __CLASS__ . ' property: ' . $field );
 		}
@@ -383,11 +402,23 @@ class CodeSnippitInit {
 
 CodeSnippitInit::get_instance();
 
+/**
+ * Replace snippet content tabs with spaces as they are generally
+ * more readable in blog-posts.
+ *
+ * To remove:
+ * remove_filter( 'dsgnwrks_snippet_content', 'dsgnwrks_snippet_content_replace_tabs' );
+ *
+ * @since  1.0.5
+ *
+ * @param  string  $snippet_content The snippet content.
+ *
+ * @return string                   Modified snippet content.
+ */
 function dsgnwrks_snippet_content_replace_tabs( $snippet_content ) {
 	// Replace tabs w/ spaces as it is more readable
-	$snippet_content = str_replace( '\t', '    ', $snippet_content );
+	$snippet_content = str_replace( "\t", "    ", $snippet_content );
 
 	return $snippet_content;
 }
-
 add_filter( 'dsgnwrks_snippet_content', 'dsgnwrks_snippet_content_replace_tabs' );
