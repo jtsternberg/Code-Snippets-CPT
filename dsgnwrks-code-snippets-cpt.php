@@ -12,7 +12,7 @@ Version: 1.0.7
 
 class CodeSnippitInit {
 
-	const VERSION = '1.0.7';
+	const VERSION = '2.0.0';
 
 	public        $cpt;
 	public static $single_instance = null;
@@ -25,6 +25,7 @@ class CodeSnippitInit {
 		'asciidoc'     => 'AsciiDoc',
 		'assembly_x86' => 'Assembly x86',
 		'autohotkey'   => 'AutoHotKey',
+		'bash'         => 'Bash',
 		'batchfile'    => 'BatchFile',
 		'c9search'     => 'C9Search',
 		'c_cpp'        => 'C and C++',
@@ -122,6 +123,7 @@ class CodeSnippitInit {
 		'sql'          => 'SQL',
 		'stylus'       => 'Stylus',
 		'svg'          => 'SVG',
+		'swift'        => 'Swift',
 		'tcl'          => 'Tcl',
 		'tex'          => 'Tex',
 		'text'         => 'Text',
@@ -180,7 +182,7 @@ class CodeSnippitInit {
 		add_shortcode( 'snippet', array( $this, 'shortcode' ) );
 
 		// Set default programming language taxonomy terms
-		add_action( 'admin_init', array( $this, 'add_languages' ) );
+		add_action( 'admin_init', array( $this, 'update_check' ) );
 		add_filter( 'content_save_pre', array( $this, 'allow_unfiltered' ), 5 );
 	}
 
@@ -191,41 +193,52 @@ class CodeSnippitInit {
 		flush_rewrite_rules();
 	}
 
+	public function update_check() {
+		$current_version = get_option( 'dsgnwrks_snippet_version', '1.0.5' );
 
-	public function add_languages() {
-		$this->version_check();
-		// make sure our default languages exist
-		foreach ( $this->languages as $key => $language ) {
-			$exists = is_numeric( $key )
-				? get_term_by( 'name', $language, 'languages' )
-				: get_term_by( 'slug', $key, 'languages' );
-			if ( empty( $exists ) ) {
-				$args = ! is_numeric( $key ) ? array( 'slug' => $key ) : array();
-				wp_insert_term( $language, 'languages', $args );
+		if ( version_compare( $current_version, self::VERSION, '<' ) ) {
+			$taxonomy  = $this->language->slug;
+			$to_create = $this->languages;
+			$migrate = array(
+				'c_cpp'  => array(
+					'key' => 'name',
+					'value' => 'C',
+				),
+				'csharp' => array(
+					'key' => 'slug',
+					'value' => 'c-sharp',
+				),
+			);
+
+			// Migrate possibly-existing terms.
+			foreach ( $migrate as $slug => $to_migrate ) {
+
+				$exists = get_term_by( $to_migrate['key'], $to_migrate['value'], $taxonomy );
+				$new_name = $to_create[ $slug ];
+
+				if ( ! empty( $exists ) ) {
+					$updated = wp_update_term( $exists->term_id, $taxonomy, array(
+						'name' => $new_name,
+						'slug' => $slug,
+					) );
+				} else {
+					wp_insert_term( $new_name, $taxonomy, array( 'slug' => $slug ) );
+				}
+
+				// Mark this done.
+				unset( $to_create[ $slug ] );
 			}
-		}
-	}
 
-	public function version_check() {
-		$current_version = get_option( 'dsgnwrks_snippetcpt_version' );
-		if ( self::VERSION !== $current_version ) {
-			$this->update();
-		}
-	}
-
-	function update() {
-		$terms = get_terms( 'languages', array(
-			'fields'     => 'ids',
-			'hide_empty' => false,
-		) );
-
-		if ( ! is_wp_error( $terms ) ) {
-			foreach ( $terms as $term ) {
-				wp_delete_term( $term->term_id, 'languages' );
+			// make sure our default languages exist
+			foreach ( $to_create as $slug => $language ) {
+				$exists = get_term_by( 'slug', $slug, $taxonomy );
+				if ( empty( $exists ) ) {
+					wp_insert_term( $language, $taxonomy, array( 'slug' => $slug ) );
+				}
 			}
-		}
 
-		update_option( 'dsgnwrks_snippetcpt_version', self::VERSION );
+			update_option( 'dsgnwrks_snippet_version', self::VERSION );
+		}
 	}
 
 	public function allow_unfiltered( $value ) {

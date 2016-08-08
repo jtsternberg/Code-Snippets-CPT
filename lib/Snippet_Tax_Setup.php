@@ -133,4 +133,27 @@ class Snippet_Tax_Setup {
 		}
 		return $output;
 	}
+
+	/**
+	 * Magic getter for our object.
+	 *
+	 * @param string $field
+	 *
+	 * @throws Exception Throws an exception if the field is invalid.
+	 *
+	 * @return mixed
+	 */
+	public function __get( $field ) {
+		switch ( $field ) {
+			case 'singular':
+			case 'plural':
+			case 'slug':
+			case 'object_types':
+			case 'args':
+				return $this->{$field};
+			default:
+				throw new Exception( 'Invalid ' . __CLASS__ . ' property: ' . $field );
+		}
+	}
+
 }
