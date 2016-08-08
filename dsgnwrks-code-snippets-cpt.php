@@ -173,6 +173,7 @@ class CodeSnippitInit {
 		$this->language = new Snippet_Tax_Setup( 'Language', '', array( $this->cpt->post_type ), array( 'public' => false, 'show_ui' => false ) );
 		// Custom metabox for the programming languages taxonomy
 		$this->language->init_select_box();
+		$this->cpt->set_language( $this->language );
 
 		// Include our wysiwyg button script
 		require_once( DWSNIPPET_PATH . 'lib/CodeSnippitButton.php' );
@@ -244,7 +245,7 @@ class CodeSnippitInit {
 	public function allow_unfiltered( $value ) {
 		global $post;
 
-		if ( isset( $post->post_type ) && $this->cpt->post_type == $post->post_type && current_user_can( 'edit_posts' ) ) {
+		if ( isset( $post->post_type ) && $this->cpt->post_type === $post->post_type && current_user_can( 'edit_posts' ) ) {
 			kses_remove_filters();
 		}
 

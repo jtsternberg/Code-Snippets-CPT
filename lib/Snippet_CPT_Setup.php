@@ -4,10 +4,11 @@
  */
 class Snippet_CPT_Setup {
 
-	public $post_type = 'code-snippets';
+	protected $post_type = 'code-snippets';
 
-	private $singular;
-	private $plural;
+	protected $singular;
+	protected $plural;
+	protected $language;
 
 	function __construct() {
 
@@ -21,8 +22,8 @@ class Snippet_CPT_Setup {
 
 		add_filter( 'user_can_richedit', array( $this, 'remove_html' ), 50 );
 		add_filter( 'enter_title_here', array( $this, 'title' ) );
-		add_action( 'add_meta_boxes', array( $this, 'meta_boxes' ) );
 		add_filter( 'gettext', array( $this, 'text' ), 20, 2 );
+		add_action( 'edit_form_after_title', array( $this, 'shortcode_sample' ) );
 		add_action( 'init', array( $this, 'register_scripts_styles' ) );
 
 
@@ -47,6 +48,10 @@ class Snippet_CPT_Setup {
 	 */
 	public function is_ace_enabled() {
 		return apply_filters( 'dsgnwrks_snippet_ace_frontend', false );
+	}
+
+	public function set_language( Snippet_Tax_Setup $language ) {
+		$this->language = $language;
 	}
 
 	public function register_post_type() {
@@ -301,25 +306,45 @@ class Snippet_CPT_Setup {
 
 	}
 
-	public function text( $translation, $text ) {
+	public function is_snippet_cpt_admin_page() {
 		global $pagenow;
 
-		if ( ( 'post-new.php' == $pagenow && isset( $_GET['post_type'] ) && $_GET['post_type'] == $this->post_type )
-		     || ( 'post.php' == $pagenow && isset( $_GET['post'] ) && get_post_type( $_GET['post'] ) == $this->post_type )
-		     || ( 'edit.php' == $pagenow && isset( $_GET['post_type'] ) && $this->post_type == $_GET['post_type'] ) ) {
-			switch ( $text ) {
-				case 'Excerpt';
-					return 'Snippet Description:';
-				break;
-				case 'Excerpts are optional hand-crafted summaries of your content that can be used in your theme. <a href="http://codex.wordpress.org/Excerpt" target="_blank">Learn more about manual excerpts.</a>';
-					return '';
-				break;
-				case 'Permalink:';
-					return 'Choose a slug that\'s easy to remember for the shortcode:';
-				break;
-			}
+		return (
+			( $pagenow == 'post-new.php' && isset( $_GET['post_type'] ) && $this->post_type === $_GET['post_type'] )
+			|| ( $pagenow == 'post.php' && isset( $_GET['post'] ) && $this->post_type === get_post_type( $_GET['post'] ) )
+			|| ( $pagenow == 'edit.php' && isset( $_GET['post_type'] ) && $this->post_type === $_GET['post_type'] )
+		);
+	}
+
+	public function text( $translation, $text ) {
+		if ( ! $this->is_snippet_cpt_admin_page() ) {
+			return $translation;
 		}
+
+		switch ($text) {
+			case 'Excerpt';
+				return __( 'Snippet Description:', 'code-snippets-cpt' );
+			case 'Excerpts are optional hand-crafted summaries of your content that can be used in your theme. <a href="https://codex.wordpress.org/Excerpt" target="_blank">Learn more about manual excerpts.</a>';
+				return '';
+			// case 'Permalink:';
+			// 	return __( 'Slug will also be used in shortcodes:' );
+		}
+
 		return $translation;
+	}
+
+	public function shortcode_sample( $post ) {
+		if ( ! $this->is_snippet_cpt_admin_page() ) {
+			return;
+		}
+
+		$lang = '';
+		if ( $has_slug = $this->language->language_slug_from_post( $post->ID ) ) {
+			$lang = ' lang=' . $has_slug;
+		}
+
+		echo '<div style="padding:10px 10px 0 10px;"><strong>'. __( 'Shortcode:', 'snippets-cpt' ) .'</strong> ';
+				echo '<code>['. CodeSnippitInit::SHORTCODE_TAG .' slug='. $post->post_name . $lang .']</code></div>';
 	}
 
 	public function meta_boxes() {
@@ -450,6 +475,7 @@ class Snippet_CPT_Setup {
 			case 'plural':
 			case 'post_type':
 			case 'args':
+			case 'language':
 				return $this->{$property};
 			default:
 				throw new Exception( 'Invalid '. __CLASS__ .' property: ' . $property );

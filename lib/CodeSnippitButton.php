@@ -8,6 +8,10 @@ class CodeSnippitButton {
 		$this->cpt = $cpt;
 		$this->language = $language;
 
+		if ( $this->cpt->is_snippet_cpt_admin_page() ) {
+			return;
+		}
+
 		// Add button for snippet lookup
 		add_filter( 'the_editor_content', array( $this, 'enqueue_button_script' ) );
 		// script for button handler
