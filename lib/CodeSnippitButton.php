@@ -28,16 +28,16 @@ class CodeSnippitButton {
 			'button_img'    => DWSNIPPET_URL .'lib/js/icon.png',
 			'version'       => CodeSnippitInit::VERSION,
 			'l10n'          => array(
-				'button_name'      => __( 'Add Snippet', 'code-snippet-cpt' ),
-				'button_title'     => __( 'Add a Code Snippet', 'code-snippet-cpt' ),
-				'btn_cancel'       => __( 'Cancel', 'snippet-cpt' ),
-				'btn_insert'       => __( 'Insert Shortcode', 'snippet-cpt' ),
-				'btn_update'       => __( 'Update Shortcode', 'snippet-cpt' ),
-				'btn_edit'         => __( 'Edit this Snippet', 'snippet-cpt' ),
-				'missing_required' => __( 'If you are creating a new snippet, you are required to have at minimum a title and content for the snippet.', 'code-snippet-cpt' ),
-				'general_error'    => __( 'There has been an error processing your request, please close the dialog and try again.', 'code-snippet-cpt' ),
-				'no_snippets'      => __( "Silly rabbit, there are no snippets, you cannot add what doesn't exist.  Try the adding a snippet first.", 'code-snippet-cpt' ),
-				'select_snippet'   => __( 'You must select a snippet to add to the shortcode.', 'code-snippet-cpt' ),
+				'button_name'      => __( 'Add Snippet', 'code-snippets-cpt' ),
+				'button_title'     => __( 'Add a Code Snippet', 'code-snippets-cpt' ),
+				'btn_cancel'       => __( 'Cancel', 'code-snippets-cpt' ),
+				'btn_insert'       => __( 'Insert Shortcode', 'code-snippets-cpt' ),
+				'btn_update'       => __( 'Update Shortcode', 'code-snippets-cpt' ),
+				'btn_edit'         => __( 'Edit this Snippet', 'code-snippets-cpt' ),
+				'missing_required' => __( 'If you are creating a new snippet, you are required to have at minimum a title and content for the snippet.', 'code-snippets-cpt' ),
+				'general_error'    => __( 'There has been an error processing your request, please close the dialog and try again.', 'code-snippets-cpt' ),
+				'no_snippets'      => __( "Silly rabbit, there are no snippets, you cannot add what doesn't exist.  Try the adding a snippet first.", 'code-snippets-cpt' ),
+				'select_snippet'   => __( 'You must select a snippet to add to the shortcode.', 'code-snippets-cpt' ),
 			),
 		) );
 	}
@@ -49,7 +49,7 @@ class CodeSnippitButton {
 
 	public function ajax_insert_snippet() {
 		if ( ! wp_verify_nonce( $_REQUEST['nonce'], 'insert_snippet_post' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Security Failure', 'code-snippet-cpt' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Security Failure', 'code-snippets-cpt' ) ) );
 		}
 
 		$form_data = array();
@@ -61,7 +61,7 @@ class CodeSnippitButton {
 		$language = get_term( absint( $form_data['snippet-language'] ), 'languages' );
 
 		if ( is_wp_error( $language ) ) {
-			$output['message'] = __( 'Make sure you select a programming language for this snippet.', 'code-snippet-cpt' );
+			$output['message'] = __( 'Make sure you select a programming language for this snippet.', 'code-snippets-cpt' );
 			wp_send_json_error( $output );
 		}
 
@@ -127,7 +127,7 @@ class CodeSnippitButton {
 		// Category box config options.
 		$cat_box_config = array(
 			'snippet-categories',
-			__( 'Snippet Categories', 'code-snippet-cpt' ),
+			__( 'Snippet Categories', 'code-snippets-cpt' ),
 			'args' => array(
 				'taxonomy' => 'snippet-categories',
 			),
@@ -136,7 +136,7 @@ class CodeSnippitButton {
 		// Tag box config options.
 		$tag_box_config = array(
 			'id'    => 'snippet-tags',
-			'title' => __( 'Snippet Tags', 'code-snippet-cpt' ),
+			'title' => __( 'Snippet Tags', 'code-snippets-cpt' ),
 			'args'  => array(
 				'taxonomy' => 'snippet-tags',
 			),

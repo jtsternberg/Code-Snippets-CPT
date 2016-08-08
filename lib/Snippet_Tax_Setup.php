@@ -113,7 +113,7 @@ class Snippet_Tax_Setup {
 
 	public function get_ace_slug( $slug_to_check ) {
 		$slug_to_check = sanitize_html_class( strtolower( $slug_to_check ) );
-		$slugs = apply_filters( 'snippetcpt_ace_lang_associations', array(
+		$slugs = apply_filters( 'dsgnwrks_snippet_ace_lang_associations', array(
 			'js'         => 'javascript',
 			'c'          => 'c_cpp',
 			'c-sharp'    => 'csharp',
@@ -134,5 +134,3 @@ class Snippet_Tax_Setup {
 		return $output;
 	}
 }
-
-// new Snippet_Tax_Setup;

@@ -268,10 +268,10 @@ class CodeSnippitInit {
 			$title_attr = '';
 		}
 
-		if ( apply_filters( 'snippets-cpt-ace-frontend', false ) ) {
+		if ( $this->cpt->is_ace_enabled() ) {
 			$output = $this->get_ace_output( $title_attr, $snippet_content, $snippet_id, $line_nums );
 		} else {
-			$output = $this->get_old_output( $title_attr, $snippet_content, $snippet_id, $line_nums );
+			$output = $this->get_legacy_output( $title_attr, $snippet_content, $snippet_id, $line_nums );
 		}
 
 		return apply_filters( 'dsgnwrks_snippet_display', $output, $atts, $snippet );
@@ -287,7 +287,7 @@ class CodeSnippitInit {
 	 *
 	 * @return string
 	 */
-	public function get_old_output( $title_attr, $snippet_content, $snippet_id, $line_nums ) {
+	public function get_legacy_output( $title_attr, $snippet_content, $snippet_id, $line_nums ) {
 		$this->cpt->enqueue_prettify();
 		$class = 'prettyprint';
 		if ( $line_nums ) {
@@ -325,7 +325,7 @@ class CodeSnippitInit {
 			$data_sets['line_nums'] = is_numeric( $line_nums ) && 0 !== absint( $line_nums ) ? absint( $line_nums ) : true;
 		}
 
-		$data_sets['lang'] = apply_filters( 'snippetcpt_default_ace_lang', 'text' );
+		$data_sets['lang'] = apply_filters( 'dsgnwrks_snippet_default_ace_lang', 'text' );
 		if ( ! empty( $atts['lang'] ) ) {
 			// Need this for backwards compatibility
 			$maybe_old_language = sanitize_html_class( $atts['lang'] );
