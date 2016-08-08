@@ -28,138 +28,12 @@ class CodeSnippitInit {
 	protected $cpt;
 	protected $language;
 
-	protected $languages = array(
-		'abap'         => 'ABAP',
-		'actionscript' => 'ActionScript',
-		'ada'          => 'ADA',
-		'apache_conf'  => 'Apache Conf',
-		'asciidoc'     => 'AsciiDoc',
-		'assembly_x86' => 'Assembly x86',
-		'autohotkey'   => 'AutoHotKey',
-		'bash'         => 'Bash',
-		'batchfile'    => 'BatchFile',
-		'c9search'     => 'C9Search',
-		'c_cpp'        => 'C and C++',
-		'cirru'        => 'Cirru',
-		'clojure'      => 'Clojure',
-		'cobol'        => 'Cobol',
-		'coffee'       => 'CoffeeScript',
-		'coldfusion'   => 'ColdFusion',
-		'csharp'       => 'C#',
-		'css'          => 'CSS',
-		'curly'        => 'Curly',
-		'd'            => 'D',
-		'dart'         => 'Dart',
-		'diff'         => 'Diff',
-		'dockerfile'   => 'Dockerfile',
-		'dot'          => 'Dot',
-		'dummy'        => 'Dummy',
-		'dummysyntax'  => 'DummySyntax',
-		'eiffel'       => 'Eiffel',
-		'ejs'          => 'EJS',
-		'elixir'       => 'Elixir',
-		'elm'          => 'Elm',
-		'erlang'       => 'Erlang',
-		'forth'        => 'Forth',
-		'ftl'          => 'FreeMarker',
-		'gcode'        => 'Gcode',
-		'gherkin'      => 'Gherkin',
-		'gitignore'    => 'Gitignore',
-		'glsl'         => 'Glsl',
-		'golang'       => 'Go',
-		'groovy'       => 'Groovy',
-		'haml'         => 'HAML',
-		'handlebars'   => 'Handlebars',
-		'haskell'      => 'Haskell',
-		'haxe'         => 'haXe',
-		'html'         => 'HTML',
-		'html_ruby'    => 'HTML (Ruby)',
-		'ini'          => 'INI',
-		'io'           => 'Io',
-		'jack'         => 'Jack',
-		'jade'         => 'Jade',
-		'java'         => 'Java',
-		'javascript'   => 'JavaScript',
-		'json'         => 'JSON',
-		'jsoniq'       => 'JSONiq',
-		'jsp'          => 'JSP',
-		'jsx'          => 'JSX',
-		'julia'        => 'Julia',
-		'latex'        => 'LaTeX',
-		'less'         => 'LESS',
-		'liquid'       => 'Liquid',
-		'lisp'         => 'Lisp',
-		'livescript'   => 'LiveScript',
-		'logiql'       => 'LogiQL',
-		'lsl'          => 'LSL',
-		'lua'          => 'Lua',
-		'luapage'      => 'LuaPage',
-		'lucene'       => 'Lucene',
-		'makefile'     => 'Makefile',
-		'markdown'     => 'Markdown',
-		'mask'         => 'Mask',
-		'matlab'       => 'MATLAB',
-		'mel'          => 'MEL',
-		'mushcode'     => 'MUSHCode',
-		'mysql'        => 'MySQL',
-		'nix'          => 'Nix',
-		'objectivec'   => 'Objective-C',
-		'ocaml'        => 'OCaml',
-		'pascal'       => 'Pascal',
-		'perl'         => 'Perl',
-		'pgsql'        => 'pgSQL',
-		'php'          => 'PHP',
-		'powershell'   => 'Powershell',
-		'praat'        => 'Praat',
-		'prolog'       => 'Prolog',
-		'properties'   => 'Properties',
-		'protobuf'     => 'Protobuf',
-		'python'       => 'Python',
-		'r'            => 'R',
-		'rdoc'         => 'RDoc',
-		'rhtml'        => 'RHTML',
-		'ruby'         => 'Ruby',
-		'rust'         => 'Rust',
-		'sass'         => 'SASS',
-		'scad'         => 'SCAD',
-		'scala'        => 'Scala',
-		'scheme'       => 'Scheme',
-		'scss'         => 'SCSS',
-		'sh'           => 'SH',
-		'sjs'          => 'SJS',
-		'smarty'       => 'Smarty',
-		'snippets'     => 'snippets',
-		'soy_template' => 'Soy Template',
-		'space'        => 'Space',
-		'sql'          => 'SQL',
-		'stylus'       => 'Stylus',
-		'svg'          => 'SVG',
-		'swift'        => 'Swift',
-		'tcl'          => 'Tcl',
-		'tex'          => 'Tex',
-		'text'         => 'Text',
-		'textile'      => 'Textile',
-		'toml'         => 'Toml',
-		'twig'         => 'Twig',
-		'typescript'   => 'Typescript',
-		'vala'         => 'Vala',
-		'vbscript'     => 'VBScript',
-		'velocity'     => 'Velocity',
-		'verilog'      => 'Verilog',
-		'vhdl'         => 'VHDL',
-		'xml'          => 'XML',
-		'xquery'       => 'XQuery',
-		'yaml'         => 'YAML',
-	);
-
 	public static $single_instance = null;
 
 	protected function __construct() {
 
 		define( 'DWSNIPPET_PATH', plugin_dir_path( __FILE__ ) );
 		define( 'DWSNIPPET_URL', plugins_url( '/', __FILE__ ) );
-
-		register_activation_hook( __FILE__, array( $this, '_activate' ) );
 
 		// Snippet Post-Type Setup
 		require_once( DWSNIPPET_PATH . 'lib/Snippet_CPT_Setup.php' );
@@ -187,19 +61,12 @@ class CodeSnippitInit {
 		add_filter( 'content_save_pre', array( $this, 'allow_unfiltered' ), 5 );
 	}
 
-	/**
-	 * Flush rewrite rules when the plugin activates
-	 */
-	function _activate() {
-		flush_rewrite_rules();
-	}
-
 	public function update_check() {
 		$current_version = get_option( 'dsgnwrks_snippet_version', '1.0.5' );
 
 		if ( version_compare( $current_version, self::VERSION, '<' ) ) {
 			$taxonomy  = $this->language->slug;
-			$to_create = $this->languages;
+			$to_create = ( include DWSNIPPET_PATH . 'lib/languages.php' );
 			$migrate = array(
 				'c_cpp'  => array(
 					'key' => 'name',
@@ -388,12 +255,13 @@ class CodeSnippitInit {
 		switch ( $field ) {
 			case 'cpt':
 			case 'language':
-			case 'languages':
 				return $this->{$field};
 			case 'shortcode_tag':
 				return self::SHORTCODE_TAG;
 			case 'version':
 				return self::VERSION;
+			case 'languages':
+				return ( include DWSNIPPET_PATH . 'lib/languages.php' );
 			default:
 				throw new Exception( 'Invalid ' . __CLASS__ . ' property: ' . $field );
 		}
@@ -401,6 +269,14 @@ class CodeSnippitInit {
 }
 
 CodeSnippitInit::get_instance();
+
+/**
+ * Flush rewrite rules when the plugin activates
+ */
+function dsgnwrks_snippet_activate() {
+	flush_rewrite_rules();
+}
+register_activation_hook( __FILE__, 'dsgnwrks_snippet_activate' );
 
 /**
  * Replace snippet content tabs with spaces as they are generally
