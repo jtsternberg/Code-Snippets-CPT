@@ -123,6 +123,53 @@ class CodeSnippitInit {
 		return $value;
 	}
 
+	public static function enabled_features( $to_check = '' ) {
+
+		/*
+		 * To disable:
+		 *
+		 * add_filter( 'dsgnwrks_snippet_do_click_to_copy', '__return_false' );
+		 * add_filter( 'dsgnwrks_snippet_enable_full_screen_view', '__return_false' );
+		 * add_filter( 'dsgnwrks_snippet_ace_frontend', '__return_false' );
+		 *
+		 */
+
+		$features = array(
+			// Determines whether we should enable the code-copy window/button.
+			'do_click_to_copy' => apply_filters( 'dsgnwrks_snippet_do_click_to_copy', true ),
+			// Determines whether we should enable full-screen view.
+			'enable_full_screen_view' => apply_filters( 'dsgnwrks_snippet_enable_full_screen_view', true ),
+			// Determines whether we are using the ACE front-end editor.
+			'enable_ace' => apply_filters( 'dsgnwrks_snippet_ace_frontend', true ),
+		);
+
+		if ( 'all' == $to_check ) {
+			foreach ( $features as $feature ) {
+				if ( ! $feature ) {
+					return false;
+				}
+			}
+
+			return true;
+		}
+
+		if ( 'any' == $to_check ) {
+			foreach ( $features as $feature ) {
+				if ( $feature ) {
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		if ( $to_check && array_key_exists( $to_check, $features ) ) {
+			return (bool) $features[ $to_check ];
+		}
+
+		return $features;
+	}
+
 	/**
 	 * Creates or returns an instance of this class.
 	 * @since  0.1.0

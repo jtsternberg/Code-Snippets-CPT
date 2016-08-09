@@ -205,14 +205,14 @@ class CodeSnippitButton {
 		$scripts = array();
 		$styles = array();
 
-		if ( $this->cpt->is_ace_enabled() ) {
+		if ( CodeSnippitInit::enabled_features( 'enable_ace' ) ) {
 			$styles[] = 'ace-css';
 			$scripts[] = 'ace-editor';
 			$scripts[] = 'snippet-cpt-js';
 		} else {
 			$scripts[] = 'prettify';
 			$styles[] = 'prettify';
-			if ( $this->cpt->do_monokai_theme() ) {
+			if ( Snippet_CPT_Frontend::do_monokai_theme() ) {
 				$styles[] = 'prettify-monokai';
 			}
 			add_action( 'wp_print_scripts', array( $this->cpt, 'run_js' ) );

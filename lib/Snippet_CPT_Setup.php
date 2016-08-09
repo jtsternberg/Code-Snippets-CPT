@@ -8,6 +8,7 @@ class Snippet_CPT_Setup {
 
 	protected $singular;
 	protected $plural;
+	protected $args;
 	protected $language;
 
 	function __construct() {
@@ -28,14 +29,6 @@ class Snippet_CPT_Setup {
 
 		// ACE Scripts
 		add_action( 'wp_ajax_snippetscpt-ace-ajax', array( $this, 'ace_ajax' ) );
-	}
-
-	/**
-	 * Determines whether we are using the ACE front-end editor.
-	 * @return mixed|void
-	 */
-	public function is_ace_enabled() {
-		return apply_filters( 'dsgnwrks_snippet_ace_frontend', false );
 	}
 
 	public function set_language( Snippet_Tax_Setup $language ) {
@@ -143,32 +136,29 @@ class Snippet_CPT_Setup {
 		}
 	}
 
-	public function enqueue_prettify() {
-		wp_enqueue_script( 'prettify' );
-		wp_enqueue_style( 'prettify' );
-
-		if ( $this->do_monokai_theme() ) {
-			wp_enqueue_style( 'prettify-monokai' );
-		}
-
-		add_action( 'wp_footer', array( $this, 'run_js' ) );
-	}
-
-	public static function do_monokai_theme() {
-		return apply_filters( 'dsgnwrks_snippet_monokai_theme', true );
-	}
-
 	public function register_scripts_styles() {
 		$ace_min = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '-min';
+
 		wp_register_script( 'ace-editor', DWSNIPPET_URL . "lib/js/ace/src{$ace_min}-noconflict/ace.js", array( 'jquery' ), '1.0', true );
 		wp_register_script( 'snippet-cpt-admin-js', DWSNIPPET_URL . 'lib/js/code-snippet-admin.js', array( 'jquery', 'ace-editor' ), '1.0', true );
 
 		wp_register_style( 'ace-css', DWSNIPPET_URL . 'lib/css/ace.css', array( 'dashicons' ), '1.0' );
-		wp_register_script( 'snippet-cpt-js', DWSNIPPET_URL . 'lib/js/code-snippet-ace.js', array( 'jquery', 'ace-editor' ), '1.0', true );
 
-		wp_register_script( 'prettify', DWSNIPPET_URL .'lib/js/prettify.js', null, '1.1' );
-		wp_register_style( 'prettify', DWSNIPPET_URL .'lib/css/prettify.css', null, '1.0' );
-		wp_register_style( 'prettify-monokai', DWSNIPPET_URL .'lib/css/prettify-monokai.css', null, '1.0' );
+		if ( CodeSnippitInit::enabled_features( 'enable_ace' ) ) {
+			$handle = 'snippet-cpt-js';
+			wp_register_script( $handle, DWSNIPPET_URL . 'lib/js/code-snippet-ace.js', array( 'jquery', 'ace-editor' ), '1.0', true );
+		} else {
+			$handle = 'prettify';
+			wp_register_script( $handle, DWSNIPPET_URL .'lib/js/prettify.js', null, '1.1' );
+
+			wp_register_style( 'prettify', DWSNIPPET_URL .'lib/css/prettify.css', null, '1.0' );
+			wp_register_style( 'prettify-monokai', DWSNIPPET_URL .'lib/css/prettify-monokai.css', null, '1.0' );
+		}
+
+		if ( CodeSnippitInit::enabled_features( 'any' ) ) {
+			wp_register_script( 'code-snippets-cpt', DWSNIPPET_URL .'lib/js/snippet-cpt.js', array( 'jquery', $handle ), CodeSnippitInit::VERSION );
+		}
+
 	}
 
 	public function ace_scripts( $handle, $args = array() ) {
@@ -207,33 +197,15 @@ class Snippet_CPT_Setup {
 		) );
 	}
 
-	public function run_js() {
-		static $js_done = false;
-		if ( $js_done ) {
-			return;
-		}
-		?>
-		<script type="text/javascript">
-			window.onload = function(){ prettyPrint( function() {
-				document.getElementsByTagName('body')[0].className += ' cscpt-js-loaded';
-				if ( window.jQuery ) {
-					jQuery( document ).trigger( 'prettify-loaded' );
-				}
-			} ); };
-		</script>
-		<?php
-		$js_done = true;
-	}
-
 	public function remove_html() {
 		return get_post_type() !== $this->post_type;
 	}
 
 	public function title( $title ) {
-
 		$screen = get_current_screen();
-		if ( $screen->post_type == $this->post_type ) {
-			$title = 'Snippet Title';
+
+		if ( $this->post_type === $screen->post_type ) {
+			$title = __( 'Snippet Title', 'code-snippets-cpt' );
 		}
 
 		return $title;
