@@ -196,22 +196,11 @@ class CodeSnippitButton {
 			return $response;
 		}
 
-		$head  = '';
-		$styles = wpview_media_sandbox_styles();
-
-		foreach ( $styles as $style ) {
-			$head .= '<link type="text/css" rel="stylesheet" href="' . $style . '">';
-		}
-
-		$head .= '<link rel="stylesheet" href="' . DWSNIPPET_URL .'lib/css/prettify.css?v=' . CodeSnippitInit::VERSION . '">';
-		$head .= '<link rel="stylesheet" href="' . DWSNIPPET_URL .'lib/css/prettify-monokai.css?v=' . CodeSnippitInit::VERSION . '">';
-
 		if ( ! empty( $wp_scripts ) ) {
 			$wp_scripts->done = array();
 		}
 
 		ob_start();
-		echo $shortcode;
 
 		$scripts = array();
 		$styles = array();
@@ -231,10 +220,14 @@ class CodeSnippitButton {
 
 		wp_print_scripts( $scripts );
 		wp_print_styles( $styles );
+		$head = ob_get_clean();
+
+		ob_start();
+		echo $shortcode;
 
 		return array(
-			'head'    => $head,
-			'body'    => ob_get_clean(),
+			'head'    => '',
+			'body'    => $head . ob_get_clean(),
 			'snippet' => $this->get_snippet_for_ajax( $snippet ),
 		);
 	}
