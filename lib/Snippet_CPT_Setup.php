@@ -201,16 +201,21 @@ class Snippet_CPT_Setup {
 	}
 
 	public function run_js() {
-		if ( isset( $this->js_done ) ) {
+		static $js_done = false;
+		if ( $js_done ) {
 			return;
 		}
 		?>
 		<script type="text/javascript">
-			window.onload = function() { prettyPrint(); };
+			window.onload = function(){ prettyPrint( function() {
+				document.getElementsByTagName('body')[0].className += ' cscpt-js-loaded';
+				if ( window.jQuery ) {
+					jQuery( document ).trigger( 'prettify-loaded' );
+				}
+			} ); };
 		</script>
 		<?php
-
-		$this->js_done = true;
+		$js_done = true;
 	}
 
 	public function remove_html() {
