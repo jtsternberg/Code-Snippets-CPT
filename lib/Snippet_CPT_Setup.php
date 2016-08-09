@@ -28,8 +28,6 @@ class Snippet_CPT_Setup {
 
 		// ACE Scripts
 		add_action( 'wp_ajax_snippetscpt-ace-ajax', array( $this, 'ace_ajax' ) );
-
-
 	}
 
 	/**
@@ -112,27 +110,36 @@ class Snippet_CPT_Setup {
 
 	public function columns( $columns ) {
 		$newcolumns = array(
-			'syntax_languages' => 'Syntax Languages',
-			'snippet_categories' => 'Snippet Categories',
-			'snippet_tags' => 'Snippet Tags',
+			'syntax_languages'   => __( 'Syntax Languages', 'code-snippets-cpt' ),
+			'snippet_categories' => __( 'Snippet Categories', 'code-snippets-cpt' ),
+			'snippet_tags'       => __( 'Snippet Tags', 'code-snippets-cpt' ),
 		);
 		$columns = array_merge( $columns, $newcolumns );
+
 		return $columns;
-		// $this->taxonomy_column( $post, 'uses', 'Uses' );
 	}
 
 	public function columns_display( $column ) {
 		global $post;
 		switch ( $column ) {
 			case 'syntax_languages':
-				$this->taxonomy_column( $post, 'languages', 'Languages' );
-			break;
+				return $this->taxonomy_column(
+					$post,
+					'languages',
+					__( 'No Languages Specified', 'code-snippets-cpt' )
+				);
 			case 'snippet_categories':
-				$this->taxonomy_column( $post, 'snippet-categories', 'Snippet Categories' );
-			break;
+				return $this->taxonomy_column(
+					$post,
+					'snippet-categories',
+					__( 'No Snippet Categories Specified', 'code-snippets-cpt' )
+				);
 			case 'snippet_tags':
-				$this->taxonomy_column( $post, 'snippet-tags', 'Snippet Tags' );
-			break;
+				return $this->taxonomy_column(
+					$post,
+					'snippet-tags',
+					__( 'No Snippet Tags Specified', 'code-snippets-cpt' )
+				);
 		}
 	}
 
@@ -232,25 +239,25 @@ class Snippet_CPT_Setup {
 		return $title;
 	}
 
-	public function taxonomy_column( $post = '', $tax = '', $name = '' ) {
+	public function taxonomy_column( $post, $tax, $oops ) {
 		if ( empty( $post ) ) {
 			return;
 		}
-		$id = $post->ID;
-		$categories = get_the_terms( $id, $tax );
-		if ( ! empty( $categories ) ) {
-			$out = array();
-			foreach ( $categories as $c ) {
-				$out[] = sprintf( '<a href="%s">%s</a>',
-					esc_url( add_query_arg( array( 'post_type' => $post->post_type, $tax => $c->slug ), 'edit.php' ) ),
-					esc_html( sanitize_term_field( 'name', $c->name, $c->term_id, 'category', 'display' ) )
-				);
-			}
-			echo join( ', ', $out );
-		} else {
-			_e( 'No '. $name .' Specified' );
+
+		$categories = get_the_terms( $post->ID, $tax );
+		if ( empty( $categories ) ) {
+			return print( $oops );
 		}
 
+		$out = array();
+		foreach ( $categories as $c ) {
+			$out[] = sprintf( '<a href="%s">%s</a>',
+				esc_url( add_query_arg( array( 'post_type' => $post->post_type, $tax => $c->slug ), 'edit.php' ) ),
+				esc_html( sanitize_term_field( 'name', $c->name, $c->term_id, 'category', 'display' ) )
+			);
+		}
+
+		echo join( ', ', $out );
 	}
 
 	public function is_snippet_cpt_admin_page() {
