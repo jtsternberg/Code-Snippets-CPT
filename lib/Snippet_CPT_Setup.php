@@ -165,7 +165,7 @@ class Snippet_CPT_Setup {
 		$current_user = wp_get_current_user();
 		wp_enqueue_style( 'ace-css' );
 		wp_enqueue_script( 'ace-editor' );
-		wp_localize_script( $handle, 'snippetcpt', wp_parse_args( $args, array(
+		wp_localize_script( $handle, 'snippetcptAce', wp_parse_args( $args, array(
 			'theme'         => get_user_meta( $current_user->ID, 'snippetscpt-ace-editor-theme', true ),
 			'default_theme' => apply_filters( 'dsgnwrks_snippet_default_ace_theme', 'ace/theme/monokai' ),
 			'default_lang'  => apply_filters( 'dsgnwrks_snippet_default_ace_lang', 'text' ),

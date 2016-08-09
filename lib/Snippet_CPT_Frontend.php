@@ -41,8 +41,10 @@ class Snippet_CPT_Frontend {
 			&& CodeSnippitInit::enabled_features( 'enable_full_screen_view' )
 		) {
 			self::$is_full_screen = true;
-			$body_classes[] = 'snippet-full-screen';
-			add_action( 'wp_after_admin_bar_render', array( $this, 'output_fullscreen_markup' ) );
+			if ( ! CodeSnippitInit::enabled_features( 'enable_ace' ) ) {
+				$body_classes[] = 'snippet-full-screen';
+				add_action( 'wp_after_admin_bar_render', array( $this, 'output_fullscreen_markup' ) );
+			}
 		}
 
 
@@ -58,7 +60,7 @@ class Snippet_CPT_Frontend {
 			'max_lines'    => false,
 		) );
 
-		echo '<div class="footer-prettyprint">'. $output .'</div>';
+		echo '<div class="snippetcpt-footer">'. $output .'</div>';
 	}
 
 	public function shortcode( $atts ) {
@@ -89,9 +91,11 @@ class Snippet_CPT_Frontend {
 			$atts['title_attr'] = in_array( $atts['title_attr'], array( 'no', 'false', '' ), true ) || ! $atts['title_attr'] ? '' : esc_attr( $snippet->post_title );
 		}
 
+		$atts = array_merge( $atts, self::get_output_args( $snippet ) );
+
 		$output = CodeSnippitInit::enabled_features( 'enable_ace' )
 			? $this->get_ace_output( $atts )
-			: $this->get_legacy_output( $atts, $snippet );
+			: $this->get_legacy_output( $atts );
 
 		return apply_filters( 'dsgnwrks_snippet_display', $output, $atts, $snippet );
 	}
@@ -103,7 +107,7 @@ class Snippet_CPT_Frontend {
 	 *
 	 * @return string
 	 */
-	public function get_legacy_output( $atts, $snippet ) {
+	public function get_legacy_output( $atts ) {
 		$this->enqueue_prettify();
 		$class = 'prettyprint';
 		if ( $atts['line_numbers'] ) {
@@ -123,23 +127,17 @@ class Snippet_CPT_Frontend {
 			$class .= ' '. sanitize_text_field( $atts['classes'] );
 		}
 
-		$edit_link = '';
-		if ( is_user_logged_in() && current_user_can( get_post_type_object( $snippet->post_type )->cap->edit_post,  $snippet->ID ) ) {
-			$edit_link = get_edit_post_link( $snippet->ID );
-		}
-
-		$copy_link = self::show_code_url_base( array( 'id' => $snippet->ID ) );
-		$fullscreen_link = add_query_arg( 'full-screen', 1, get_permalink( $snippet->ID ) );
-
 		return sprintf(
-			'<div class="snippetcpt-wrap" id="snippet-%4$s" data-id="%4$s" data-edit="%5$s" data-copy="%6$s" data-fullscreen="%7$s"><pre class="%1$s" title="%2$s">%3$s</pre></div>',
+			'<div class="snippetcpt-wrap" id="snippet-%4$s" data-id="%4$s" data-edit="%5$s" data-copy="%6$s" data-fullscreen="%7$s">
+				<pre class="%1$s" title="%2$s">%3$s</pre>
+			</div>',
 			$class,
 			$atts['title_attr'],
 			$atts['content'],
-			$snippet->ID,
-			esc_url( $edit_link ),
-			esc_url( $copy_link ),
-			esc_url( $fullscreen_link )
+			$atts['snippet_id'],
+			$atts['edit_link'],
+			$atts['copy_link'],
+			$atts['fullscreen_link']
 		);
 	}
 
@@ -188,26 +186,41 @@ class Snippet_CPT_Frontend {
 		}
 
 		if ( ! $scripts_enqueued ) {
-			$this->cpt->ace_scripts( 'snippet-cpt-js' );
+			$this->enqueue_ace();
 			$scripts_enqueued = true;
 		}
 
-		// '<pre class="snippetcpt-ace-viewer" title="Large Network &#039;My Sites&#039; menu replacement"  data-line_nums=\'1\' data-lang=\'php\' data-snippet-id=\'15904\'>'
-
 		return sprintf(
-			'<div class="snippetcpt-wrap">
+			'<div class="snippetcpt-wrap" id="snippet-%5$s" data-id="%5$s" data-edit="%6$s" data-copy="%7$s" data-fullscreen="%8$s">
 				<pre class="snippetcpt-ace-viewer %1$s" %2$s title="%3$s">%4$s</pre>
-				<div class="snippet-controls" title="%3$s">
-					<a href="#" class="dashicons dashicons-hidden collapse"></a>
-					<a href="#" class="dashicons dashicons-editor-ol line-numbers"></a>
-				</div>
+				<div class="snippet-buttons" title="%3$s"></div>
 			</div>',
 			$atts['classes'],
 			$data,
 			$atts['title_attr'],
-			$atts['content']
+			$atts['content'],
+			$atts['snippet_id'],
+			$atts['edit_link'],
+			$atts['copy_link'],
+			$atts['fullscreen_link']
 		);
+
 	}
+
+	public static function get_output_args( $snippet ) {
+		$snippet_id = $snippet->ID;
+
+		$edit_link = '';
+		if ( is_user_logged_in() && current_user_can( get_post_type_object( $snippet->post_type )->cap->edit_post,  $snippet_id ) ) {
+			$edit_link = get_edit_post_link( $snippet_id );
+		}
+
+		$copy_link = self::show_code_url_base( array( 'id' => $snippet_id ) );
+		$fullscreen_link = add_query_arg( 'full-screen', 1, get_permalink( $snippet_id ) );
+
+		return compact( 'edit_link', 'copy_link', 'fullscreen_link', 'snippet_id' );
+	}
+
 
 	public function maybe_remove_filters() {
 		if ( $this->cpt->post_type === get_post_type() ) {
@@ -231,6 +244,13 @@ class Snippet_CPT_Frontend {
 
 	public static function do_monokai_theme() {
 		return apply_filters( 'dsgnwrks_snippet_monokai_theme', true );
+	}
+
+	public function enqueue_ace() {
+		$this->cpt->ace_scripts( 'snippet-cpt-js' );
+
+		wp_enqueue_script( 'code-snippets-cpt' );
+		add_action( 'wp_footer', array( __CLASS__, 'localize_js_data' ), 5 );
 	}
 
 	public function enqueue_prettify() {
@@ -261,6 +281,8 @@ class Snippet_CPT_Frontend {
 				'fullscreen' => esc_html__( 'Expand Snippet', 'code-snippets-cpt' ),
 				'close'      => esc_html__( 'Close Snippet (or hit "escape" key)', 'code-snippets-cpt' ),
 				'edit'       => esc_html__( 'Edit Snippet', 'code-snippets-cpt' ),
+				'collapse'   => esc_html__( 'Collapse Snippet', 'code-snippets-cpt' ),
+				'numbers'    => esc_html__( 'Toggle Line Numbers', 'code-snippets-cpt' ),
 			),
 		);
 		wp_localize_script( 'code-snippets-cpt', 'snippetcpt', apply_filters( 'dsgnwrks_snippet_js_data', $data ) );
