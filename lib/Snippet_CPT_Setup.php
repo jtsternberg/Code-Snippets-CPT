@@ -26,24 +26,14 @@ class Snippet_CPT_Setup {
 		add_action( 'edit_form_after_title', array( $this, 'shortcode_sample' ) );
 		add_action( 'init', array( $this, 'register_scripts_styles' ) );
 
-
 		// ACE Scripts
-		add_action( 'admin_enqueue_scripts', array( $this, 'ace_scripts' ) );
 		add_action( 'wp_ajax_snippetscpt-ace-ajax', array( $this, 'ace_ajax' ) );
 
-		add_filter( 'dsgnwrks_snippet_display', array( $this, 'add_ace_snippet_controls' ), 10, 3 );
-		add_action( 'template_redirect', array( $this, 'remove_filter' ) );
-
-		if ( $this->is_ace_enabled() ) {
-			add_action( 'wp_enqueue_scripts', array( $this, 'ace_front_end_scripts' ) );
-		} else {
-			add_filter( 'the_content', array( $this, 'prettify_content' ), 20, 2 );
-		}
 
 	}
 
 	/**
-	 * Determines rather or not we are using the ACE front-end editor.
+	 * Determines whether we are using the ACE front-end editor.
 	 * @return mixed|void
 	 */
 	public function is_ace_enabled() {
@@ -146,62 +136,44 @@ class Snippet_CPT_Setup {
 		}
 	}
 
-	public function remove_filter() {
-		if ( get_post_type() != $this->post_type ) {
-			return;
-		}
-		remove_filter( 'the_content', 'wptexturize' );
-		remove_filter( 'the_content','wpautop' );
-	}
-
 	public function enqueue_prettify() {
 		wp_enqueue_script( 'prettify' );
 		wp_enqueue_style( 'prettify' );
-		wp_enqueue_style( 'prettify-monokai' );
+
+		if ( $this->do_monokai_theme() ) {
+			wp_enqueue_style( 'prettify-monokai' );
+		}
+
 		add_action( 'wp_footer', array( $this, 'run_js' ) );
+	}
+
+	public static function do_monokai_theme() {
+		return apply_filters( 'dsgnwrks_snippet_monokai_theme', true );
 	}
 
 	public function register_scripts_styles() {
 		$ace_min = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '-min';
-		wp_register_script( 'ace_editor', DWSNIPPET_URL . "lib/js/ace/src{$ace_min}-noconflict/ace.js", array( 'jquery' ), '1.0', true );
-		wp_register_script( 'snippet-cpt-admin-js', DWSNIPPET_URL . 'lib/js/code-snippet-admin.js', array( 'jquery', 'ace_editor' ), '1.0', true );
+		wp_register_script( 'ace-editor', DWSNIPPET_URL . "lib/js/ace/src{$ace_min}-noconflict/ace.js", array( 'jquery' ), '1.0', true );
+		wp_register_script( 'snippet-cpt-admin-js', DWSNIPPET_URL . 'lib/js/code-snippet-admin.js', array( 'jquery', 'ace-editor' ), '1.0', true );
 
-		wp_register_style( 'ace_css', DWSNIPPET_URL . 'lib/css/ace.css', array( 'dashicons' ), '1.0' );
-		wp_register_script( 'snippet-cpt-js', DWSNIPPET_URL . 'lib/js/code-snippet-ace.js', array( 'jquery', 'ace_editor' ), '1.0', true );
+		wp_register_style( 'ace-css', DWSNIPPET_URL . 'lib/css/ace.css', array( 'dashicons' ), '1.0' );
+		wp_register_script( 'snippet-cpt-js', DWSNIPPET_URL . 'lib/js/code-snippet-ace.js', array( 'jquery', 'ace-editor' ), '1.0', true );
 
 		wp_register_script( 'prettify', DWSNIPPET_URL .'lib/js/prettify.js', null, '1.1' );
 		wp_register_style( 'prettify', DWSNIPPET_URL .'lib/css/prettify.css', null, '1.0' );
 		wp_register_style( 'prettify-monokai', DWSNIPPET_URL .'lib/css/prettify-monokai.css', null, '1.0' );
 	}
 
-	public function ace_scripts() {
+	public function ace_scripts( $handle, $args = array() ) {
 		$current_user = wp_get_current_user();
-		wp_enqueue_style( 'ace_css' );
-		wp_enqueue_script( 'ace_editor' );
-		wp_localize_script( 'snippet-cpt-admin-js', 'ace_editor_globals', array(
-			'nonce'  => wp_create_nonce( 'ace_editor_nonce' ),
-			'labels' => array(
-				'default' => __( 'Change Theme:', 'code-snippets-cpt' ),
-				'saving'  => __( 'Saving...', 'code-snippets-cpt' ),
-			),
-			'theme'  => get_user_meta( $current_user->ID, 'snippetscpt-ace-editor-theme', true ),
-			'default_lang' => apply_filters( 'dsgnwrks_snippet_default_ace_lang', 'text' ),
-		) );
-		wp_enqueue_script( 'snippet-cpt-admin-js' );
-	}
-
-	public function ace_front_end_scripts() {
-		if ( $this->is_ace_enabled() ) {
-			$current_user = wp_get_current_user();
-			wp_enqueue_style( 'ace_css' );
-			wp_enqueue_script( 'ace_editor' );
-			wp_localize_script( 'snippet-cpt-js', 'ace_editor_front_end_globals', array(
-				'theme'         => get_user_meta( $current_user->ID, 'snippetscpt-ace-editor-theme', true ),
-				'default_theme' => apply_filters( 'dsgnwrks_snippet_default_ace_theme', 'ace/theme/monokai' ),
-				'default_lang'  => apply_filters( 'dsgnwrks_snippet_default_ace_lang', 'text' ),
-			) );
-			wp_enqueue_script( 'snippet-cpt-js' );
-		}
+		wp_enqueue_style( 'ace-css' );
+		wp_enqueue_script( 'ace-editor' );
+		wp_localize_script( $handle, 'snippetcpt', wp_parse_args( $args, array(
+			'theme'         => get_user_meta( $current_user->ID, 'snippetscpt-ace-editor-theme', true ),
+			'default_theme' => apply_filters( 'dsgnwrks_snippet_default_ace_theme', 'ace/theme/monokai' ),
+			'default_lang'  => apply_filters( 'dsgnwrks_snippet_default_ace_lang', 'text' ),
+		) ) );
+		wp_enqueue_script( $handle );
 	}
 
 	public function ace_ajax() {
@@ -226,36 +198,6 @@ class Snippet_CPT_Setup {
 			'nonce' => $nonce,
 			'theme' => $new_theme,
 		) );
-	}
-
-	/**
-	 * Snippet Controller
-	 * So far will only collapse the snippet and show/hide
-	 * line numbers. But should do WAY more.
-	 * @param  string 	$output      	HTML Output of original shortcode
-	 * @param  array 	$atts        	shortcode attributes
-	 * @param  WP_Post	$snippet_obj 	post object similar to get_post
-	 * @return string              		HTML output for display.
-	 */
-	public function add_ace_snippet_controls( $output, $atts, $snippet_obj ) {
-		if ( ! $this->is_ace_enabled() ) {
-			return $output;
-		}
-
-		$tmp  = '<div class="snippetcpt-ace-controller">';
-		$tmp .= '	<div class="snippetcpt_controls">';
-
-		if ( $atts['title_attr'] && ! in_array( $atts['title_attr'], array( 'no', 'false' ), true ) ) {
-			$title_attr = esc_attr( $snippet_obj->post_title );
-			$tmp .= '	<div class="snippetcpt_title">' . $title_attr . '</div>';
-		}
-
-		$tmp .= '		<a href="#" class="dashicons dashicons-sort collapse"></a>';
-		$tmp .= '		<a href="#" class="dashicons dashicons-editor-ol line_numbers"></a>';
-		$tmp .= '	</div>';
-		$tmp .= $output;
-		$tmp .= '</div>';
-		return $tmp;
 	}
 
 	public function run_js() {
@@ -354,15 +296,23 @@ class Snippet_CPT_Setup {
 	public function content_editor_meta_box( $post ) {
 		$content = ! empty( $post->post_content ) ? $post->post_content : '';
 		?>
-		<div class="ace_editor_settings">
-			<label for="ace_theme_settings" id="ace_label"><?php _e( 'Change Theme:', 'code-snippets-cpt' ); ?></label>
-			<select id="ace_theme_settings" size="1">
+		<div class="ace-editor-settings">
+			<label for="ace-theme-settings" id="ace-theme-change-label"><?php _e( 'Change Theme:', 'code-snippets-cpt' ); ?></label>
+			<select id="ace-theme-settings" size="1">
 				<?php echo $this->ace_theme_selector_options(); ?>
 			</select>
 		</div>
 		<div id="snippet-content"><?php echo $content; ?></div>
 		<textarea name="content" class="widefat snippet-main-content" class="hidden"><?php echo $content; ?></textarea>
 		<?php
+
+		$this->ace_scripts( 'snippet-cpt-admin-js', array(
+			'nonce'  => wp_create_nonce( 'ace_editor_nonce' ),
+			'labels' => array(
+				'default' => __( 'Change Theme:', 'code-snippets-cpt' ),
+				'saving'  => __( 'Saving...', 'code-snippets-cpt' ),
+			),
+		) );
 	}
 
 	/**
@@ -438,15 +388,6 @@ class Snippet_CPT_Setup {
 		return $output;
 	}
 
-	public function prettify_content( $content ) {
-		if ( get_post_type() != $this->post_type ) {
-			return $content;
-		}
-
-		$this->enqueue_prettify();
-		return '<pre class="prettyprint linenums">'. htmlentities( $content ) .'</pre>';
-	}
-
 	public function get_snippet_by_id_or_slug( $atts ) {
 		$args = array(
 			'post_type'      => $this->post_type,
@@ -457,14 +398,14 @@ class Snippet_CPT_Setup {
 		if ( isset( $atts['id'] ) && is_numeric( $atts['id'] ) ) {
 			$args['p'] = $atts['id'];
 		} elseif ( isset( $atts['slug'] ) && is_string( $atts['slug'] ) ) {
-			$args['name'] = $atts['slug'];
+			$args['name'] = sanitize_text_field( $atts['slug'] );
 		} else {
 			return false;
 		}
 
 		$snippets = new WP_Query( $args );
 
-		return $snippet = $snippets->have_posts()
+		return $snippets->have_posts()
 			? $snippets->posts[0]
 			: false;
 	}

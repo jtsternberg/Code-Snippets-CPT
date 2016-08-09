@@ -21,7 +21,7 @@ class CodeSnippitButton {
 		add_action( 'admin_init', array( $this, 'admin_init' ) );
 
 		add_action( 'wp_ajax_snippetcpt_insert_snippet', array( $this, 'ajax_insert_snippet' ) );
-		add_action( 'wp_ajax_snippet_parse_shortcode', array( $this, 'ajax_parse_shortcode' ) );
+		add_action( 'wp_ajax_snippet_parse_shortcode', array( $this, 'ajax_parse_shortcode_callback' ) );
 	}
 
 	public function button_script() {
@@ -53,20 +53,16 @@ class CodeSnippitButton {
 
 	public function ajax_insert_snippet() {
 		if ( ! wp_verify_nonce( $_REQUEST['nonce'], 'insert_snippet_post' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Security Failure', 'code-snippets-cpt' ) ) );
+			wp_send_json_error( __( 'Security Failure', 'code-snippets-cpt' ) );
 		}
 
 		$form_data = array();
 		parse_str( $_POST['form_data'], $form_data );
 
-		// Need to create a new nonce.
-		$output = array( 'nonce' => wp_create_nonce( 'insert_snippet_post' ) );
-
 		$language = get_term( absint( $form_data['snippet-language'] ), 'languages' );
 
 		if ( is_wp_error( $language ) ) {
-			$output['message'] = __( 'Make sure you select a programming language for this snippet.', 'code-snippets-cpt' );
-			wp_send_json_error( $output );
+			wp_send_json_error( __( 'Make sure you select a programming language for this snippet.', 'code-snippets-cpt' ) );
 		}
 
 		$args = array(
@@ -81,20 +77,30 @@ class CodeSnippitButton {
 			),
 		);
 
-		if ( isset( $form_data['new-snippet-id'] ) ) {
-			$args['ID'] = absint( $form_data['new-snippet-id'] );
+		if ( isset( $form_data['edit-snippet-id'] ) ) {
+			$args['ID'] = absint( $form_data['edit-snippet-id'] );
 		}
 
 		$post_id = wp_insert_post( $args, true );
 
 		if ( is_wp_error( $post_id ) ) {
-			$output['message'] = $post_id->get_error_message();
-			wp_send_json_error( $output );
+			wp_send_json_error( $post_id->get_error_message() );
 		}
 
-		$output['line_numbers'] = $form_data['snippet-cpt-line-nums-2'];
-		$output['language']     = $language->slug;
-		$output['slug']         = get_post( $post_id )->post_name;
+		// Need to create a new nonce.
+		$output = array(
+			'nonce'        => wp_create_nonce( 'insert_snippet_post' ),
+			'line_numbers' => ! empty( $form_data['snippet-cpt-line-nums-2'] ),
+			'post_name'    => '',
+			'lang'         => '',
+		);
+
+		$snippet = $this->get_snippet_for_ajax( $post_id );
+
+		if ( $snippet ) {
+			$output['post_name'] = $snippet->post_name;
+			$output['lang'] = ! empty( $snippet->language->slug ) ? $snippet->language->slug : '';
+		}
 
 		// Finally end it all
 		wp_send_json_success( $output );
@@ -156,22 +162,38 @@ class CodeSnippitButton {
 	}
 
 	/**
-	 * Parse the snippet shortcode for display within a TinyMCE view.
+	 * Parse the snippet shortcode for display within a TinyMCE view, and send it back to JS.
 	 */
-	public function ajax_parse_shortcode() {
-		global $wp_scripts;
-
+	public function ajax_parse_shortcode_callback() {
 		if ( empty( $_POST['shortcode'] ) ) {
 			wp_send_json_error();
 		}
 
-		$shortcode = do_shortcode( wp_unslash( $_POST['shortcode'] ) );
+		$response = $this->ajax_parse_shortcode( wp_unslash( $_POST['shortcode'] ), $_POST['slug'] );
+
+		if ( isset( $response['error'] ) ) {
+			wp_send_json_error( $response['error'] );
+		}
+
+		wp_send_json_success( $response );
+	}
+
+	/**
+	 * Parse the snippet shortcode for display within a TinyMCE view.
+	 */
+	public function ajax_parse_shortcode( $shortcode, $snippet ) {
+		global $wp_scripts;
+
+		$response = array();
+		$shortcode = do_shortcode( $shortcode );
 
 		if ( empty( $shortcode ) ) {
-			wp_send_json_error( array(
+			$response['error'] = array(
 				'type' => 'no-items',
 				'message' => __( 'No items found.' ),
-			) );
+			);
+
+			return $response;
 		}
 
 		$head  = '';
@@ -188,14 +210,53 @@ class CodeSnippitButton {
 			$wp_scripts->done = array();
 		}
 
-		$snippet = $this->cpt->get_snippet_by_id_or_slug( array(
-			'slug' => sanitize_text_field( $_POST['slug'] ),
-		) );
+		ob_start();
+		echo $shortcode;
 
-		if ( $snippet ) {
-			if ( $lang = $this->language->get_lang( $snippet->ID ) ) {
-				$snippet->lang_id = $lang->term_id;
+		$scripts = array();
+		$styles = array();
+
+		if ( $this->cpt->is_ace_enabled() ) {
+			$styles[] = 'ace-css';
+			$scripts[] = 'ace-editor';
+			$scripts[] = 'snippet-cpt-js';
+		} else {
+			$scripts[] = 'prettify';
+			$styles[] = 'prettify';
+			if ( $this->cpt->do_monokai_theme() ) {
+				$styles[] = 'prettify-monokai';
 			}
+			add_action( 'wp_print_scripts', array( $this->cpt, 'run_js' ) );
+		}
+
+		wp_print_scripts( $scripts );
+		wp_print_styles( $styles );
+
+		return array(
+			'head'    => $head,
+			'body'    => ob_get_clean(),
+			'snippet' => $this->get_snippet_for_ajax( $snippet ),
+		);
+	}
+
+	public function get_snippet_for_ajax( $snippet_id ) {
+		if ( is_object( $snippet_id ) ) {
+			return $snippet_id;
+		}
+
+		$snippet = is_numeric( $snippet_id )
+			? get_post( absint( $snippet_id ) )
+			: $this->cpt->get_snippet_by_id_or_slug( array(
+				'slug' => sanitize_text_field( sanitize_text_field( $snippet_id ) ),
+			) );
+
+		if ( ! $snippet ) {
+			return false;
+		}
+
+		$snippet->language = array();
+		if ( $lang = $this->language->get_lang( $snippet->ID ) ) {
+			$snippet->language = $lang;
 		}
 
 		foreach( array( 'snippet-categories', 'snippet-tags' ) as $tax ) {
@@ -211,18 +272,7 @@ class CodeSnippitButton {
 			$snippet->tags = wp_list_pluck( $snippet->tags, 'name' );
 		}
 
-		ob_start();
-		echo $shortcode;
-
-		add_action( 'wp_print_scripts', array( $this->cpt, 'run_js' ) );
-
-		wp_print_scripts( 'prettify' );
-
-		wp_send_json_success( array(
-			'head'    => $head,
-			'body'    => ob_get_clean(),
-			'snippet' => $snippet,
-		) );
+		return $snippet;
 	}
 
 }

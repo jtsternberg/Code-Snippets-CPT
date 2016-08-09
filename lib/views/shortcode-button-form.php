@@ -111,7 +111,7 @@
 		</div>
 	</fieldset>
 	<fieldset class="add-new-snippet">
-		<input type="hidden" name="new-snippet-id" id="new-snippet-id" value=""/>
+		<input type="hidden" name="edit-snippet-id" id="edit-snippet-id" value=""/>
 		<div>
 			<label class="snippet-cpt-label" for="new-snippet-title"><?php _e( 'Snippet Title', 'code-snippets-cpt' ); ?></label>
 			<input type="text" name="new-snippet-title" id="new-snippet-title" class="new-snippet-title widefat">
