@@ -25,11 +25,11 @@ class CodeSnippitButton {
 	}
 
 	public function button_script() {
-		wp_register_script( $this->script, DWSNIPPET_URL .'/lib/js/'. $this->script .'.js' , array( 'jquery', 'quicktags', 'wpdialogs' ), CodeSnippitInit::VERSION, true );
+		wp_register_script( $this->script, DWSNIPPET_URL .'/assets/js/'. $this->script .'.js' , array( 'jquery', 'quicktags', 'wpdialogs' ), CodeSnippitInit::VERSION, true );
 
 		wp_localize_script( $this->script, 'codeSnippetCPTButton', array(
 			'snippet_nonce' => wp_create_nonce( 'insert_snippet_post' ),
-			'button_img'    => DWSNIPPET_URL .'lib/js/icon.png',
+			'button_img'    => DWSNIPPET_URL .'assets/js/icon.png',
 			'version'       => CodeSnippitInit::VERSION,
 			'l10n'          => array(
 				'button_name'      => __( 'Add Snippet', 'code-snippets-cpt' ),
@@ -107,7 +107,7 @@ class CodeSnippitButton {
 	}
 
 	public function add_button( $plugin_array ) {
-		$plugin_array[ $this->btn ] = DWSNIPPET_URL .'/lib/js/'. $this->script .'-mce.js';
+		$plugin_array[ $this->btn ] = DWSNIPPET_URL .'/assets/js/'. $this->script .'-mce.js';
 		return $plugin_array;
 	}
 

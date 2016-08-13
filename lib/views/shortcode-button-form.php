@@ -152,6 +152,6 @@
 	</fieldset>
 	</form>
 	<div class="snippet-overlay">
-		<img src="<?php echo DWSNIPPET_URL . 'lib/css/ajax-loader.gif'; ?>" height="32" width="32" >
+		<img src="<?php echo DWSNIPPET_URL . 'assets/images/ajax-loader.gif'; ?>" height="32" width="32" >
 	</div>
 </div>

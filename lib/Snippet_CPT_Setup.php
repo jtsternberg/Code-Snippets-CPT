@@ -137,29 +137,39 @@ class Snippet_CPT_Setup {
 	}
 
 	public function register_scripts_styles() {
-		$ace_min = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '-min';
+		$is_debug = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG;
+		$ace_min  = $is_debug ? '' : '-min';
+		$min      = $is_debug ? '' : '.min';
+		$dependencies = array( 'jquery' );
 
-		wp_register_script( 'ace-editor', DWSNIPPET_URL . "lib/js/ace/src{$ace_min}-noconflict/ace.js", array( 'jquery' ), '1.0', true );
-		wp_register_script( 'snippet-cpt-admin-js', DWSNIPPET_URL . 'lib/js/code-snippet-admin.js', array( 'jquery', 'ace-editor' ), '1.0', true );
+		wp_register_script( 'ace-editor', DWSNIPPET_URL . "assets/js/vendor/ace/src{$ace_min}-noconflict/ace.js", array( 'jquery' ), '1.0', true );
+		wp_register_script( 'snippet-cpt-admin-js', DWSNIPPET_URL . "assets/js/code-snippet-admin$min.js", array( 'jquery', 'ace-editor' ), '1.0', true );
 
-		wp_register_style( 'ace-css', DWSNIPPET_URL . 'lib/css/ace.css', array( 'dashicons' ), '1.0' );
+		wp_register_style( 'ace-css', DWSNIPPET_URL . 'assets/css/ace.css', array( 'dashicons' ), '1.0' );
 
 		if ( CodeSnippitInit::get_option( 'ace' ) ) {
 			$handle = 'snippet-cpt-js';
-			wp_register_script( $handle, DWSNIPPET_URL . 'lib/js/code-snippet-ace.js', array( 'jquery', 'ace-editor' ), '1.0', true );
+			if ( $is_debug ) {
+				wp_register_script( 'snippet-cpt-js', DWSNIPPET_URL . 'assets/js/code-snippet-ace.js', array( 'jquery', 'ace-editor' ), '1.0', true );
+				$dependencies[] = 'snippet-cpt-js';
+			} else {
+				$dependencies[] = 'ace-editor';
+			}
 		} else {
-			$handle = 'prettify';
-			wp_register_script( $handle, DWSNIPPET_URL .'lib/js/prettify.js', null, '1.1' );
+			if ( $is_debug ) {
+				wp_register_script( 'prettify', DWSNIPPET_URL .'assets/js/vendor/prettify/prettify.js', null, '1.1' );
+				$dependencies[] = 'prettify';
+			}
 
-			wp_register_style( 'prettify', DWSNIPPET_URL .'lib/css/prettify.css', null, '1.0' );
+			wp_register_style( 'prettify', DWSNIPPET_URL .'assets/css/prettify.css', null, '1.0' );
 
 			if ( 'ace/theme/monokai' === CodeSnippitInit::get_option( 'theme', 'ace/theme/monokai' ) ) {
-				wp_register_style( 'prettify-monokai', DWSNIPPET_URL .'lib/css/prettify-monokai.css', null, '1.0' );
+				wp_register_style( 'prettify-monokai', DWSNIPPET_URL .'assets/css/prettify-monokai.css', null, '1.0' );
 			}
 		}
 
 		if ( CodeSnippitInit::enabled_features( 'any' ) ) {
-			wp_register_script( 'code-snippets-cpt', DWSNIPPET_URL .'lib/js/snippet-cpt.js', array( 'jquery', $handle ), CodeSnippitInit::VERSION );
+			wp_register_script( 'code-snippets-cpt', DWSNIPPET_URL .'assets/js/snippet-cpt.js', $dependencies, CodeSnippitInit::VERSION );
 		}
 
 	}
