@@ -8,9 +8,9 @@ Adds a custom post type for managing your code snippets with taxonomies for clas
 Features:
 
 * Host your own snippet library.
-* Button for easy-copying of snippet (disable with: `add_filter( 'snippet_cpt_do_click_to_copy', '__return_false' )`).
-* Button to enable full-screen snippet view (disable with: `add_filter( 'snippet_cpt_enable_full_screen_view', '__return_false' )`).
-* Monokai theme (disable with: `add_filter( 'snippet_cpt_monokai_theme', '__return_false' )`).
+* Button for easy-copying of snippet (disable with: `add_filter( 'dsgnwrks_snippet_do_click_to_copy', '__return_false' )`).
+* Button to enable full-screen snippet view (disable with: `add_filter( 'dsgnwrks_snippet_enable_full_screen_view', '__return_false' )`).
+* Monokai theme (disable with: `add_filter( 'dsgnwrks_snippet_monokai_theme', '__return_false' )`).
 * WordPress editor shortcode button for embedding snippets in your content.
 * Live (tinymce) previews of the snippets in your content editor.
 * Programming language picker (for syntax).

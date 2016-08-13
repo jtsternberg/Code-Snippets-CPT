@@ -29,12 +29,12 @@ class CodeSnippitButton {
 		wp_localize_script( $this->script, 'codeSnippetCPTButton', array(
 			'l10n' => array(
 				'button_img'   => DWSNIPPET_URL .'lib/js/icon.png',
-				'button_name'  => __( 'Add Snippet', 'code-snippet-cpt' ),
-				'button_title' => __( 'Add a Code Snippet', 'code-snippet-cpt' ),
-				'btn_cancel'   => __( 'Cancel', 'snippet-cpt' ),
-				'btn_insert'   => __( 'Insert Shortcode', 'snippet-cpt' ),
-				'btn_update'   => __( 'Update Shortcode', 'snippet-cpt' ),
-				'btn_edit'     => __( 'Edit this Snippet', 'snippet-cpt' ),
+				'button_name'  => __( 'Add Snippet', 'code-snippets-cpt' ),
+				'button_title' => __( 'Add a Code Snippet', 'code-snippets-cpt' ),
+				'btn_cancel'   => __( 'Cancel', 'code-snippets-cpt' ),
+				'btn_insert'   => __( 'Insert Shortcode', 'code-snippets-cpt' ),
+				'btn_update'   => __( 'Update Shortcode', 'code-snippets-cpt' ),
+				'btn_edit'     => __( 'Edit this Snippet', 'code-snippets-cpt' ),
 			),
 			'version' => CodeSnippitInit::VERSION,
 		) );
@@ -92,14 +92,14 @@ class CodeSnippitButton {
 			}
 
 		</style>
-		<div style="display: none;" id="snippet-cpt-form" title="<?php esc_attr_e( 'Code Snippets', 'code-snippet-cpt' ); ?>">
+		<div style="display: none;" id="snippet-cpt-form" title="<?php esc_attr_e( 'Code Snippets', 'code-snippets-cpt' ); ?>">
 			<div class="snippet-cpt-errors"><p></p></div>
 			<form>
 			<fieldset>
 				<table>
 					<?php if ( ! empty( $snippets ) ) : ?>
 					<tr>
-						<th colspan="2"><label for="snippet-cpt-posts"><?php _e( 'Choose a Snippet', 'code-snippet-cpt' ); ?></label></th>
+						<th colspan="2"><label for="snippet-cpt-posts"><?php _e( 'Choose a Snippet', 'code-snippets-cpt' ); ?></label></th>
 					</tr>
 					<tr>
 						<td colspan="2">
@@ -123,7 +123,7 @@ class CodeSnippitButton {
 
 					<?php else : ?>
 					<tr>
-						<th><label id="no-snippets-exist"><?php _e( 'No Snippets Yet!', 'code-snippet-cpt' ); ?></label></th>
+						<th><label id="no-snippets-exist"><?php _e( 'No Snippets Yet!', 'code-snippets-cpt' ); ?></label></th>
 					</tr>
 					<?php endif; ?>
 				</table>

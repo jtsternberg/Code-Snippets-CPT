@@ -38,19 +38,19 @@ class Snippet_CPT_Setup {
 
 	public function register_post_type() {
 		// set default custom post type options
-		register_post_type( $this->post_type, apply_filters( 'snippet_cpt_registration_args', array(
+		register_post_type( $this->post_type, apply_filters( 'dsgnwrks_snippet_registration_args', array(
 			'labels' => array(
 				'name'               => $this->plural,
 				'singular_name'      => $this->singular,
-				'add_new'            => __( 'Add New Code Snippet', 'snippet-cpt' ),
-				'add_new_item'       => __( 'Add New Code Snippet', 'snippet-cpt' ),
-				'edit_item'          => __( 'Edit Code Snippet', 'snippet-cpt' ),
-				'new_item'           => __( 'New Code Snippet', 'snippet-cpt' ),
-				'all_items'          => __( 'All Code Snippets', 'snippet-cpt' ),
-				'view_item'          => __( 'View Code Snippet', 'snippet-cpt' ),
-				'search_items'       => __( 'Search Code Snippets', 'snippet-cpt' ),
-				'not_found'          => __( 'No Code Snippets found', 'snippet-cpt' ),
-				'not_found_in_trash' => __( 'No Code Snippets found in Trash', 'snippet-cpt' ),
+				'add_new'            => __( 'Add New Code Snippet', 'code-snippets-cpt' ),
+				'add_new_item'       => __( 'Add New Code Snippet', 'code-snippets-cpt' ),
+				'edit_item'          => __( 'Edit Code Snippet', 'code-snippets-cpt' ),
+				'new_item'           => __( 'New Code Snippet', 'code-snippets-cpt' ),
+				'all_items'          => __( 'All Code Snippets', 'code-snippets-cpt' ),
+				'view_item'          => __( 'View Code Snippet', 'code-snippets-cpt' ),
+				'search_items'       => __( 'Search Code Snippets', 'code-snippets-cpt' ),
+				'not_found'          => __( 'No Code Snippets found', 'code-snippets-cpt' ),
+				'not_found_in_trash' => __( 'No Code Snippets found in Trash', 'code-snippets-cpt' ),
 				'parent_item_colon'  => '',
 				'menu_name'          => $this->plural
 			),
@@ -78,7 +78,7 @@ class Snippet_CPT_Setup {
 		if ( $snippet_post = get_post( absint( $_GET['id'] ) ) ) {
 			ob_start();
 			include_once( DWSNIPPET_PATH .'lib/views/snippet-window.php' );
-			wp_die( ob_get_clean(), __( 'Copy Snippet (cmd/ctrl+c)', 'snippet-cpt' ) );
+			wp_die( ob_get_clean(), __( 'Copy Snippet (cmd/ctrl+c)', 'code-snippets-cpt' ) );
 		}
 	}
 
@@ -123,19 +123,19 @@ class Snippet_CPT_Setup {
 				return $this->taxonomy_column(
 					$post,
 					'languages',
-					__( 'No Languages Specified', 'snippet-cpt' )
+					__( 'No Languages Specified', 'code-snippets-cpt' )
 				);
 			case 'snippet_categories':
 				return $this->taxonomy_column(
 					$post,
 					'snippet-categories',
-					__( 'No Snippet Categories Specified', 'snippet-cpt' )
+					__( 'No Snippet Categories Specified', 'code-snippets-cpt' )
 				);
 			case 'snippet_tags':
 				return $this->taxonomy_column(
 					$post,
 					'snippet-tags',
-					__( 'No Snippet Tags Specified', 'snippet-cpt' )
+					__( 'No Snippet Tags Specified', 'code-snippets-cpt' )
 				);
 		}
 	}
@@ -151,7 +151,7 @@ class Snippet_CPT_Setup {
 		wp_register_script( 'prettify', DWSNIPPET_URL .'lib/js/prettify.js', null, '1.1' );
 
 		if ( $this->enabled_features( 'any' ) ) {
-			wp_register_script( 'snippet-cpt', DWSNIPPET_URL .'lib/js/snippet-cpt.js', array( 'jquery', 'prettify' ), CodeSnippitInit::VERSION );
+			wp_register_script( 'code-snippets-cpt', DWSNIPPET_URL .'lib/js/snippet-cpt.js', array( 'jquery', 'prettify' ), CodeSnippitInit::VERSION );
 		}
 
 		wp_register_style( 'prettify', DWSNIPPET_URL .'lib/css/prettify.css', array( 'dashicons' ), CodeSnippitInit::VERSION );
@@ -160,7 +160,7 @@ class Snippet_CPT_Setup {
 
 	public function enqueue_prettify() {
 		if ( $this->enabled_features( 'any' ) ) {
-			wp_enqueue_script( 'snippet-cpt' );
+			wp_enqueue_script( 'code-snippets-cpt' );
 			add_action( 'wp_footer', array( __CLASS__, 'localize_js_data' ), 5 );
 		} else {
 			wp_enqueue_script( 'prettify' );
@@ -176,7 +176,7 @@ class Snippet_CPT_Setup {
 	}
 
 	public static function do_monokai_theme() {
-		return apply_filters( 'snippet_cpt_monokai_theme', true );
+		return apply_filters( 'dsgnwrks_snippet_monokai_theme', true );
 	}
 
 	public static function localize_js_data() {
@@ -186,13 +186,13 @@ class Snippet_CPT_Setup {
 			'fullscreen'    => self::$is_full_screen,
 			'isSnippet'     => self::$is_singular,
 			'l10n'          => array(
-				'copy'       => esc_attr__( 'Copy Snippet', 'snippet-cpt' ),
-				'fullscreen' => esc_html__( 'Expand Snippet', 'snippet-cpt' ),
-				'close'      => esc_html__( 'Close Snippet (or hit "escape" key)', 'snippet-cpt' ),
-				'edit'       => esc_html__( 'Edit Snippet', 'snippet-cpt' ),
+				'copy'       => esc_attr__( 'Copy Snippet', 'code-snippets-cpt' ),
+				'fullscreen' => esc_html__( 'Expand Snippet', 'code-snippets-cpt' ),
+				'close'      => esc_html__( 'Close Snippet (or hit "escape" key)', 'code-snippets-cpt' ),
+				'edit'       => esc_html__( 'Edit Snippet', 'code-snippets-cpt' ),
 			),
 		);
-		wp_localize_script( 'snippet-cpt', 'snippetcpt', apply_filters( 'snippet_cpt_js_data', $data ) );
+		wp_localize_script( 'code-snippets-cpt', 'snippetcpt', apply_filters( 'dsgnwrks_snippet_js_data', $data ) );
 	}
 
 	public static function show_code_url_base( $args = false ) {
@@ -234,7 +234,7 @@ class Snippet_CPT_Setup {
 		$screen = get_current_screen();
 
 		if ( $this->post_type === $screen->post_type ) {
-			$title = __( 'Snippet Title', 'snippet-cpt' );
+			$title = __( 'Snippet Title', 'code-snippets-cpt' );
 		}
 
 		return $title;
@@ -278,7 +278,7 @@ class Snippet_CPT_Setup {
 
 		switch ($text) {
 			case 'Excerpt';
-				return __( 'Snippet Description:', 'snippet-cpt' );
+				return __( 'Snippet Description:', 'code-snippets-cpt' );
 			case 'Excerpts are optional hand-crafted summaries of your content that can be used in your theme. <a href="https://codex.wordpress.org/Excerpt" target="_blank">Learn more about manual excerpts.</a>';
 				return '';
 			// case 'Permalink:';
@@ -353,7 +353,7 @@ class Snippet_CPT_Setup {
 			'title_attr'      => esc_attr( get_the_title( $post->ID ) ),
 		) );
 
-		echo '<div class="footer-prettyprint">'. $output .'</div>';
+		echo '<div class="snippetcpt-footer">'. $output .'</div>';
 	}
 
 	public static function enabled_features( $to_check = '' ) {
@@ -361,14 +361,14 @@ class Snippet_CPT_Setup {
 		/*
 		 * To disable:
 		 *
-		 * add_filter( 'snippet_cpt_do_click_to_copy', '__return_false' );
-		 * add_filter( 'snippet_cpt_enable_full_screen_view', '__return_false' );
+		 * add_filter( 'dsgnwrks_snippet_do_click_to_copy', '__return_false' );
+		 * add_filter( 'dsgnwrks_snippet_enable_full_screen_view', '__return_false' );
 		 *
 		 */
 
 		$features = array(
-			'do_click_to_copy'        => apply_filters( 'snippet_cpt_do_click_to_copy', true ),
-			'enable_full_screen_view' => apply_filters( 'snippet_cpt_enable_full_screen_view', true ),
+			'do_click_to_copy'        => apply_filters( 'dsgnwrks_snippet_do_click_to_copy', true ),
+			'enable_full_screen_view' => apply_filters( 'dsgnwrks_snippet_enable_full_screen_view', true ),
 		);
 
 		if ( 'all' == $to_check ) {
@@ -412,6 +412,6 @@ class Snippet_CPT_Setup {
 
 }
 
-// add_filter( 'snippet_cpt_do_click_to_copy', '__return_false' );
-// add_filter( 'snippet_cpt_enable_full_screen_view', '__return_false' );
-// add_filter( 'snippet_cpt_monokai_theme', '__return_false' );
+// add_filter( 'dsgnwrks_snippet_do_click_to_copy', '__return_false' );
+// add_filter( 'dsgnwrks_snippet_enable_full_screen_view', '__return_false' );
+// add_filter( 'dsgnwrks_snippet_monokai_theme', '__return_false' );

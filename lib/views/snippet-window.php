@@ -62,7 +62,7 @@
 	}
 	<?php endif; ?>
 </style>
-<h5><?php _e( 'Copy Snippet (cmd/ctrl+c)', 'snippet-cpt' ); ?></h5>
+<h5><?php _e( 'Copy Snippet (cmd/ctrl+c)', 'code-snippets-cpt' ); ?></h5>
 <pre id="snippet-wrap"><textarea id="snippet"><?php print_r( $snippet_post->post_content ); ?></textarea></pre>
 <script type="text/javascript">
 	window.onload = document.getElementById( 'snippet' ).select();

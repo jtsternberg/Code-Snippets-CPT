@@ -194,7 +194,7 @@ class CodeSnippitInit {
 		) );
 
 		$html = sprintf(
-			'<div class="pretty-print-wrap" id="snippet-%4$s" data-id="%4$s" data-edit="%5$s" data-copy="%6$s" data-fullscreen="%7$s"><pre class="%1$s" title="%2$s">%3$s</pre></div>',
+			'<div class="snippetcpt-wrap" id="snippet-%4$s" data-id="%4$s" data-edit="%5$s" data-copy="%6$s" data-fullscreen="%7$s"><pre class="%1$s" title="%2$s">%3$s</pre></div>',
 			$args['class'],
 			$args['title_attr'],
 			$args['snippet_content'],

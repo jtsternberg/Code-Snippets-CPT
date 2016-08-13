@@ -70,7 +70,7 @@ li.L5,
 li.L7,
 li.L9 { background: #f3f3f3 }
 
-.pretty-print-wrap {
+.snippetcpt-wrap {
   position: relative;
 }
 
@@ -102,7 +102,7 @@ li.L9 { background: #f3f3f3 }
 .snippet-buttons .snippet-button::active {
   text-decoration: underline;
 }
-.footer-prettyprint {
+.snippetcpt-footer {
   position: fixed;
   top: 0;
   left: 0;
@@ -112,8 +112,8 @@ li.L9 { background: #f3f3f3 }
   opacity: .991;
 }
 
-.footer-prettyprint .pretty-print-wrap,
-.footer-prettyprint .prettyprint {
+.snippetcpt-footer .snippetcpt-wrap,
+.snippetcpt-footer .prettyprint {
   position: absolute;
   top: 0;
   left: 0;
@@ -124,14 +124,14 @@ li.L9 { background: #f3f3f3 }
   margin: 0 !important;
 }
 
-.footer-prettyprint .prettyprint {
+.snippetcpt-footer .prettyprint {
   padding-top: 32px;
   padding-bottom: 32px;
   height: calc( 100% - 64px ); /* Compensate for padding-top/bottom */
   width: calc( 100% - 30px ); /* Compensate for pre.prettyprint padding */
 }
 
-.footer-prettyprint .snippet-button {
+.snippetcpt-footer .snippet-button {
   font-size: 32px;
   padding: 4px 5px;
   line-height: 32px;

@@ -1,17 +1,17 @@
 === Code Snippets CPT ===
 
-Plugin Name: Code Snippets CPT  
-Plugin URI: http://dsgnwrks.pro/plugins/code-snippets-cpt  
-Contributors: jtsternberg  
-Donate link: http://j.ustin.co/rYL89n  
-Author URI: http://dsgnwrks.pro  
-Author: Jtsternberg  
-Tags snippets, code, code snippets, syntax highlighting, shortcode  
-Requires at least: 3.8.0  
-Tested up to: 4.6  
-Stable tag: 2.0.0  
-License: GPLv2 or later  
-License URI: http://www.gnu.org/licenses/gpl-2.0.html  
+Plugin Name: Code Snippets CPT
+Plugin URI: http://dsgnwrks.pro/plugins/code-snippets-cpt
+Contributors: jtsternberg
+Donate link: http://j.ustin.co/rYL89n
+Author URI: http://dsgnwrks.pro
+Author: Jtsternberg
+Tags snippets, code, code snippets, syntax highlighting, shortcode
+Requires at least: 3.8.0
+Tested up to: 4.6
+Stable tag: 2.0.0
+License: GPLv2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 A WordPress plugin for elegantly managing and displaying code snippets.
 
@@ -24,9 +24,9 @@ Adds a custom post type for managing your code snippets with taxonomies for clas
 Features:
 
 * Host your own snippet library.
-* Button for easy-copying of snippet (disable with: `add_filter( 'snippet_cpt_do_click_to_copy', '__return_false' )`).
-* Button to enable full-screen snippet view (disable with: `add_filter( 'snippet_cpt_enable_full_screen_view', '__return_false' )`).
-* Monokai theme (disable with: `add_filter( 'snippet_cpt_monokai_theme', '__return_false' )`).
+* Button for easy-copying of snippet (disable with: `add_filter( 'dsgnwrks_snippet_do_click_to_copy', '__return_false' )`).
+* Button to enable full-screen snippet view (disable with: `add_filter( 'dsgnwrks_snippet_enable_full_screen_view', '__return_false' )`).
+* Monokai theme (disable with: `add_filter( 'dsgnwrks_snippet_monokai_theme', '__return_false' )`).
 * WordPress editor shortcode button for embedding snippets in your content.
 * Live (tinymce) previews of the snippets in your content editor.
 * Programming language picker (for syntax).
