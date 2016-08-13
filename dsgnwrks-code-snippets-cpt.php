@@ -8,6 +8,7 @@ Author: Jtsternberg
 Author URI: http://about.me/jtsternberg
 Donate link: http://j.ustin.co/rYL89n
 Version: 2.0.0
+Text Domain: code-snippets-cpt
 */
 
 /**
@@ -30,6 +31,7 @@ class CodeSnippitInit {
 	protected $cpt;
 	protected $language;
 	protected $frontend;
+	protected $settings;
 
 	public static $single_instance = null;
 
@@ -63,6 +65,13 @@ class CodeSnippitInit {
 		// Snippet Post-Type Front-end stuff.
 		require_once( DWSNIPPET_PATH . 'lib/Snippet_CPT_Frontend.php' );
 		$this->frontend = new Snippet_CPT_Frontend( $this->cpt );
+
+		add_action( 'admin_menu', array( $this, 'load_admin_settings' ) );
+	}
+
+	public function load_admin_settings() {
+		require_once( DWSNIPPET_PATH . 'lib/Snippet_CPT_Settings.php' );
+		$this->settings = new Snippet_CPT_Settings( $this->cpt );
 	}
 
 	public function update_check() {
@@ -139,8 +148,8 @@ class CodeSnippitInit {
 			'do_click_to_copy' => apply_filters( 'dsgnwrks_snippet_do_click_to_copy', true ),
 			// Determines whether we should enable full-screen view.
 			'enable_full_screen_view' => apply_filters( 'dsgnwrks_snippet_enable_full_screen_view', true ),
-			// Determines whether we are using the ACE front-end editor.
-			'enable_ace' => apply_filters( 'dsgnwrks_snippet_ace_frontend', true ),
+			// Determines whether snippets are collapsible.
+			'collapsible' => apply_filters( 'dsgnwrks_snippet_enable_ace_collapsible_snippets', true ),
 		);
 
 		if ( 'all' == $to_check ) {
@@ -170,6 +179,15 @@ class CodeSnippitInit {
 		return $features;
 	}
 
+	public static function get_option( $setting_key = null, $default = null ) {
+		$options = (array) get_option( 'code-snippets-cpt', array() );
+		if ( null !== $setting_key ) {
+			return isset( $options[ $setting_key ] ) ? $options[ $setting_key ] : $default;
+		}
+
+		return $options;
+	}
+
 	/**
 	 * Creates or returns an instance of this class.
 	 * @since  0.1.0
@@ -197,6 +215,7 @@ class CodeSnippitInit {
 			case 'cpt':
 			case 'language':
 			case 'frontend':
+			case 'settings':
 				return $this->{$field};
 			case 'shortcode_tag':
 				return self::SHORTCODE_TAG;

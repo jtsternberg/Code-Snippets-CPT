@@ -4,7 +4,7 @@
 }
 
 textarea.snippet-main-content {
-	display:none;
+	height: 600px;
 }
 
 .ace-editor-settings {

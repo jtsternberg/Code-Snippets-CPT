@@ -41,7 +41,7 @@ class Snippet_CPT_Frontend {
 			&& CodeSnippitInit::enabled_features( 'enable_full_screen_view' )
 		) {
 			self::$is_full_screen = true;
-			if ( ! CodeSnippitInit::enabled_features( 'enable_ace' ) ) {
+			if ( ! CodeSnippitInit::get_option( 'ace' ) ) {
 				$body_classes[] = 'snippet-full-screen';
 				add_action( 'wp_after_admin_bar_render', array( $this, 'output_fullscreen_markup' ) );
 			}
@@ -70,7 +70,7 @@ class Snippet_CPT_Frontend {
 			'line_numbers' => true,
 			'lang'         => '',
 			'title_attr'   => true,
-			'max_lines'    => 60,
+			'max_lines'    => 'auto',
 			'classes'      => '',
 			// @todo Offer to output snippet description/taxonomies
 		), $atts, 'snippet' );
@@ -93,7 +93,7 @@ class Snippet_CPT_Frontend {
 
 		$atts = array_merge( $atts, self::get_output_args( $snippet ) );
 
-		$output = CodeSnippitInit::enabled_features( 'enable_ace' )
+		$output = CodeSnippitInit::get_option( 'ace' )
 			? $this->get_ace_output( $atts )
 			: $this->get_legacy_output( $atts );
 
@@ -242,10 +242,6 @@ class Snippet_CPT_Frontend {
 		) );
 	}
 
-	public static function do_monokai_theme() {
-		return apply_filters( 'dsgnwrks_snippet_monokai_theme', true );
-	}
-
 	public function enqueue_ace() {
 		$this->cpt->ace_scripts( 'snippet-cpt-js' );
 
@@ -263,7 +259,7 @@ class Snippet_CPT_Frontend {
 
 		wp_enqueue_style( 'prettify' );
 
-		if ( $this->do_monokai_theme() ) {
+		if ( 'ace/theme/monokai' === CodeSnippitInit::get_option( 'theme', 'ace/theme/monokai' ) ) {
 			wp_enqueue_style( 'prettify-monokai' );
 		}
 
@@ -271,9 +267,11 @@ class Snippet_CPT_Frontend {
 	}
 
 	public static function localize_js_data() {
+		$features = CodeSnippitInit::enabled_features();
+		$features['enable_ace'] = (bool) CodeSnippitInit::get_option( 'ace' );
 		$data = array(
 			'show_code_url' => self::show_code_url_base(),
-			'features'      => CodeSnippitInit::enabled_features(),
+			'features'      => $features,
 			'fullscreen'    => self::$is_full_screen,
 			'isSnippet'     => self::$is_singular,
 			'l10n'          => array(

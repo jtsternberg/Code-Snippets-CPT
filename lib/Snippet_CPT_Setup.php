@@ -144,7 +144,7 @@ class Snippet_CPT_Setup {
 
 		wp_register_style( 'ace-css', DWSNIPPET_URL . 'lib/css/ace.css', array( 'dashicons' ), '1.0' );
 
-		if ( CodeSnippitInit::enabled_features( 'enable_ace' ) ) {
+		if ( CodeSnippitInit::get_option( 'ace' ) ) {
 			$handle = 'snippet-cpt-js';
 			wp_register_script( $handle, DWSNIPPET_URL . 'lib/js/code-snippet-ace.js', array( 'jquery', 'ace-editor' ), '1.0', true );
 		} else {
@@ -152,7 +152,10 @@ class Snippet_CPT_Setup {
 			wp_register_script( $handle, DWSNIPPET_URL .'lib/js/prettify.js', null, '1.1' );
 
 			wp_register_style( 'prettify', DWSNIPPET_URL .'lib/css/prettify.css', null, '1.0' );
-			wp_register_style( 'prettify-monokai', DWSNIPPET_URL .'lib/css/prettify-monokai.css', null, '1.0' );
+
+			if ( 'ace/theme/monokai' === CodeSnippitInit::get_option( 'theme', 'ace/theme/monokai' ) ) {
+				wp_register_style( 'prettify-monokai', DWSNIPPET_URL .'lib/css/prettify-monokai.css', null, '1.0' );
+			}
 		}
 
 		if ( CodeSnippitInit::enabled_features( 'any' ) ) {
@@ -162,14 +165,14 @@ class Snippet_CPT_Setup {
 	}
 
 	public function ace_scripts( $handle, $args = array() ) {
-		$current_user = wp_get_current_user();
 		wp_enqueue_style( 'ace-css' );
 		wp_enqueue_script( 'ace-editor' );
 		wp_enqueue_script( $handle );
+
 		$args = wp_parse_args( $args, array(
-			'theme'         => get_user_meta( $current_user->ID, 'snippetscpt-ace-editor-theme', true ),
-			'default_theme' => apply_filters( 'dsgnwrks_snippet_default_ace_theme', 'ace/theme/monokai' ),
+			'theme'         => CodeSnippitInit::get_option( 'theme', 'ace/theme/monokai' ),
 			'default_lang'  => apply_filters( 'dsgnwrks_snippet_default_ace_lang', 'text' ),
+			'features'      => CodeSnippitInit::enabled_features(),
 		) );
 		wp_localize_script( $handle, 'snippetcpt', $args );
 	}
@@ -181,10 +184,9 @@ class Snippet_CPT_Setup {
 			) );
 		}
 
-		$current_user = wp_get_current_user();
 		$new_theme = $_POST['theme'];
 		$nonce = wp_create_nonce( 'ace_editor_nonce' );
-		$result = update_user_meta( $current_user->ID, 'snippetscpt-ace-editor-theme', $new_theme );
+		$result = update_user_meta( get_current_user_id(), 'snippetscpt-ace-editor-theme', $new_theme );
 		if ( false === $result ) {
 			wp_send_json_error( array(
 				'nonce' => $nonce,
@@ -280,24 +282,32 @@ class Snippet_CPT_Setup {
 
 	public function content_editor_meta_box( $post ) {
 		$content = ! empty( $post->post_content ) ? $post->post_content : '';
+		$theme   = get_user_meta( get_current_user_id(), 'snippetscpt-ace-editor-theme', true );
+
 		?>
 		<div class="ace-editor-settings">
 			<label for="ace-theme-settings" id="ace-theme-change-label"><?php _e( 'Change Theme:', 'code-snippets-cpt' ); ?></label>
 			<select id="ace-theme-settings" size="1">
-				<?php echo $this->ace_theme_selector_options(); ?>
+				<?php echo $this->ace_theme_selector_options( $theme ); ?>
 			</select>
 		</div>
-		<div id="snippet-content"><?php echo $content; ?></div>
-		<textarea name="content" class="widefat snippet-main-content" class="hidden"><?php echo $content; ?></textarea>
+		<pre id="snippet-content" class="hidden"><?php echo $content; ?></pre>
+		<pre><textarea name="content" class="widefat snippet-main-content"><?php echo $content; ?></textarea></pre>
 		<?php
 
-		$this->ace_scripts( 'snippet-cpt-admin-js', array(
+		$args = array(
 			'nonce'  => wp_create_nonce( 'ace_editor_nonce' ),
 			'labels' => array(
 				'default' => __( 'Change Theme:', 'code-snippets-cpt' ),
 				'saving'  => __( 'Saving...', 'code-snippets-cpt' ),
 			),
-		) );
+		);
+
+		if ( $theme ) {
+			$args['theme'] = $theme;
+		}
+
+		$this->ace_scripts( 'snippet-cpt-admin-js', $args );
 	}
 
 	/**
@@ -309,10 +319,7 @@ class Snippet_CPT_Setup {
 	 *
 	 * @return string HTML Option Selectors
 	 */
-	public function ace_theme_selector_options() {
-
-		$current_user = wp_get_current_user();
-		$theme = get_user_meta( $current_user->ID, 'snippetscpt-ace-editor-theme', true );
+	public function ace_theme_selector_options( $selected ) {
 
 		$available_themes = apply_filters( 'dsgnwrks_snippet_available_ace_themes', array(
 			array(
@@ -364,8 +371,7 @@ class Snippet_CPT_Setup {
 			$options = $theme_group['options'];
 			$output .= "<optgroup label='{$theme_group['label']}' >";
 			foreach ( $options as $value => $name ) {
-				$selected = selected( $theme, $value, false );
-				$output .= "<option value='$value' $selected >$name</option>";
+				$output .= '<option value="'. $value .'" '. selected( $selected, $value, false ) .' >'. $name .'</option>';
 			}
 			$output .= '</optgroup>';
 		}

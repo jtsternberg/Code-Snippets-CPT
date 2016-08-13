@@ -40,7 +40,7 @@
 	#error-page p {
 		display: none;
 	}
-	<?php if ( $this->do_monokai_theme() ) : ?>
+	<?php if ( 'ace/theme/monokai' === CodeSnippitInit::get_option( 'theme', 'ace/theme/monokai' ) ) : ?>
 	html, body, textarea {
 		background: #2b2d26;
 		color: #ccc;
