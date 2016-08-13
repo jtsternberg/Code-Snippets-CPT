@@ -64,7 +64,7 @@ class Snippet_CPT_Setup {
 			'hierarchical'         => false,
 			'menu_position'        => null,
 			'register_meta_box_cb' => array( $this, 'meta_boxes' ),
-			'supports'             => array( 'title', 'excerpt' )
+			'supports'             => array( 'title', 'excerpt', 'author' )
 		);
 
 		// This filter is deprecated, but left for back-compatibility.
