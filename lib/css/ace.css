@@ -48,9 +48,11 @@ textarea.snippet-main-content {
 	top: 0px;
 	right: 0px;
 	z-index: 2;
-	width: calc( 100% - 2em );
-	padding: 0 1.25em;
+	width: 100%;
 	z-index: 5;
+}
+.snippetcpt-wrap.scrollable .snippet-buttons {
+	padding: 0 1em;
 }
 
 .snippetcpt-wrap:hover .snippet-buttons, .snippetcpt-wrap.snippetcpt-hidden .snippet-buttons {

@@ -191,7 +191,7 @@ class Snippet_CPT_Frontend {
 		}
 
 		return sprintf(
-			'<div class="snippetcpt-wrap" id="snippet-%5$s" data-id="%5$s" data-edit="%6$s" data-copy="%7$s" data-fullscreen="%8$s">
+			'<div class="snippetcpt-wrap scrollable" id="snippet-%5$s" data-id="%5$s" data-edit="%6$s" data-copy="%7$s" data-fullscreen="%8$s">
 				<pre class="snippetcpt-ace-viewer %1$s" %2$s title="%3$s">%4$s</pre>
 				<div class="snippet-buttons" title="%3$s"></div>
 			</div>',
