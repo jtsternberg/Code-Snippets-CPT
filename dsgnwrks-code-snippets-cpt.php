@@ -15,8 +15,7 @@ Text Domain: code-snippets-cpt
  * Plugin setup master class.
  * @todo shortcode parameters for description/taxonomy data
  * @todo Minify/concatenate CSS/JS
- * @todo Make minify/line-number buttons optional
- * @todo Make theme setting a setting (vs user-meta only)
+ * @todo Make line-number button optional
  */
 class CodeSnippitInit {
 
