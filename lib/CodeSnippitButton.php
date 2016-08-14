@@ -202,12 +202,18 @@ class CodeSnippitButton {
 			$wp_scripts->done = array();
 		}
 
+		$do_ace = CodeSnippitInit::get_option( 'ace' );
+
 		ob_start();
+
+		if ( ! $do_ace ) {
+			Snippet_CPT_Frontend::run_js();
+		}
 
 		$styles = array();
 		$scripts = array( 'code-snippets-cpt' );
 
-		if ( CodeSnippitInit::get_option( 'ace' ) ) {
+		if ( $do_ace ) {
 			$styles[] = 'ace-css';
 			$scripts[] = 'ace-editor';
 		} else {
@@ -215,8 +221,6 @@ class CodeSnippitButton {
 			if ( 'ace/theme/monokai' === CodeSnippitInit::get_option( 'theme', 'ace/theme/monokai' ) ) {
 				$styles[] = 'prettify-monokai';
 			}
-
-			add_action( 'wp_print_scripts', array( 'Snippet_CPT_Frontend', 'run_js' ), 11 );
 		}
 
 		add_action( 'wp_print_scripts', array( 'Snippet_CPT_Frontend', 'localize_js_data' ) );
