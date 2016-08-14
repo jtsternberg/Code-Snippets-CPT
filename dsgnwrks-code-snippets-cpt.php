@@ -5,8 +5,8 @@ Description: A code snippet custom post-type and shortcode for elegantly managin
 elegantly managing and displaying code snippets
 Plugin URI: http://j.ustin.co/jAHRM3
 Author: Jtsternberg
-Author URI: http://about.me/jtsternberg
-Donate link: http://j.ustin.co/rYL89n
+Author URI: http://dsgnwrks.pro
+Donate link: http://j.ustin.co/2aKL1Iu
 Version: 2.0.0
 Text Domain: code-snippets-cpt
 */

@@ -1,10 +1,9 @@
-/* global codeSnippetCPTButton */
-/* global codeSnippetCPTVisual */
-
 window.wp = window.wp || {};
 window.codeSnippetCPTButton = window.codeSnippetCPTButton || {};
 
+/* eslint-disable max-params, no-shadow-restricted-names, no-undefined, no-unused-vars */
 ( function( window, document, $, wp, QTags, btn, undefined ) {
+	/* eslint-enable max-params, no-shadow-restricted-names, no-undefined, no-unused-vars */
 	'use strict';
 
 	btn.$        = {};
@@ -15,9 +14,9 @@ window.codeSnippetCPTButton = window.codeSnippetCPTButton || {};
 	var addingNew = false;
 	var ENTER_KEY = 13;
 
-	function $id( id ) {
+	var $id = function( id ) {
 		return $( document.getElementById( id ) );
-	}
+	};
 
 	btn.cache = function() {
 		if ( cached ) {
@@ -47,16 +46,18 @@ window.codeSnippetCPTButton = window.codeSnippetCPTButton || {};
 	};
 
 	btn.create = function() {
-		var $this = $(this);
+		var $this = $( this );
+
 		// focus first button and bind enter to it
-		$this.parent().find('.ui-dialog-buttonpane button:last-child').focus();
-		$this.keypress(function(evt) {
-			var isEditable = evt.target.tagName in {'INPUT':1, 'TEXTAREA':1};
+		$this.parent().find( '.ui-dialog-buttonpane button:last-child' ).focus();
+		$this.keypress( function( evt ) {
+			var isEditable = evt.target.tagName in { INPUT: 1, TEXTAREA: 1 };
+
 			if ( ! isEditable && ENTER_KEY === evt.keyCode ) {
 				evt.preventDefault();
-				$this.parent().find('.ui-dialog-buttonpane button:last-child').click();
+				$this.parent().find( '.ui-dialog-buttonpane button:last-child' ).click();
 			}
-		});
+		} );
 	};
 
 	btn.close = function() {
@@ -74,19 +75,19 @@ window.codeSnippetCPTButton = window.codeSnippetCPTButton || {};
 		}
 
 		// Reset the form now
-		btn.$.form.trigger('reset');
+		btn.$.form.trigger( 'reset' );
 		btn.mainBtn().text( btn.l10n.btn_insert );
 	};
 
 	btn.resetErrorBlock = function() {
-		btn.$.errorBlock.text('').hide();
+		btn.$.errorBlock.text( '' ).hide();
 	};
 
 	btn.cancel = function() {
 		btn.$.formWrap.dialog( 'close' );
 	};
 
-	btn.insert = function () {
+	btn.insert = function() {
 
 		// Reset it just in case.
 		btn.resetErrorBlock();
@@ -94,25 +95,24 @@ window.codeSnippetCPTButton = window.codeSnippetCPTButton || {};
 		if ( ! addingNew ) {
 			return btn.insertShortcode( btn.buildShortcode(
 				btn.$.select.val(),
-				btn.$.check.is(':checked') ? true : false,
-				btn.$.select.find(':selected').data( 'lang' )
-			 ) );
+				btn.$.check.is( ':checked' ),
+				btn.$.select.find( ':selected' ).data( 'lang' )
+			) );
 		}
-
 
 		if ( ! btn.$.snippetTitle.val() || ! btn.$.snippetContent.val() ) {
 			return btn.displayErrorMessage( btn.l10n.missing_required );
 		}
 
 		var ajaxData = {
-			action    : 'snippetcpt_insert_snippet',
-			nonce     : btn.snippet_nonce,
-			form_data : btn.$.form.serialize(),
+			action : 'snippetcpt_insert_snippet',
+			nonce  : btn.snippet_nonce,
+			data   : btn.$.form.serialize()
 		};
 
 		btn.$.overlay.show();
 
-		$.post( ajaxurl, ajaxData, function( response ) {
+		$.post( window.ajaxurl, ajaxData, function( response ) {
 			btn.$.overlay.hide();
 			if ( response.success && response.data ) {
 				var r = response.data;
@@ -125,7 +125,9 @@ window.codeSnippetCPTButton = window.codeSnippetCPTButton || {};
 
 		}, 'json' ).fail( function() {
 			btn.displayErrorMessage();
-		});
+		} );
+
+		return true;
 	};
 
 	btn.displayErrorMessage = function( message ) {
@@ -149,7 +151,7 @@ window.codeSnippetCPTButton = window.codeSnippetCPTButton || {};
 			return '';
 		}
 
-		var shortcode = '[snippet slug='+ postSlug;
+		var shortcode = '[snippet slug=' + postSlug;
 
 		if ( ! lineNumbers ) {
 			shortcode += ' line_numbers=false';
@@ -175,8 +177,8 @@ window.codeSnippetCPTButton = window.codeSnippetCPTButton || {};
 
 			if ( 'function' === typeof( btn.isVisual ) ) {
 				btn.isVisual( shortcode, true );
-			} else if ( btn.isVisual && codeSnippetCPTVisual ) {
-				codeSnippetCPTVisual.execCommand( 'mceInsertContent', 0, shortcode );
+			} else if ( btn.isVisual && window.codeSnippetCPTVisual ) {
+				window.codeSnippetCPTVisual.execCommand( 'mceInsertContent', 0, shortcode );
 			} else {
 				QTags.insertContent( shortcode );
 			}
@@ -192,7 +194,10 @@ window.codeSnippetCPTButton = window.codeSnippetCPTButton || {};
 			} else {
 				btn.displayErrorMessage( btn.l10n.select_snippet );
 			}
+			return false;
 		}
+
+		return true;
 	};
 
 	btn.showAddNew = function( evt ) {
@@ -208,7 +213,7 @@ window.codeSnippetCPTButton = window.codeSnippetCPTButton || {};
 				btn.$.cancelNew.fadeIn();
 				addingNew = true;
 			} );
-		});
+		} );
 	};
 
 	btn.cancelAddNew = function( evt ) {
@@ -221,7 +226,7 @@ window.codeSnippetCPTButton = window.codeSnippetCPTButton || {};
 				btn.$.cancelNew.fadeOut();
 				addingNew = false;
 			} );
-		});
+		} );
 	};
 
 	btn.open = function( isVisual ) {
@@ -233,17 +238,18 @@ window.codeSnippetCPTButton = window.codeSnippetCPTButton || {};
 	};
 
 	btn.mainBtn = function() {
-		btn.$.btn = btn.$.btn || btn.$.formWrap.next().find( '.ui-button-text:contains('+ btn.l10n.btn_insert +')' ).parent().addClass( 'button-primary' );
+		btn.$.btn = btn.$.btn || btn.$.formWrap.next().find( '.ui-button-text:contains(' + btn.l10n.btn_insert + ')' ).parent().addClass( 'button-primary' );
 
 		return btn.$.btn;
 	};
 
-	btn.mce_view = {
+	btn.mceView = {
 		action: 'snippet_parse_shortcode',
 		state: [],
 
 		initialize: function() {
 			var that = this;
+			var slug = '';
 
 			if ( that.url ) {
 				that.loader    = false;
@@ -252,12 +258,11 @@ window.codeSnippetCPTButton = window.codeSnippetCPTButton || {};
 				} );
 			}
 
-			var slug = '';
 			if ( that.shortcode.attrs && that.shortcode.attrs.named && that.shortcode.attrs.named.slug ) {
 				slug = that.shortcode.attrs.named.slug;
 			}
 			wp.ajax.post( that.action, {
-				post_ID   : btn.postID,
+				postID    : btn.postID,
 				slug      : slug,
 				type      : that.shortcode.tag,
 				shortcode : that.shortcode.string()
@@ -291,7 +296,7 @@ window.codeSnippetCPTButton = window.codeSnippetCPTButton || {};
 			btn.$.check.prop( 'checked', attrs.line_numbers && 'false' !== attrs.line_numbers );
 
 			if ( ! attrs.slug ) {
-				$option = btn.$.select.find( '[data-id="'+ attrs.id +'"]' );
+				$option = btn.$.select.find( '[data-id="' + attrs.id + '"]' );
 				attrs.slug = $option.attr( 'value' );
 			}
 
@@ -334,12 +339,13 @@ window.codeSnippetCPTButton = window.codeSnippetCPTButton || {};
 
 		// Localize the buttons
 		var buttons = {};
+
 		buttons[ btn.l10n.btn_cancel ] = btn.cancel;
 		if ( ! btn.$.none.length ) {
 			buttons[ btn.l10n.btn_insert ] = btn.insert;
 		}
 
-		btn.$.formWrap.dialog({
+		btn.$.formWrap.dialog( {
 			resizable     : true,
 			dialogClass   : 'wp-dialog snippet-cpt-dialog',
 			modal         : true,
@@ -352,14 +358,14 @@ window.codeSnippetCPTButton = window.codeSnippetCPTButton || {};
 			buttons       : buttons,
 			create        : btn.create,
 			close         : btn.close
-		});
+		} );
 
-		wp.mce.views.register( 'snippet', btn.mce_view );
+		wp.mce.views.register( 'snippet', btn.mceView );
 
 		// text editor button
 		QTags.addButton( 'snippetcpt', btn.l10n.button_name, function() {
-			codeSnippetCPTButton.open();
-		});
+			window.codeSnippetCPTButton.open();
+		} );
 
 		// New UI Hooks
 		$( document.body )

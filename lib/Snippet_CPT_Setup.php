@@ -137,30 +137,21 @@ class Snippet_CPT_Setup {
 	}
 
 	public function register_scripts_styles() {
-		$is_debug = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG;
-		$ace_min  = $is_debug ? '' : '-min';
-		$min      = $is_debug ? '' : '.min';
+		$is_debug     = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG;
+		$ace_min      = $is_debug ? '' : '-min';
+		$min          = $is_debug ? '' : '.min';
 		$dependencies = array( 'jquery' );
 
 		wp_register_script( 'ace-editor', DWSNIPPET_URL . "assets/js/vendor/ace/src{$ace_min}-noconflict/ace.js", array( 'jquery' ), '1.0', true );
-		wp_register_script( 'snippet-cpt-admin-js', DWSNIPPET_URL . "assets/js/code-snippet-admin$min.js", array( 'jquery', 'ace-editor' ), '1.0', true );
+		wp_register_script( 'snippet-cpt-admin-js', DWSNIPPET_URL . "assets/js/code-snippet-admin-ace{$min}.js", array( 'jquery', 'ace-editor' ), '1.0', true );
 
 		wp_register_style( 'ace-css', DWSNIPPET_URL . 'assets/css/ace.css', array( 'dashicons' ), '1.0' );
 
 		if ( CodeSnippitInit::get_option( 'ace' ) ) {
-			$handle = 'snippet-cpt-js';
-			if ( $is_debug ) {
-				wp_register_script( 'snippet-cpt-js', DWSNIPPET_URL . 'assets/js/code-snippet-ace.js', array( 'jquery', 'ace-editor' ), '1.0', true );
-				$dependencies[] = 'snippet-cpt-js';
-			} else {
-				$dependencies[] = 'ace-editor';
-			}
+			$src = 'code-snippet-cpt-ace';
+			$dependencies[] = 'ace-editor';
 		} else {
-			if ( $is_debug ) {
-				wp_register_script( 'prettify', DWSNIPPET_URL .'assets/js/vendor/prettify/prettify.js', null, '1.1' );
-				$dependencies[] = 'prettify';
-			}
-
+			$src = 'code-snippet-cpt-prettify';
 			wp_register_style( 'prettify', DWSNIPPET_URL .'assets/css/prettify.css', null, '1.0' );
 
 			if ( 'ace/theme/monokai' === CodeSnippitInit::get_option( 'theme', 'ace/theme/monokai' ) ) {
@@ -168,10 +159,7 @@ class Snippet_CPT_Setup {
 			}
 		}
 
-		if ( CodeSnippitInit::enabled_features( 'any' ) ) {
-			wp_register_script( 'code-snippets-cpt', DWSNIPPET_URL .'assets/js/snippet-cpt.js', $dependencies, CodeSnippitInit::VERSION );
-		}
-
+		wp_register_script( 'code-snippets-cpt', DWSNIPPET_URL ."assets/js/{$src}{$min}.js", $dependencies, CodeSnippitInit::VERSION );
 	}
 
 	public function ace_scripts( $handle, $args = array() ) {
@@ -180,11 +168,11 @@ class Snippet_CPT_Setup {
 		wp_enqueue_script( $handle );
 
 		$args = wp_parse_args( $args, array(
-			'theme'         => CodeSnippitInit::get_option( 'theme', 'ace/theme/monokai' ),
-			'default_lang'  => apply_filters( 'dsgnwrks_snippet_default_ace_lang', 'text' ),
-			'features'      => CodeSnippitInit::enabled_features(),
+			'theme'    => CodeSnippitInit::get_option( 'theme', 'ace/theme/monokai' ),
+			'language' => apply_filters( 'dsgnwrks_snippet_default_ace_lang', 'text' ),
+			'features' => CodeSnippitInit::enabled_features(),
 		) );
-		wp_localize_script( $handle, 'snippetcpt', $args );
+		wp_localize_script( $handle, 'snippetcptAce', $args );
 	}
 
 	public function ace_ajax() {

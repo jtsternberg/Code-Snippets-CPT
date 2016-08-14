@@ -1,12 +1,14 @@
 <?php
 class CodeSnippitButton {
 
-	private $script = 'code-snippet-button';
-	private $btn = 'snippetcpt';
+	private $min = '';
 
 	function __construct( $cpt, $language ) {
-		$this->cpt = $cpt;
+		$this->cpt      = $cpt;
 		$this->language = $language;
+
+		$is_debug = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG;
+		$this->min      = $is_debug ? '' : '.min';
 
 		if ( $this->cpt->is_snippet_cpt_admin_page() ) {
 			return;
@@ -25,9 +27,9 @@ class CodeSnippitButton {
 	}
 
 	public function button_script() {
-		wp_register_script( $this->script, DWSNIPPET_URL .'/assets/js/'. $this->script .'.js' , array( 'jquery', 'quicktags', 'wpdialogs' ), CodeSnippitInit::VERSION, true );
+		wp_register_script( 'code-snippet-button', DWSNIPPET_URL ."/assets/js/code-snippet-admin-button{$this->min}.js" , array( 'jquery', 'quicktags', 'wpdialogs' ), CodeSnippitInit::VERSION, true );
 
-		wp_localize_script( $this->script, 'codeSnippetCPTButton', array(
+		wp_localize_script( 'code-snippet-button', 'codeSnippetCPTButton', array(
 			'snippet_nonce' => wp_create_nonce( 'insert_snippet_post' ),
 			'button_img'    => DWSNIPPET_URL .'assets/js/icon.png',
 			'version'       => CodeSnippitInit::VERSION,
@@ -57,7 +59,7 @@ class CodeSnippitButton {
 		}
 
 		$form_data = array();
-		parse_str( $_POST['form_data'], $form_data );
+		parse_str( $_POST['data'], $form_data );
 
 		$language = get_term( absint( $form_data['snippet-language'] ), 'languages' );
 
@@ -107,12 +109,12 @@ class CodeSnippitButton {
 	}
 
 	public function add_button( $plugin_array ) {
-		$plugin_array[ $this->btn ] = DWSNIPPET_URL .'/assets/js/'. $this->script .'-mce.js';
+		$plugin_array['snippetcpt'] = DWSNIPPET_URL ."/assets/js/code-snippet-admin-button-mce{$this->min}.js";
 		return $plugin_array;
 	}
 
 	public function register_buttons( $buttons ) {
-		array_push( $buttons, $this->btn );
+		array_push( $buttons, 'snippetcpt' );
 		return $buttons;
 	}
 
@@ -126,7 +128,7 @@ class CodeSnippitButton {
 		global $post;
 
 		wp_enqueue_style( 'wp-jquery-ui-dialog' );
-		wp_enqueue_script( $this->script );
+		wp_enqueue_script( 'code-snippet-button' );
 
 		// Get CPT posts
 		$snippets = get_posts( array(
@@ -202,21 +204,22 @@ class CodeSnippitButton {
 
 		ob_start();
 
-		$scripts = array();
 		$styles = array();
+		$scripts = array( 'code-snippets-cpt' );
 
 		if ( CodeSnippitInit::get_option( 'ace' ) ) {
 			$styles[] = 'ace-css';
 			$scripts[] = 'ace-editor';
-			$scripts[] = 'snippet-cpt-js';
 		} else {
-			$scripts[] = 'prettify';
 			$styles[] = 'prettify';
 			if ( 'ace/theme/monokai' === CodeSnippitInit::get_option( 'theme', 'ace/theme/monokai' ) ) {
 				$styles[] = 'prettify-monokai';
 			}
-			add_action( 'wp_print_scripts', array( $this->cpt, 'run_js' ) );
+
+			add_action( 'wp_print_scripts', array( 'Snippet_CPT_Frontend', 'run_js' ), 11 );
 		}
+
+		add_action( 'wp_print_scripts', array( 'Snippet_CPT_Frontend', 'localize_js_data' ) );
 
 		wp_print_scripts( $scripts );
 		wp_print_styles( $styles );

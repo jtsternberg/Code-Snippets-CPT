@@ -166,7 +166,7 @@ class Snippet_CPT_Frontend {
 		if ( ! empty( $atts['lang'] ) ) {
 			// Need this for backwards compatibility
 			$maybe_old_language = sanitize_html_class( $atts['lang'] );
-			$data_attrs['lang']  = $this->cpt->language->get_ace_slug( $maybe_old_language );
+			$data_attrs['lang'] = $this->cpt->language->get_ace_slug( $maybe_old_language );
 		} elseif ( $lang_slug = $this->cpt->language->language_slug_from_post( $atts['id'] ) ) {
 			// Get the language linked to the current post id
 			$data_attrs['lang'] = $lang_slug;
@@ -243,19 +243,14 @@ class Snippet_CPT_Frontend {
 	}
 
 	public function enqueue_ace() {
-		$this->cpt->ace_scripts( 'snippet-cpt-js' );
+		$this->cpt->ace_scripts( 'code-snippets-cpt' );
 
-		wp_enqueue_script( 'code-snippets-cpt' );
 		add_action( 'wp_footer', array( __CLASS__, 'localize_js_data' ), 5 );
 	}
 
 	public function enqueue_prettify() {
-		if ( CodeSnippitInit::enabled_features( 'any' ) ) {
-			wp_enqueue_script( 'code-snippets-cpt' );
-			add_action( 'wp_footer', array( __CLASS__, 'localize_js_data' ), 5 );
-		} else {
-			wp_enqueue_script( 'prettify' );
-		}
+		wp_enqueue_script( 'code-snippets-cpt' );
+		add_action( 'wp_footer', array( __CLASS__, 'localize_js_data' ), 5 );
 
 		wp_enqueue_style( 'prettify' );
 
@@ -267,14 +262,17 @@ class Snippet_CPT_Frontend {
 	}
 
 	public static function localize_js_data() {
-		$features = CodeSnippitInit::enabled_features();
-		$features['enable_ace'] = (bool) CodeSnippitInit::get_option( 'ace' );
+		$features = array();
+		if ( ! is_admin() ) {
+			$features = CodeSnippitInit::enabled_features();
+			$features['enable_ace'] = (bool) CodeSnippitInit::get_option( 'ace' );
+			$features['edit'] = true;
+		}
 		$data = array(
-			'show_code_url' => self::show_code_url_base(),
-			'features'      => $features,
-			'fullscreen'    => self::$is_full_screen,
-			'isSnippet'     => self::$is_singular,
-			'l10n'          => array(
+			'features'   => $features,
+			'fullscreen' => self::$is_full_screen,
+			'isSnippet'  => self::$is_singular,
+			'l10n'       => array(
 				'copy'       => esc_attr__( 'Copy Snippet', 'code-snippets-cpt' ),
 				'fullscreen' => esc_html__( 'Expand Snippet', 'code-snippets-cpt' ),
 				'close'      => esc_html__( 'Close Snippet (or hit "escape" key)', 'code-snippets-cpt' ),
@@ -283,7 +281,7 @@ class Snippet_CPT_Frontend {
 				'numbers'    => esc_html__( 'Toggle Line Numbers', 'code-snippets-cpt' ),
 			),
 		);
-		wp_localize_script( 'code-snippets-cpt', 'snippetcpt', apply_filters( 'dsgnwrks_snippet_js_data', $data ) );
+		wp_localize_script( 'code-snippets-cpt', 'snippetcptl10n', apply_filters( 'dsgnwrks_snippet_js_data', $data ) );
 	}
 
 	public static function show_code_url_base( $args = false ) {

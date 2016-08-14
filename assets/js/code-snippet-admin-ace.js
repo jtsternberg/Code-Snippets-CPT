@@ -1,17 +1,21 @@
 window.snippetcpt = window.snippetcpt || {};
 
+/* eslint-disable max-params, no-shadow-restricted-names, no-undefined, no-unused-vars */
 ( function( window, document, $, cpt, undefined ) {
+	/* eslint-enable max-params, no-shadow-restricted-names, no-undefined, no-unused-vars */
 	'use strict';
 
-	function $id( id ) {
+	$.extend( cpt, window.snippetcptAce );
+
+	var $id = function( id ) {
 		return $( document.getElementById( id ) );
-	}
+	};
 
 	cpt.editor = null;
 
 	cpt.cache = function() {
 		cpt.$content          = $( '.snippet-main-content' );
-		cpt.$ace_wrap         = $id( 'snippet-content' );
+		cpt.$wrap             = $id( 'snippet-content' );
 		cpt.$themeSelector    = $id( 'ace-theme-settings' );
 		cpt.$settingTxt       = $id( 'ace-theme-change-label' );
 		cpt.$languageSelector = $( '.snippetcpt-language-selector' );
@@ -22,10 +26,10 @@ window.snippetcpt = window.snippetcpt || {};
 
 		var currentLang = cpt.getCurrentLanguage();
 
-		cpt.$ace_wrap.removeClass( 'hidden' );
+		cpt.$wrap.removeClass( 'hidden' );
 		cpt.$content.addClass( 'hidden' );
 
-		cpt.editor = ace.edit('snippet-content');
+		cpt.editor = window.ace.edit( 'snippet-content' );
 
 		if ( cpt.theme ) {
 			cpt.editor.setTheme( cpt.theme );
@@ -36,7 +40,7 @@ window.snippetcpt = window.snippetcpt || {};
 		if ( currentLang ) {
 			cpt.editor.getSession().setMode( 'ace/mode/' + currentLang );
 		} else {
-			cpt.editor.getSession().setMode( cpt.default_lang || 'ace/mode/text' );
+			cpt.editor.getSession().setMode( cpt.language || 'ace/mode/text' );
 		}
 
 		cpt.editor.setShowPrintMargin( false );
@@ -46,12 +50,11 @@ window.snippetcpt = window.snippetcpt || {};
 	};
 
 	cpt.getCurrentLanguage = function() {
-		return cpt.$languageSelector.find(':selected').data('language');
+		return cpt.$languageSelector.find( ':selected' ).data( 'language' );
 	};
 
 	cpt.updateLanguage = function() {
-		var new_lang = cpt.getCurrentLanguage();
-		cpt.editor.getSession().setMode( "ace/mode/" + new_lang );
+		cpt.editor.getSession().setMode( 'ace/mode/' + cpt.getCurrentLanguage() );
 	};
 
 	cpt.updateTextarea = function() {
@@ -61,13 +64,14 @@ window.snippetcpt = window.snippetcpt || {};
 	cpt.changeTheme = function() {
 		cpt.$themeSelector.prop( 'disabled', true );
 		cpt.savingMsg();
-		var new_theme = cpt.$themeSelector.val();
-		var post_data = {
+
+		var data = {
 			nonce  : cpt.nonce,
-			theme  : new_theme,
-			action : 'snippetscpt-ace-ajax',
+			theme  : cpt.$themeSelector.val(),
+			action : 'snippetscpt-ace-ajax'
 		};
-		$.post( ajaxurl, post_data, cpt.ajaxResponse, 'json' );
+
+		$.post( window.ajaxurl, data, cpt.ajaxResponse, 'json' );
 	};
 
 	cpt.ajaxResponse = function( resp ) {
@@ -91,6 +95,7 @@ window.snippetcpt = window.snippetcpt || {};
 
 	cpt.savingMsg = function( reset, message ) {
 		var output = null;
+
 		if ( reset ) {
 			if ( message ) {
 				output = message;

@@ -1,17 +1,19 @@
 window.snippetcpt = window.snippetcpt || {};
 
-( function( window, document, $, cpt, undefined ) {
+/* eslint-disable max-params, no-shadow-restricted-names, no-undefined, no-unused-vars */
+( function( window, document, $, ace, cpt, undefined ) {
+	/* eslint-enable max-params, no-shadow-restricted-names, no-undefined, no-unused-vars */
 	'use strict';
 
 	$.extend( cpt, window.snippetcptAce );
 
+	var renderTimeout = null;
+
 	cpt.viewers = [];
 	cpt.aceInitComplete = false;
 	cpt.aceAfterRenderComplete = false;
-	var renderTimeout = null;
 
 	cpt.newViewer = function( currentEl ) {
-
 		var viewer = {
 			toolbarDelay : 500,
 			isCollapsed  : null,
@@ -38,7 +40,7 @@ window.snippetcpt = window.snippetcpt || {};
 			if ( viewer.data.lang ) {
 				viewer.editor.getSession().setMode( 'ace/mode/' + viewer.data.lang );
 			} else {
-				viewer.editor.getSession().setMode( cpt.default_lang || 'ace/mode/text' );
+				viewer.editor.getSession().setMode( cpt.language || 'ace/mode/text' );
 			}
 
 			if ( ! viewer.data.lineNums ) {
@@ -62,7 +64,7 @@ window.snippetcpt = window.snippetcpt || {};
 			viewer.$snippet.trigger( 'snippetcpt-ace-init' );
 		};
 
-		viewer.triggerRender = function( evt ) {
+		viewer.triggerRender = function() {
 			if ( renderTimeout ) {
 				window.clearTimeout( renderTimeout );
 			}
@@ -73,7 +75,6 @@ window.snippetcpt = window.snippetcpt || {};
 
 				viewer.editor.renderer.off( 'resize', viewer.triggerRender );
 			}, 500 );
-
 		};
 
 		viewer.toggleLineNumbers = function( evt ) {
@@ -126,4 +127,4 @@ window.snippetcpt = window.snippetcpt || {};
 
 	$( cpt.init );
 
-} )( window, document, jQuery, window.snippetcpt );
+} )( window, document, jQuery, window.ace, window.snippetcpt );

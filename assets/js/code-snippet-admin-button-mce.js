@@ -1,39 +1,42 @@
-var codeSnippetCPTVisual = false;
+window.codeSnippetCPTVisual = false;
 window.codeSnippetCPTButton = window.codeSnippetCPTButton || {};
 
-( function( window, document, tinymce, btn, undefined ) {
-    'use strict';
+/* eslint-disable max-params, no-shadow-restricted-names, no-undefined, no-unused-vars */
+( function( window, document, tinymce, btn, visual, undefined ) {
+	/* eslint-enable max-params, no-shadow-restricted-names, no-undefined, no-unused-vars */
+	'use strict';
 
-    tinymce.create( 'tinymce.plugins.Snippet_CPT_Button', {
-        init : function( ed, url ) {
-            ed.addButton( 'snippetcpt', {
-                title : btn.l10n.button_title,
-                cmd   : 'snippetcpt',
-                image : btn.button_img
-            } );
+	tinymce.create( 'tinymce.plugins.Snippet_CPT_Button', {
+		init : function( ed ) {
+			ed.addButton( 'snippetcpt', {
+				title : btn.l10n.button_title,
+				cmd   : 'snippetcpt',
+				image : btn.button_img
+			} );
 
-            ed.addCommand( 'snippetcpt', function() {
-                codeSnippetCPTVisual = ed;
-                codeSnippetCPTVisual.focus();
-                codeSnippetCPTButton.open( true );
-            } );
-        },
+			ed.addCommand( 'snippetcpt', function() {
+				visual = ed;
+				visual.focus();
+				btn.open( true );
+			} );
+		},
 
-        createControl : function() { return null; },
+		createControl : function() {
+			return null;
+		},
 
-        getInfo : function() {
-            return {
-                longname  : btn.l10n.button_title,
-                author    : 'Justin Sternberg',
-                authorurl : 'http://dsgnwrks.pro',
-                infourl   : 'http://dsgnwrks.pro',
-                version   : btn.version
-            };
-        }
-    });
+		getInfo : function() {
+			return {
+				longname  : btn.l10n.button_title,
+				author    : 'Justin Sternberg',
+				authorurl : 'http://dsgnwrks.pro',
+				infourl   : 'http://dsgnwrks.pro',
+				version   : btn.version
+			};
+		}
+	} );
 
-    // Visual editor button
-    tinymce.PluginManager.add( 'snippetcpt', tinymce.plugins.Snippet_CPT_Button );
+	// Visual editor button
+	tinymce.PluginManager.add( 'snippetcpt', tinymce.plugins.Snippet_CPT_Button );
 
-} )( window, document, window.tinymce, window.codeSnippetCPTButton );
-
+} )( window, document, window.tinymce, window.codeSnippetCPTButton, window.codeSnippetCPTVisual );
