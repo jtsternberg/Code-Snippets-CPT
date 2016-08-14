@@ -1,31 +1,38 @@
 === Code Snippets CPT ===
 
-Plugin Name: Code Snippets CPT  
-Plugin URI: http://dsgnwrks.pro/plugins/code-snippets-cpt  
-Contributors: jtsternberg  
-Donate link: http://j.ustin.co/rYL89n  
-Author URI: http://jtsternberg.com/about  
-Author: Jtsternberg  
-Tags snippets, code, code snippets, syntax highlighting, shortcode  
-Requires at least: 3.8.0  
-Tested up to: 4.1.0  
-Stable tag: 1.0.7
-License: GPLv2 or later  
-License URI: http://www.gnu.org/licenses/gpl-2.0.html  
+Plugin Name: Code Snippets CPT
+Plugin URI: http://dsgnwrks.pro/plugins/code-snippets-cpt
+Contributors: jtsternberg
+Donate link: http://j.ustin.co/rYL89n
+Author URI: http://dsgnwrks.pro
+Author: Jtsternberg
+Tags snippets, code, code snippets, syntax highlighting, shortcode
+Requires at least: 3.8.0
+Tested up to: 4.6
+Stable tag: 2.0.0
+License: GPLv2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-A WordPress plugin for managing and displaying code snippets.
+A WordPress plugin for elegantly managing and displaying code snippets.
 
 == Description ==
 
-A WordPress plugin for managing and displaying code snippets
+A WordPress plugin for elegantly managing and displaying code snippets.
 
-Adds a custom post type for managing your code snippets with taxonomies for classifying the snippets. Embed snippets with syntax highlighting to posts or pages via a handy shortcode insert button that allows you to pick from the most recent snippets. Syntax highlighting provided by the [Ace Code Editor](http://ace.c9.io/#nav=about).
+Adds a custom post type for managing your code snippets with taxonomies for classifying the snippets. Embed snippets with syntax highlighting to posts or pages via a handy shortcode insert button that allows you to pick from the most recent snippets. Syntax highlighting provided by the [Prettify javascript library](https://github.com/google/code-prettify) and the [Ace Editor](https://ace.c9.io/).
+
+Features:
+
+* Host your own snippet library.
+* Button for easy-copying of snippet (disable with: `add_filter( 'dsgnwrks_snippet_do_click_to_copy', '__return_false' )`).
+* Button to enable full-screen snippet view (disable with: `add_filter( 'dsgnwrks_snippet_enable_full_screen_view', '__return_false' )`).
+* Two frontend render engines, prettify (with 2 themes) or Ace (with 32 themes).
+* WordPress editor shortcode button for embedding snippets in your content, and creating/editing those snippets on the fly.
+* Live (tinymce) previews of the snippets in your content editor.
+* Programming language picker (for syntax).
+* Snippet tags and categories.
 
 Feel free to [fork or contribute on Github](https://github.com/jtsternberg/Code-Snippets-CPT).
-
-= ACE Editor =
-To enable the ACE front-end display instead of Prettify, you can simply do this:
-`add_filters( 'snippets-cpt-ace-frontend', '__return_true' );`
 
 == Installation ==
 
@@ -40,19 +47,20 @@ To enable the ACE front-end display instead of Prettify, you can simply do this:
 2. Editing code snippet
 3. Code snippet shortcode in a post
 4. Code snippet insert button/modal
+4. Front-end snippet view, using Ace with the monokai theme.
 
 == Changelog ==
 
-= 1.0.7 =
-* Adds the [Ace Editor](https://ace.c9.io/#nav=about) in place of the old code editors.
-* Allows the showing & Hiding of line numbers and makes the code block collapsible.  ( **ACE Only** )
-* Code themes, highlighting, multiple languages, more...
-* New Filter - `snippets-cpt-ace-frontend` - Enables the ACE Front-end shortcode output.
-
-= 1.0.6 =
-* Add extra dialog structure to allow users to create snippets in-post, fixes [#3](https://github.com/jtsternberg/Code-Snippets-CPT/issues/3)
-* Fix rogue text-domain
-* Reset form after closing it
+= 2.0.0 =
+* Button for opening modal for easy-copying of snippet.
+* Button to enable full-screen snippet view.
+* (When using Ace frontend) Button to toggle line-numbers.
+* (When using Ace frontend) Button to collapse/minify the snippet.
+* (When logged-in) Button to edit Snippet.
+* View individual snippet pages, and link to full-screen snippets.
+* Live (tinymce) previews of the snippets in your content editor, and edit them in place.
+* Option to choose the front-end display theme and render engine (prettify or Ace).
+* Ace editor on the snippet-edit page, and option to use the Ace render engine on the front-end. Props [JayWood](https://github.com/JayWood) ([#22](https://github.com/jtsternberg/Code-Snippets-CPT/pull/22)).
 
 = 1.0.5 =
 * Add C# as available language.
@@ -80,6 +88,17 @@ To enable the ACE front-end display instead of Prettify, you can simply do this:
 * First Release
 
 == Upgrade Notice ==
+
+= 2.0.0 =
+* Button for opening modal for easy-copying of snippet.
+* Button to enable full-screen snippet view.
+* (When using Ace frontend) Button to toggle line-numbers.
+* (When using Ace frontend) Button to collapse/minify the snippet.
+* (When logged-in) Button to edit Snippet.
+* View individual snippet pages, and link to full-screen snippets.
+* Live (tinymce) previews of the snippets in your content editor, and edit them in place.
+* Option to choose the front-end display theme and render engine (prettify or Ace).
+* Ace editor on the snippet-edit page, and option to use the Ace render engine on the front-end. Props [JayWood](https://github.com/JayWood) ([#22](https://github.com/jtsternberg/Code-Snippets-CPT/pull/22)).
 
 = 1.0.5 =
 * Add C# as available language.

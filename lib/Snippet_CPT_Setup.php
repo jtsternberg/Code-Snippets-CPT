@@ -251,7 +251,7 @@ class Snippet_CPT_Setup {
 		switch ($text) {
 			case 'Excerpt';
 				return __( 'Snippet Description:', 'code-snippets-cpt' );
-			case 'Excerpts are optional hand-crafted summaries of your content that can be used in your theme. <a href="https://codex.wordpress.org/Excerpt" target="_blank">Learn more about manual excerpts.</a>';
+			case 'Excerpts are optional hand-crafted summaries of your content that can be used in your theme. <a href="%s">Learn more about manual excerpts</a>.';
 				return '';
 			// case 'Permalink:';
 			// 	return __( 'Slug will also be used in shortcodes:' );
