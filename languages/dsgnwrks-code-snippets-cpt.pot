@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: Code Snippets CPT 2.0.0\n"
 "Report-Msgid-Bugs-To: "
 "https://wordpress.org/support/plugin/dsgnwrks-code-snippets-cpt\n"
-"POT-Creation-Date: 2016-08-14 03:32:14+00:00\n"
+"POT-Creation-Date: 2016-08-14 17:59:09+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -22,7 +22,7 @@ msgstr ""
 msgid "Add a Code Snippet"
 msgstr ""
 
-#: lib/CodeSnippitButton.php:39 lib/views/shortcode-button-form.php:110
+#: lib/CodeSnippitButton.php:39 lib/views/shortcode-button-form.php:114
 msgid "Cancel"
 msgstr ""
 
@@ -68,17 +68,17 @@ msgstr ""
 msgid "Make sure you select a programming language for this snippet."
 msgstr ""
 
-#: lib/CodeSnippitButton.php:142 lib/Snippet_CPT_Setup.php:107
-#: lib/views/shortcode-button-form.php:133
+#: lib/CodeSnippitButton.php:149 lib/Snippet_CPT_Setup.php:107
+#: lib/views/shortcode-button-form.php:138
 msgid "Snippet Categories"
 msgstr ""
 
-#: lib/CodeSnippitButton.php:151 lib/Snippet_CPT_Setup.php:108
-#: lib/views/shortcode-button-form.php:138
+#: lib/CodeSnippitButton.php:158 lib/Snippet_CPT_Setup.php:108
+#: lib/views/shortcode-button-form.php:143
 msgid "Snippet Tags"
 msgstr ""
 
-#: lib/CodeSnippitButton.php:195
+#: lib/CodeSnippitButton.php:202
 msgid "No items found."
 msgstr ""
 
@@ -118,7 +118,7 @@ msgstr ""
 msgid "Code Snippet"
 msgstr ""
 
-#: lib/Snippet_CPT_Setup.php:17 lib/views/shortcode-button-form.php:66
+#: lib/Snippet_CPT_Setup.php:17 lib/views/shortcode-button-form.php:70
 msgid "Code Snippets"
 msgstr ""
 
@@ -226,7 +226,7 @@ msgstr ""
 msgid "Error inserting user data"
 msgstr ""
 
-#: lib/Snippet_CPT_Setup.php:209 lib/views/shortcode-button-form.php:116
+#: lib/Snippet_CPT_Setup.php:209 lib/views/shortcode-button-form.php:120
 msgid "Snippet Title"
 msgstr ""
 
@@ -238,7 +238,7 @@ msgstr ""
 msgid "Shortcode:"
 msgstr ""
 
-#: lib/Snippet_CPT_Setup.php:278 lib/views/shortcode-button-form.php:128
+#: lib/Snippet_CPT_Setup.php:278 lib/views/shortcode-button-form.php:132
 msgid "Snippet"
 msgstr ""
 
@@ -410,32 +410,32 @@ msgstr ""
 msgid "Save Changes"
 msgstr ""
 
-#: lib/views/shortcode-button-form.php:73
+#: lib/views/shortcode-button-form.php:77
 msgid "Choose a Snippet"
 msgstr ""
 
-#: lib/views/shortcode-button-form.php:78
+#: lib/views/shortcode-button-form.php:82
 msgid "Select a Snippet"
 msgstr ""
 
-#: lib/views/shortcode-button-form.php:94
-#: lib/views/shortcode-button-form.php:123
+#: lib/views/shortcode-button-form.php:98
+#: lib/views/shortcode-button-form.php:127
 msgid "Display Line Numbers?"
 msgstr ""
 
-#: lib/views/shortcode-button-form.php:101
+#: lib/views/shortcode-button-form.php:105
 msgid "No Snippets Yet!"
 msgstr ""
 
-#: lib/views/shortcode-button-form.php:109
+#: lib/views/shortcode-button-form.php:113
 msgid "Add New"
 msgstr ""
 
-#: lib/views/shortcode-button-form.php:143
+#: lib/views/shortcode-button-form.php:148
 msgid "Programming Language"
 msgstr ""
 
-#: lib/views/shortcode-button-form.php:145
+#: lib/views/shortcode-button-form.php:150
 msgid "Select One"
 msgstr ""
 

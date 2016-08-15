@@ -2,7 +2,7 @@ window.wp = window.wp || {};
 window.codeSnippetCPTButton = window.codeSnippetCPTButton || {};
 
 /* eslint-disable max-params, no-shadow-restricted-names, no-undefined, no-unused-vars */
-( function( window, document, $, wp, QTags, btn, undefined ) {
+( function( window, document, $, wp, QTags, btn, cpt, undefined ) {
 	/* eslint-enable max-params, no-shadow-restricted-names, no-undefined, no-unused-vars */
 	'use strict';
 
@@ -66,6 +66,8 @@ window.codeSnippetCPTButton = window.codeSnippetCPTButton || {};
 
 		// New UI
 		if ( addingNew ) {
+			cpt.editor.getSession().setValue( '' );
+
 			btn.$.addNew.prop( 'disabled', false );
 			btn.$.addSnippetSection.hide();
 			btn.$.selectSnippet.show();
@@ -308,7 +310,13 @@ window.codeSnippetCPTButton = window.codeSnippetCPTButton || {};
 			btn.open( update );
 			// Update snippet-editing fields.
 			if ( this.content.snippet && this.content.snippet.post_content ) {
+				var editSession = cpt.editor.getSession();
+
 				snippet = this.content.snippet;
+
+				cpt.editor.resize();
+				editSession.setValue( snippet.post_content, -1 );
+
 				btn.$.snippetContent.val( snippet.post_content );
 				btn.$.snippetTitle.val( snippet.post_title );
 				btn.$.snippetID.val( snippet.ID );
@@ -325,6 +333,8 @@ window.codeSnippetCPTButton = window.codeSnippetCPTButton || {};
 
 				if ( snippet.language.term_id ) {
 					$id( 'snippet-language' ).val( snippet.language.term_id );
+
+					editSession.setMode( 'ace/mode/' + snippet.language.slug );
 				}
 
 				btn.showAddNew();
@@ -371,8 +381,10 @@ window.codeSnippetCPTButton = window.codeSnippetCPTButton || {};
 		$( document.body )
 			.on( 'click', 'input.add-new-snippet-btn', btn.showAddNew )
 			.on( 'click', 'input.cancel-new-snippet-btn', btn.cancelAddNew );
+
+		$( '.new-snippet-content-wrap' ).addClass( 'hidden' );
 	};
 
 	$( btn.init );
 
-} )( window, document, jQuery, window.wp, window.QTags, window.codeSnippetCPTButton );
+} )( window, document, jQuery, window.wp, window.QTags, window.codeSnippetCPTButton, window.snippetcpt );

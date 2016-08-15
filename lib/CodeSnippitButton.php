@@ -127,6 +127,13 @@ class CodeSnippitButton {
 	public function quicktag_button_script() {
 		global $post;
 
+		$args = array();
+		if ( $theme = get_user_meta( get_current_user_id(), 'snippetscpt-ace-editor-theme', true ) ) {
+			$args['theme'] = $theme;
+		}
+
+		$this->cpt->ace_scripts( 'snippet-cpt-admin-js', $args );
+
 		wp_enqueue_style( 'wp-jquery-ui-dialog' );
 		wp_enqueue_script( 'code-snippet-button' );
 

@@ -62,6 +62,10 @@
 		display: block;
 		margin-bottom: .5em;
 	}
+
+	.new-snippet-content-wrap, .snippet-main-content {
+		height: 400px;
+	}
 </style>
 <div style="display: none;" id="snippet-cpt-form" title="<?php esc_attr_e( 'Code Snippets', 'code-snippets-cpt' ); ?>">
 	<div class="snippet-cpt-errors"><p></p></div>
@@ -126,7 +130,8 @@
 
 		<div>
 			<label class="snippet-cpt-label" for="new-snippet-content"><?php _e( 'Snippet', 'code-snippets-cpt' ); ?></label>
-			<textarea name="new-snippet-content" id="new-snippet-content" class="widefat new-snippet-content" rows="15"></textarea>
+			<pre id="snippet-content" class="hidden"></pre>
+			<pre class="new-snippet-content-wrap"><textarea name="new-snippet-content" id="new-snippet-content" class="widefat snippet-main-content"></textarea></pre>
 		</div>
 		<hr />
 		<div>

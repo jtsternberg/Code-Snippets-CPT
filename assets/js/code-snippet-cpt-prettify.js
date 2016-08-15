@@ -1,6 +1,6 @@
 /**
- * WDS Client Plugin Name - v0.0.0 - 2016-08-13
- * http://webdevstudios.com
+ * Code Snippets CPT - v2.0.0 - 2016-08-14
+ * http://dsgnwrks.pro
  *
  * Copyright (c) 2016;
  * Licensed GPLv2+
