@@ -1,4 +1,4 @@
-Code Snippets CPT
+Code Snippets CPT - 2.0.1
 =================
 
 A WordPress plugin for elegantly managing and displaying code snippets
@@ -19,6 +19,9 @@ Features:
 [Available on wordpress.org](https://wordpress.org/plugins/code-snippets-cpt/).
 
 ## Change Log
+
+### 2.0.1
+* Use Ace editor for the snippet add/edit shortcode modal.
 
 ### 2.0.0
 * Button for opening modal for easy-copying of snippet.

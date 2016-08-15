@@ -7,19 +7,19 @@ Plugin URI: http://j.ustin.co/jAHRM3
 Author: Jtsternberg
 Author URI: http://dsgnwrks.pro
 Donate link: http://j.ustin.co/2aKL1Iu
-Version: 2.0.0
+Version: 2.0.1
 Text Domain: code-snippets-cpt
 */
 
 /**
  * Plugin setup master class.
  * @todo shortcode parameters for description/taxonomy data
- * @todo Minify/concatenate CSS/JS
+ * @todo Minify/concatenate CSS
  * @todo Make line-number button optional
  */
 class CodeSnippitInit {
 
-	const VERSION = '2.0.0';
+	const VERSION = '2.0.1';
 
 	/**
 	 * The name of the shortcode tag
