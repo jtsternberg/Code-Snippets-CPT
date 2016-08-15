@@ -47,7 +47,10 @@ Feel free to [fork or contribute on Github](https://github.com/jtsternberg/Code-
 2. Editing code snippet
 3. Code snippet shortcode in a post
 4. Code snippet insert button/modal
-4. Front-end snippet view, using Ace with the monokai theme.
+5. Front-end snippet view, using Ace with the monokai theme
+6. Full-screen snippet view
+7. Snippet easy-copy window
+8. Inline snippet editor
 
 == Changelog ==
 
@@ -64,6 +67,7 @@ Feel free to [fork or contribute on Github](https://github.com/jtsternberg/Code-
 * Live (tinymce) previews of the snippets in your content editor, and edit them in place.
 * Option to choose the front-end display theme and render engine (prettify or Ace).
 * Ace editor on the snippet-edit page, and option to use the Ace render engine on the front-end. Props [JayWood](https://github.com/JayWood) ([#22](https://github.com/jtsternberg/Code-Snippets-CPT/pull/22)).
+* Add new snippets on the fly via the shortcode button (vs having to leave your post and to create them). Props [JayWood](https://github.com/JayWood) ([#22](https://github.com/jtsternberg/Code-Snippets-CPT/pull/22)).
 
 = 1.0.5 =
 * Add C# as available language.
