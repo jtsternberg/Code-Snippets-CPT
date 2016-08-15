@@ -1,0 +1,9 @@
+/**
+ * Code Snippets CPT - v2.0.2 - 2016-08-15
+ * http://dsgnwrks.pro
+ *
+ * Copyright (c) 2016;
+ * Licensed GPLv2+
+ */
+
+.pln{color:#000}@media screen{.str{color:#080}.kwd{color:#008}.com{color:#800}.typ{color:#606}.lit{color:#066}.clo,.opn,.pun{color:#660}.tag{color:#008}.atn{color:#606}.atv{color:#080}.dec,.var{color:#606}.fun{color:red}}@media print,projection{.kwd,.tag,.typ{font-weight:700}.str{color:#060}.kwd{color:#006}.com{color:#600;font-style:italic}.typ{color:#404}.lit{color:#044}.clo,.opn,.pun{color:#440}.tag{color:#006}.atn{color:#404}.atv{color:#060}}pre.prettyprint{background:#f9f9f9;border:1px solid #888;padding:10px 15px;overflow-x:scroll;word-wrap:normal;white-space:pre}pre.prettyprint.linenums{padding-left:.5em}.prettyprint ol.linenums{margin:0;padding:0;color:#888}li.L1,li.L3,li.L5,li.L7,li.L9{background:#f3f3f3}.snippetcpt-wrap{position:relative}.snippet-invisible{visibility:hidden}.snippet-hidden{display:none}.snippet-buttons{position:absolute;top:0;right:0}.snippet-buttons .snippet-button{color:#888;padding:.25em .32em}.snippet-buttons .snippet-button:hover{color:#fff;background:#444;opacity:.8;cursor:pointer;text-decoration:none}.snippet-buttons .snippet-button::active{text-decoration:underline}.snippetcpt-footer{position:fixed;top:0;left:0;width:100%;height:100%;z-index:99999;opacity:.991}.snippetcpt-footer .prettyprint,.snippetcpt-footer .snippetcpt-wrap{position:absolute;top:0;left:0;bottom:0;right:0;width:100%;height:100%;margin:0!important}.snippetcpt-footer .prettyprint{padding-top:32px;padding-bottom:32px;height:calc(100% - 64px);width:calc(100% - 30px)}.snippetcpt-footer .snippet-button{font-size:32px;padding:4px 5px;line-height:32px;height:28px;width:32px}.snippetcpt-footer pre.prettyprint.linenums{padding-left:2.5em}.snippetcpt-footer .gt10 pre.prettyprint.linenums{padding-left:3em}.snippetcpt-footer .gt100 pre.prettyprint.linenums{padding-left:3.5em}body.snippet-full-screen{overflow:hidden;max-height:100%}

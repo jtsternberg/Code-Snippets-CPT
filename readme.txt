@@ -56,6 +56,7 @@ Feel free to [fork or contribute on Github](https://github.com/jtsternberg/Code-
 
 = 2.0.2 =
 * Better support for inline php snippets (i.e. no opening `<?php` tag).
+* Minify css files.
 
 = 2.0.1 =
 * Use Ace editor for the snippet add/edit shortcode modal.
@@ -101,6 +102,7 @@ Feel free to [fork or contribute on Github](https://github.com/jtsternberg/Code-
 
 = 2.0.2 =
 * Better support for inline php snippets (i.e. no opening `<?php` tag).
+* Minify css files.
 
 = 2.0.1 =
 * Use Ace editor for the snippet add/edit shortcode modal.

@@ -214,10 +214,18 @@ module.exports = function (grunt) {
 				options: {
 					style: 'expanded'
 				},
-				files: { 'assets/css/code-snippet-cpt.css': 'assets/css/sass/styles.scss' }
+				files: {
+					'assets/css/code-snippet-cpt-ace.css': 'assets/css/sass/ace.scss',
+					'assets/css/code-snippet-cpt-prettify.css': 'assets/css/sass/prettify.scss',
+					'assets/css/code-snippet-cpt-prettify-monokai.css': 'assets/css/sass/prettify-monokai.scss'
+				}
 			}
 		},
-		cssmin: { dist: { files: { 'assets/css/code-snippet-cpt.min.css': 'assets/css/code-snippet-cpt.css' } } },
+		cssmin: { dist: { files: {
+			'assets/css/code-snippet-cpt-ace.min.css': 'assets/css/code-snippet-cpt-ace.css',
+			'assets/css/code-snippet-cpt-prettify.min.css': 'assets/css/code-snippet-cpt-prettify.css',
+			'assets/css/code-snippet-cpt-prettify-monokai.min.css': 'assets/css/code-snippet-cpt-prettify-monokai.css'
+		} } },
 		usebanner: {
 			taskName: {
 				options: {
@@ -225,7 +233,11 @@ module.exports = function (grunt) {
 					banner: bannerTemplate,
 					linebreak: true
 				},
-				files: { src: ['assets/css/code-snippet-cpt.min.css'] }
+				files: { src: [
+					'assets/css/code-snippet-cpt-ace.min.css',
+					'assets/css/code-snippet-cpt-prettify.min.css',
+					'assets/css/code-snippet-cpt-prettify-monokai.min.css'
+				] }
 			}
 		}
 	});

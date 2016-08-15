@@ -145,17 +145,17 @@ class Snippet_CPT_Setup {
 		wp_register_script( 'ace-editor', DWSNIPPET_URL . "assets/js/vendor/ace/src{$ace_min}-noconflict/ace.js", array( 'jquery' ), '1.0', true );
 		wp_register_script( 'snippet-cpt-admin-js', DWSNIPPET_URL . "assets/js/code-snippet-admin-ace{$min}.js", array( 'jquery', 'ace-editor' ), '1.0', true );
 
-		wp_register_style( 'ace-css', DWSNIPPET_URL . 'assets/css/ace.css', array( 'dashicons' ), '1.0' );
+		wp_register_style( 'ace-css', DWSNIPPET_URL . "assets/css/code-snippet-cpt-ace{$min}.css", array( 'dashicons' ), '1.0' );
 
 		if ( CodeSnippitInit::get_option( 'ace' ) ) {
 			$src = 'code-snippet-cpt-ace';
 			$dependencies[] = 'ace-editor';
 		} else {
 			$src = 'code-snippet-cpt-prettify';
-			wp_register_style( 'prettify', DWSNIPPET_URL .'assets/css/prettify.css', null, '1.0' );
+			wp_register_style( 'prettify', DWSNIPPET_URL ."assets/css/code-snippet-cpt-prettify{$min}.css", null, '1.0' );
 
 			if ( 'ace/theme/monokai' === CodeSnippitInit::get_option( 'theme', 'ace/theme/monokai' ) ) {
-				wp_register_style( 'prettify-monokai', DWSNIPPET_URL .'assets/css/prettify-monokai.css', null, '1.0' );
+				wp_register_style( 'prettify-monokai', DWSNIPPET_URL ."assets/css/code-snippet-cpt-prettify-monokai{$min}.css", null, '1.0' );
 			}
 		}
 

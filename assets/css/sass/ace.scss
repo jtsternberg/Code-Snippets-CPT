@@ -10,11 +10,11 @@ textarea.snippet-main-content {
 .ace-editor-settings {
 	margin-bottom: 5px;
 	text-align: right;
+	label {
+		font-weight: bold;
+	}
 }
 
-.ace-editor-settings label {
-	font-weight: bold;
-}
 
 /**
  * Controller
@@ -24,11 +24,12 @@ textarea.snippet-main-content {
 	position: relative;
 	min-height: 2em;
 	position: relative;
+
+	&.no-toolbar {
+		min-height: 0;
+	}
 }
 
-.snippetcpt-wrap.no-toolbar {
-	min-height: 0;
-}
 
 .snippetcpt-ace-viewer {
 	min-height: 2em;
