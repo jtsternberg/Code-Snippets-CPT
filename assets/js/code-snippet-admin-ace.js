@@ -47,6 +47,8 @@ window.snippetcpt = window.snippetcpt || {};
 		cpt.editor.getSession().on( 'change', cpt.updateTextarea );
 		cpt.$themeSelector.on( 'change', cpt.changeTheme );
 		cpt.$languageSelector.on( 'change', cpt.updateLanguage );
+
+		$( document.body ).trigger( 'code-snippet-ace-init', cpt );
 	};
 
 	cpt.getCurrentLanguage = function() {
