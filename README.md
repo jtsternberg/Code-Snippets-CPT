@@ -21,7 +21,7 @@ Features:
 ## Change Log
 
 ### 2.0.2
-* Better support for inline php snippets (i.e. no opening `<?php` tag).
+* Better Ace editor support for inline php snippets (i.e. no opening `<?php` tag).
 * Minify css files.
 
 ### 2.0.1

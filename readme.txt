@@ -55,7 +55,7 @@ Feel free to [fork or contribute on Github](https://github.com/jtsternberg/Code-
 == Changelog ==
 
 = 2.0.2 =
-* Better support for inline php snippets (i.e. no opening `<?php` tag).
+* Better Ace editor support for inline php snippets (i.e. no opening `<?php` tag).
 * Minify css files.
 
 = 2.0.1 =
@@ -101,7 +101,7 @@ Feel free to [fork or contribute on Github](https://github.com/jtsternberg/Code-
 == Upgrade Notice ==
 
 = 2.0.2 =
-* Better support for inline php snippets (i.e. no opening `<?php` tag).
+* Better Ace editor support for inline php snippets (i.e. no opening `<?php` tag).
 * Minify css files.
 
 = 2.0.1 =
