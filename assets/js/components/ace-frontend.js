@@ -34,13 +34,18 @@ window.snippetcpt = window.snippetcpt || {};
 
 			viewer.editor.setOption( 'maxLines', 'auto' === viewer.data.max_lines ? Infinity : viewer.data.max_lines );
 			viewer.editor.setOption( 'minLines', 1 );
+			var editSession = viewer.editor.getSession();
 
 			viewer.editor.setTheme( cpt.theme || 'ace/theme/chrome' );
 
 			if ( viewer.data.lang ) {
-				viewer.editor.getSession().setMode( 'ace/mode/' + viewer.data.lang );
+				if ( 'php' === viewer.data.lang && 0 !== editSession.getValue().trim().indexOf( '<?php' ) ) {
+					editSession.setMode( { path: 'ace/mode/php', inline: true } );
+				} else {
+					editSession.setMode( 'ace/mode/' + viewer.data.lang );
+				}
 			} else {
-				viewer.editor.getSession().setMode( cpt.language || 'ace/mode/text' );
+				editSession.setMode( cpt.language || 'ace/mode/text' );
 			}
 
 			if ( ! viewer.data.lineNums ) {

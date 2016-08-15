@@ -9,7 +9,7 @@ Author: Jtsternberg
 Tags snippets, code, code snippets, syntax highlighting, shortcode
 Requires at least: 3.8.0
 Tested up to: 4.6
-Stable tag: 2.0.1
+Stable tag: 2.0.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -54,6 +54,9 @@ Feel free to [fork or contribute on Github](https://github.com/jtsternberg/Code-
 
 == Changelog ==
 
+= 2.0.2 =
+* Better support for inline php snippets (i.e. no opening `<?php` tag).
+
 = 2.0.1 =
 * Use Ace editor for the snippet add/edit shortcode modal.
 
@@ -95,6 +98,9 @@ Feel free to [fork or contribute on Github](https://github.com/jtsternberg/Code-
 * First Release
 
 == Upgrade Notice ==
+
+= 2.0.2 =
+* Better support for inline php snippets (i.e. no opening `<?php` tag).
 
 = 2.0.1 =
 * Use Ace editor for the snippet add/edit shortcode modal.
