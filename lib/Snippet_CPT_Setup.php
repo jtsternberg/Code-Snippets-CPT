@@ -159,7 +159,7 @@ class Snippet_CPT_Setup {
 			}
 		}
 
-		wp_register_script( 'code-snippets-cpt', DWSNIPPET_URL ."assets/js/{$src}{$min}.js", $dependencies, CodeSnippitInit::VERSION );
+		wp_register_script( 'code-snippets-cpt', DWSNIPPET_URL ."assets/js/{$src}{$min}.js", $dependencies, CodeSnippitInit::VERSION, true );
 	}
 
 	public function ace_scripts( $handle, $args = array() ) {
