@@ -1,7 +1,7 @@
 {
   "name": "dsgnwrks-code-snippets-cpt",
   "title": "Code Snippets CPT",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "description": "A code snippet custom post-type and shortcode for elegantly managing and displaying your code snippets.",
   "author": {
     "name": "DsgnWrks",

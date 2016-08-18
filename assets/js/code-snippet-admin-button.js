@@ -179,8 +179,8 @@ window.codeSnippetCPTButton = window.codeSnippetCPTButton || {};
 
 			if ( 'function' === typeof( btn.isVisual ) ) {
 				btn.isVisual( shortcode, true );
-			} else if ( btn.isVisual && window.codeSnippetCPTVisual ) {
-				window.codeSnippetCPTVisual.execCommand( 'mceInsertContent', 0, shortcode );
+			} else if ( btn.isVisual && btn.visualMode ) {
+				btn.visualMode.execCommand( 'mceInsertContent', 0, shortcode );
 			} else {
 				QTags.insertContent( shortcode );
 			}
