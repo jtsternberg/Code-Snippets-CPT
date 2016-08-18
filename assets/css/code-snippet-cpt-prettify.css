@@ -185,6 +185,15 @@ li.L9 {
   height: 100%;
   z-index: 99999;
   opacity: .991;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.snippetcpt-footer * {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 .snippetcpt-footer .snippetcpt-wrap,
@@ -202,18 +211,17 @@ li.L9 {
 .snippetcpt-footer .prettyprint {
   padding-top: 32px;
   padding-bottom: 32px;
-  height: calc( 100% - 64px );
-  /* Compensate for padding-top/bottom */
-  width: calc( 100% - 30px );
-  /* Compensate for pre.prettyprint padding */
+  height: 100%;
+  width: 100%;
 }
 
 .snippetcpt-footer .snippet-button {
   font-size: 32px;
-  padding: 4px 5px;
-  line-height: 32px;
-  height: 28px;
-  width: 32px;
+  padding: 0;
+  line-height: 1em;
+  height: 1em;
+  width: 1em;
+  margin: 4px;
 }
 
 .snippetcpt-footer pre.prettyprint.linenums {

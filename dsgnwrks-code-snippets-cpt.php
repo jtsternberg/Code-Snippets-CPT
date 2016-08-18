@@ -7,7 +7,7 @@ Plugin URI: http://j.ustin.co/jAHRM3
 Author: Jtsternberg
 Author URI: http://dsgnwrks.pro
 Donate link: http://j.ustin.co/2aKL1Iu
-Version: 2.0.2
+Version: 2.0.3
 Text Domain: code-snippets-cpt
 */
 
@@ -19,7 +19,7 @@ Text Domain: code-snippets-cpt
  */
 class CodeSnippitInit {
 
-	const VERSION = '2.0.2';
+	const VERSION = '2.0.3';
 
 	/**
 	 * The name of the shortcode tag

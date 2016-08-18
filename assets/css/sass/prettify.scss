@@ -4,52 +4,52 @@
 .pln { color: #000 }  /* plain text */
 
 @media screen {
-    .str { color: #080 }  /* string content */
-    .kwd { color: #008 }  /* a keyword */
-    .com { color: #800 }  /* a comment */
-    .typ { color: #606 }  /* a type name */
-    .lit { color: #066 }  /* a literal value */
-    /* punctuation, lisp open bracket, lisp close bracket */
-    .pun, .opn, .clo { color: #660 }
-    .tag { color: #008 }  /* a markup tag name */
-    .atn { color: #606 }  /* a markup attribute name */
-    .atv { color: #080 }  /* a markup attribute value */
-    .dec, .var { color: #606 }  /* a declaration; a variable name */
-    .fun { color: red }  /* a function name */
-}
+		.str { color: #080 }  /* string content */
+		.kwd { color: #008 }  /* a keyword */
+		.com { color: #800 }  /* a comment */
+		.typ { color: #606 }  /* a type name */
+		.lit { color: #066 }  /* a literal value */
+		/* punctuation, lisp open bracket, lisp close bracket */
+		.pun, .opn, .clo { color: #660 }
+		.tag { color: #008 }  /* a markup tag name */
+		.atn { color: #606 }  /* a markup attribute name */
+		.atv { color: #080 }  /* a markup attribute value */
+		.dec, .var { color: #606 }  /* a declaration; a variable name */
+		.fun { color: red }  /* a function name */
+	}
 
 /* Use higher contrast and text-weight for printable form. */
 @media print, projection {
-    .str { color: #060 }
-    .kwd { color: #006; font-weight: bold }
-    .com { color: #600; font-style: italic }
-    .typ { color: #404; font-weight: bold }
-    .lit { color: #044 }
-    .pun, .opn, .clo { color: #440 }
-    .tag { color: #006; font-weight: bold }
-    .atn { color: #404 }
-    .atv { color: #060 }
+	.str { color: #060 }
+	.kwd { color: #006; font-weight: bold }
+	.com { color: #600; font-style: italic }
+	.typ { color: #404; font-weight: bold }
+	.lit { color: #044 }
+	.pun, .opn, .clo { color: #440 }
+	.tag { color: #006; font-weight: bold }
+	.atn { color: #404 }
+	.atv { color: #060 }
 }
 
 /* Put a border around prettyprinted code snippets. */
 pre.prettyprint {
-    background: #f9f9f9;
-    border: 1px solid #888;
-    padding: 10px 15px;
-    overflow-x: scroll;
-    word-wrap: normal;
-    white-space: pre;
+	background: #f9f9f9;
+	border: 1px solid #888;
+	padding: 10px 15px;
+	overflow-x: scroll;
+	word-wrap: normal;
+	white-space: pre;
 }
 
 pre.prettyprint.linenums {
-    padding-left: .5em;
+	padding-left: .5em;
 }
 
 /* Specify class=linenums on a pre to get line numbering */
 .prettyprint ol.linenums {
-    margin: 0;
-    padding: 0;
-    color: #888;
+	margin: 0;
+	padding: 0;
+	color: #888;
 }
 
 /*li.L0,
@@ -68,83 +68,92 @@ li.L7,
 li.L9 { background: #f3f3f3 }
 
 .snippetcpt-wrap {
-  position: relative;
+	position: relative;
 }
 
 .snippet-invisible { visibility: hidden; }
 .snippet-hidden { display: none; }
 .snippet-buttons {
-  position: absolute;
-  top: 0;
-  right: 0;
+	position: absolute;
+	top: 0;
+	right: 0;
 }
 
 .snippet-buttons .snippet-button {
-  color: #888;
-  padding: .25em .32em;
+	color: #888;
+	padding: .25em .32em;
 }
 
 .snippet-buttons .snippet-button:hover {
-  color: #fff;
-  background: #444;
-  opacity: .8;
-  cursor: pointer;
-  text-decoration: none;
+	color: #fff;
+	background: #444;
+	opacity: .8;
+	cursor: pointer;
+	text-decoration: none;
 }
 .snippet-buttons .snippet-button::active {
-  text-decoration: underline;
+	text-decoration: underline;
 }
 .snippetcpt-footer {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 99999;
-  opacity: .991;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 99999;
+	opacity: .991;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+}
+.snippetcpt-footer * {
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
 }
 
 .snippetcpt-footer .snippetcpt-wrap,
 .snippetcpt-footer .prettyprint {
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  width: 100%;
-  height: 100%;
-  margin: 0 !important;
+	position: absolute;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	width: 100%;
+	height: 100%;
+	margin: 0 !important;
 }
 
 .snippetcpt-footer .prettyprint {
-  padding-top: 32px;
-  padding-bottom: 32px;
-  height: calc( 100% - 64px ); /* Compensate for padding-top/bottom */
-  width: calc( 100% - 30px ); /* Compensate for pre.prettyprint padding */
+	padding-top: 32px;
+	padding-bottom: 32px;
+	height: 100%;
+	width: 100%;
 }
 
 .snippetcpt-footer .snippet-button {
-  font-size: 32px;
-  padding: 4px 5px;
-  line-height: 32px;
-  height: 28px;
-  width: 32px;
+	font-size: 32px;
+	padding: 0;
+	line-height: 1em;
+	height: 1em;
+	width: 1em;
+	margin: 4px;
 }
 
 
 .snippetcpt-footer pre.prettyprint.linenums {
-  padding-left: 2.5em;
+	padding-left: 2.5em;
 }
 
 .snippetcpt-footer .gt10 pre.prettyprint.linenums {
-  padding-left: 3em;
+	padding-left: 3em;
 }
 
 .snippetcpt-footer .gt100 pre.prettyprint.linenums {
-  padding-left: 3.5em;
+	padding-left: 3.5em;
 }
 
 body.snippet-full-screen {
-  overflow: hidden;
-  max-height: 100%;
+	overflow: hidden;
+	max-height: 100%;
 }

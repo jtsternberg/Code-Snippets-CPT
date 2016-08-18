@@ -1,4 +1,4 @@
-Code Snippets CPT - 2.0.2
+Code Snippets CPT - 2.0.3
 =================
 
 A WordPress plugin for elegantly managing and displaying code snippets
@@ -19,6 +19,10 @@ Features:
 [Available on wordpress.org](https://wordpress.org/plugins/code-snippets-cpt/).
 
 ## Change Log
+
+### 2.0.3
+* The front-end script needs to load in the footer so that `wp_localize_script()` works as expected.
+* Better styling for the full-width view and the buttons in the full-width view
 
 ### 2.0.2
 * Better Ace editor support for inline php snippets (i.e. no opening `<?php` tag).

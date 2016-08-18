@@ -1,5 +1,5 @@
 /**
- * Code Snippets CPT - v2.0.2 - 2016-08-15
+ * Code Snippets CPT - v2.0.3 - 2016-08-18
  * http://dsgnwrks.pro
  *
  * Copyright (c) 2016;
