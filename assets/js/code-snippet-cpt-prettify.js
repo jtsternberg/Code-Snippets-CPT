@@ -1,5 +1,5 @@
 /**
- * Code Snippets CPT - v2.0.3 - 2016-08-18
+ * Code Snippets CPT - v2.0.3 - 2016-08-21
  * http://dsgnwrks.pro
  *
  * Copyright (c) 2016;
@@ -1505,27 +1505,27 @@ window.snippetcpt = window.snippetcpt || {};
 	var btnTemplate = '<span class="snippet-button dashicons {{ data.class }}" title="{{ data.title }}"></span>';
 	var linkTemplate = '<a href="{{ data.link }}" class="snippet-button dashicons {{ data.class }}" title="{{ data.title }}"></a>';
 	var iconsConfig = {
-		copy : {
+		copy: {
 			class: 'dashicons-editor-code',
 			title: cpt.l10n.copy
 		},
-		fullscreen : {
+		fullscreen: {
 			class: 'dashicons-editor-expand',
 			title: cpt.l10n.fullscreen
 		},
-		close : {
+		close: {
 			class: 'dashicons-no',
 			title: cpt.l10n.close
 		},
-		edit : {
+		edit: {
 			class: 'dashicons-edit',
 			title: cpt.l10n.edit
 		},
-		collapse : {
+		collapse: {
 			class: 'dashicons-hidden collapse',
 			title: cpt.l10n.collapse
 		},
-		numbers : {
+		numbers: {
 			class: 'dashicons-editor-ol line-numbers',
 			title: cpt.l10n.numbers
 		}
@@ -1570,7 +1570,7 @@ window.snippetcpt = window.snippetcpt || {};
 	cpt.prettifyLoaded = function() {
 		$c.wrap.each( function() {
 			var $this = $( this );
-			var rows  = $this.find( '.linenums li' ).length;
+			var rows = $this.find( '.linenums li' ).length;
 
 			if ( rows > 1000 ) {
 				$this.addClass( 'gt1000' );
@@ -1592,16 +1592,16 @@ window.snippetcpt = window.snippetcpt || {};
 			var html = '';
 
 			for ( var i = 0; i < icons.length; i++ ) {
-				if ( 'fullscreen' === icons[i] && $this.parent( '.snippetcpt-footer' ).length ) {
-					icons[i] = 'close';
+				if ( 'fullscreen' === icons[ i ] && $this.parent( '.snippetcpt-footer' ).length ) {
+					icons[ i ] = 'close';
 				}
 
-				html += cpt.getIcon( icons[i], $this.data( icons[i] ) );
+				html += cpt.getIcon( icons[ i ], $this.data( icons[ i ] ) );
 			}
 
 			if ( html ) {
 				added = true;
-				if ( ! $this.find( '.snippet-buttons' ).length ) {
+				if ( !$this.find( '.snippet-buttons' ).length ) {
 					$this.append( '<div class="snippet-buttons"></div>' );
 				}
 			}
@@ -1624,7 +1624,9 @@ window.snippetcpt = window.snippetcpt || {};
 			default:
 				if ( link ) {
 					html = cpt.template(
-						$.extend( iconsConfig[ icon ], { link: link } ),
+						$.extend( iconsConfig[ icon ], {
+							link: link
+						} ),
 						linkTemplate
 					);
 				}
@@ -1649,7 +1651,7 @@ window.snippetcpt = window.snippetcpt || {};
 	cpt.clickToCopyInit = function() {
 		iconSet.push( 'copy' );
 
-		$c.body.on( 'click', '.snippet-button.dashicons-editor-code', cpt.openSnippetCopy );
+		$c.body.on( 'click', '.snippet-button.dashicons-editor-code', cpt.browserCopy );
 	};
 
 	cpt.openSnippetCopy = function( evt ) {
@@ -1672,6 +1674,76 @@ window.snippetcpt = window.snippetcpt || {};
 		);
 	};
 
+	/**
+	 * Set styles for the copy success message.
+	 *
+	 */
+
+	cpt.browserCopyStyles = function() {
+		$( '.snippet-copy-status' ).css( {
+			fontSize: '.75em',
+			fontWeight: 'bold',
+			padding: '.32em .5em',
+			color: 'rgba(63, 195, 128, 1)'
+		} );
+
+		$( '.snippet-copy-status span' ).css( 'lineHeight', '1.4' );
+	};
+
+	/*
+	 * Feature: Browser copy using execCommand().
+	 */
+
+	cpt.browserCopy = function( evt ) {
+		evt.preventDefault();
+
+		// Success message
+		var statusMsg = 'Copied successfully.';
+
+		if ( !$( '.snippet-copy-status' ).length ) {
+			$( '.snippet-buttons' ).prepend( '<span class="snippet-copy-status">' + statusMsg + '<span class="dashicons dashicons-thumbs-up"></span></span>' );
+			setTimeout( function() {
+				$( '.snippet-copy-status' ).fadeOut( 'fast' );
+			}, 1500 );
+
+			cpt.browserCopyStyles();
+		}
+
+		var range = document.createRange();
+
+		var snippetContent = $( '.singular-snippet' )[ 0 ];
+
+		range.selectNode( snippetContent );
+
+		window.getSelection().addRange( range );
+
+		try {
+			document.execCommand( 'copy' );
+
+			// wp.a11y.speak( statusMsg, 'assertive' );
+
+			$( '.snippet-copy-status' ).fadeIn( 'fast' );
+			setTimeout( function() {
+				$( '.snippet-copy-status' ).fadeOut( 'fast' );
+			}, 1500 );
+		} catch ( err ) {
+
+			// Log an error if the snippet content could not be copied.
+
+			var errMsg = 'Could not copy code snippet using document.execCommand';
+
+			console.error( errMsg );
+			console.error( err );
+
+			// wp.a11y.speak( errMsg, 'assertive' );
+
+			// Fallback to window.open function on failure.
+			cpt.openSnippetCopy();
+		}
+		// Clear the set range for next event.
+		window.getSelection().removeAllRanges();
+	};
+
 	/*
 	 * Feature: Expand snippet view to full screen
 	 */
@@ -1680,7 +1752,7 @@ window.snippetcpt = window.snippetcpt || {};
 		iconSet.push( 'fullscreen' );
 
 		$c.footer = $( '.snippetcpt-footer' );
-		if ( ! $c.footer.length ) {
+		if ( !$c.footer.length ) {
 			$c.footer = $( '<div class="snippetcpt-footer snippet-hidden"></div>' )
 				.appendTo( $c.body );
 		}
@@ -1720,7 +1792,9 @@ window.snippetcpt = window.snippetcpt || {};
 		cpt.isFull = false;
 
 		if ( cpt.isSnippet ) {
-			window.history.pushState( { was: 'open' }, '', cpt.url );
+			window.history.pushState( {
+				was: 'open'
+			}, '', cpt.url );
 		}
 
 		$c.body.removeClass( 'snippet-full-screen' );
@@ -1732,7 +1806,9 @@ window.snippetcpt = window.snippetcpt || {};
 		cpt.isFull = true;
 
 		if ( cpt.isSnippet ) {
-			window.history.pushState( { was: 'closed' }, '', '?full-screen' );
+			window.history.pushState( {
+				was: 'closed'
+			}, '', '?full-screen' );
 		}
 
 		var $snippet = $( this ).parents( '.snippetcpt-wrap' ).clone();

@@ -56,15 +56,21 @@ textarea.snippet-main-content {
 	padding: 0 1em;
 }
 
+.snippetcpt-wrap .snippet-copy-status {
+	font-family: inherit;
+	font-size: .75em;
+	display: none;
+}
+
 .snippetcpt-wrap:hover .snippet-buttons, .snippetcpt-wrap.snippetcpt-hidden .snippet-buttons {
 	opacity: 1;
 }
 
-.snippetcpt-wrap .snippet-button {
+.snippetcpt-wrap .snippet-button,
+.snippet-copy-status {
 	text-decoration: none;
 	color: #555;
 	cursor: pointer;
-
 	color: #888;
 	padding: .25em .32em;
 }

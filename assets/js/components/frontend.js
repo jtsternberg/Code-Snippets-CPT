@@ -159,7 +159,7 @@ window.snippetcpt = window.snippetcpt || {};
 	cpt.clickToCopyInit = function() {
 		iconSet.push( 'copy' );
 
-		$c.body.on( 'click', '.snippet-button.dashicons-editor-code', cpt.openSnippetCopy );
+		$c.body.on( 'click', '.snippet-button.dashicons-editor-code', cpt.browserCopy );
 	};
 
 	cpt.openSnippetCopy = function( evt ) {
@@ -182,6 +182,76 @@ window.snippetcpt = window.snippetcpt || {};
 		);
 	};
 
+	/**
+	 * Set styles for the copy success message.
+	 *
+	 */
+
+	cpt.browserCopyStyles = function() {
+		$( '.snippet-copy-status' ).css( {
+			fontSize: '.75em',
+			fontWeight: 'bold',
+			padding: '.32em .5em',
+			color: 'rgba(63, 195, 128, 1)'
+		} );
+
+		$( '.snippet-copy-status span' ).css( 'lineHeight', '1.4' );
+	};
+
+	/*
+	 * Feature: Browser copy using execCommand().
+	 */
+
+	cpt.browserCopy = function( evt ) {
+		evt.preventDefault();
+
+		// Success message
+		var statusMsg = 'Copied successfully.';
+
+		if ( !$( '.snippet-copy-status' ).length ) {
+			$( '.snippet-buttons' ).prepend( '<span class="snippet-copy-status">' + statusMsg + '<span class="dashicons dashicons-thumbs-up"></span></span>' );
+			setTimeout( function() {
+				$( '.snippet-copy-status' ).fadeOut( 'fast' );
+			}, 1500 );
+
+			cpt.browserCopyStyles();
+		}
+
+		var range = document.createRange();
+
+		var snippetContent = $( '.singular-snippet' )[ 0 ];
+
+		range.selectNode( snippetContent );
+
+		window.getSelection().addRange( range );
+
+		try {
+			document.execCommand( 'copy' );
+
+			// wp.a11y.speak( statusMsg, 'assertive' );
+
+			$( '.snippet-copy-status' ).fadeIn( 'fast' );
+			setTimeout( function() {
+				$( '.snippet-copy-status' ).fadeOut( 'fast' );
+			}, 1500 );
+		} catch ( err ) {
+
+			// Log an error if the snippet content could not be copied.
+
+			var errMsg = 'Could not copy code snippet using document.execCommand';
+
+			console.error( errMsg );
+			console.error( err );
+
+			// wp.a11y.speak( errMsg, 'assertive' );
+
+			// Fallback to window.open function on failure.
+			cpt.openSnippetCopy();
+		}
+		// Clear the set range for next event.
+		window.getSelection().removeAllRanges();
+	};
+
 	/*
 	 * Feature: Expand snippet view to full screen
 	 */
@@ -190,7 +260,7 @@ window.snippetcpt = window.snippetcpt || {};
 		iconSet.push( 'fullscreen' );
 
 		$c.footer = $( '.snippetcpt-footer' );
-		if ( ! $c.footer.length ) {
+		if ( !$c.footer.length ) {
 			$c.footer = $( '<div class="snippetcpt-footer snippet-hidden"></div>' )
 				.appendTo( $c.body );
 		}
