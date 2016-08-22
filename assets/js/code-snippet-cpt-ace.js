@@ -1,5 +1,5 @@
 /**
- * Code Snippets CPT - v2.0.3 - 2016-08-21
+ * Code Snippets CPT - v2.0.5 - 2016-08-22
  * http://dsgnwrks.pro
  *
  * Copyright (c) 2016;
@@ -158,27 +158,27 @@ window.snippetcpt = window.snippetcpt || {};
 	var btnTemplate = '<span class="snippet-button dashicons {{ data.class }}" title="{{ data.title }}"></span>';
 	var linkTemplate = '<a href="{{ data.link }}" class="snippet-button dashicons {{ data.class }}" title="{{ data.title }}"></a>';
 	var iconsConfig = {
-		copy: {
+		copy : {
 			class: 'dashicons-editor-code',
 			title: cpt.l10n.copy
 		},
-		fullscreen: {
+		fullscreen : {
 			class: 'dashicons-editor-expand',
 			title: cpt.l10n.fullscreen
 		},
-		close: {
+		close : {
 			class: 'dashicons-no',
 			title: cpt.l10n.close
 		},
-		edit: {
+		edit : {
 			class: 'dashicons-edit',
 			title: cpt.l10n.edit
 		},
-		collapse: {
+		collapse : {
 			class: 'dashicons-hidden collapse',
 			title: cpt.l10n.collapse
 		},
-		numbers: {
+		numbers : {
 			class: 'dashicons-editor-ol line-numbers',
 			title: cpt.l10n.numbers
 		}
@@ -223,7 +223,7 @@ window.snippetcpt = window.snippetcpt || {};
 	cpt.prettifyLoaded = function() {
 		$c.wrap.each( function() {
 			var $this = $( this );
-			var rows = $this.find( '.linenums li' ).length;
+			var rows  = $this.find( '.linenums li' ).length;
 
 			if ( rows > 1000 ) {
 				$this.addClass( 'gt1000' );
@@ -245,16 +245,16 @@ window.snippetcpt = window.snippetcpt || {};
 			var html = '';
 
 			for ( var i = 0; i < icons.length; i++ ) {
-				if ( 'fullscreen' === icons[ i ] && $this.parent( '.snippetcpt-footer' ).length ) {
-					icons[ i ] = 'close';
+				if ( 'fullscreen' === icons[i] && $this.parent( '.snippetcpt-footer' ).length ) {
+					icons[i] = 'close';
 				}
 
-				html += cpt.getIcon( icons[ i ], $this.data( icons[ i ] ) );
+				html += cpt.getIcon( icons[i], $this.data( icons[i] ) );
 			}
 
 			if ( html ) {
 				added = true;
-				if ( !$this.find( '.snippet-buttons' ).length ) {
+				if ( ! $this.find( '.snippet-buttons' ).length ) {
 					$this.append( '<div class="snippet-buttons"></div>' );
 				}
 			}
@@ -277,9 +277,7 @@ window.snippetcpt = window.snippetcpt || {};
 			default:
 				if ( link ) {
 					html = cpt.template(
-						$.extend( iconsConfig[ icon ], {
-							link: link
-						} ),
+						$.extend( iconsConfig[ icon ], { link: link } ),
 						linkTemplate
 					);
 				}
@@ -405,7 +403,7 @@ window.snippetcpt = window.snippetcpt || {};
 		iconSet.push( 'fullscreen' );
 
 		$c.footer = $( '.snippetcpt-footer' );
-		if ( !$c.footer.length ) {
+		if ( ! $c.footer.length ) {
 			$c.footer = $( '<div class="snippetcpt-footer snippet-hidden"></div>' )
 				.appendTo( $c.body );
 		}
@@ -445,12 +443,10 @@ window.snippetcpt = window.snippetcpt || {};
 		cpt.isFull = false;
 
 		if ( cpt.isSnippet ) {
-			window.history.pushState( {
-				was: 'open'
-			}, '', cpt.url );
+			window.history.pushState( { was: 'open' }, '', cpt.url );
 		}
 
-		$c.body.removeClass( 'snippet-full-screen' );
+		$c.body.removeClass( 'snippet-full-screen' ).removeClass( 'snippet-scrollable' );
 		$c.footer.html( '' ).addClass( 'snippet-hidden' );
 	};
 
@@ -459,18 +455,22 @@ window.snippetcpt = window.snippetcpt || {};
 		cpt.isFull = true;
 
 		if ( cpt.isSnippet ) {
-			window.history.pushState( {
-				was: 'closed'
-			}, '', '?full-screen' );
+			window.history.pushState( { was: 'closed' }, '', '?full-screen' );
 		}
 
 		var $snippet = $( this ).parents( '.snippetcpt-wrap' ).clone();
+		var $pre = $snippet.find( 'pre' );
 
 		$c.body.addClass( 'snippet-full-screen' );
 		$snippet.find( '.dashicons-editor-expand' )
 			.replaceWith( cpt.template( iconsConfig.close, btnTemplate ) );
-		$snippet.find( 'pre' ).show();
+		$pre.show();
 		$c.footer.html( $snippet ).removeClass( 'snippet-hidden' );
+
+		if ( $pre.outerHeight() > $( window ).height() || $pre.find( '>' ).outerHeight() > $( window ).height() ) {
+			$( document.body ).addClass( 'snippet-scrollable' );
+		}
+
 		$( document.body ).trigger( 'snippet-full-screen' );
 	};
 

@@ -154,27 +154,50 @@ li.L9 {
   display: none;
 }
 
-.snippet-buttons {
-  position: absolute;
-  top: 0;
-  right: 0;
-}
-
-.snippet-buttons .snippet-button {
-  color: #888;
-  padding: .25em .32em;
-}
-
 .snippet-buttons .snippet-button:hover {
   color: #fff;
   background: #444;
   opacity: .8;
   cursor: pointer;
   text-decoration: none;
+  border: none;
+}
+
+.snippet-buttons {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 2;
+}
+
+.snippetcpt-wrap .snippet-buttons {
+  text-align: right;
+  z-index: 2;
+  width: 100%;
+  z-index: 5;
+}
+
+.snippetcpt-wrap.scrollable .snippet-buttons, .snippet-scrollable .snippetcpt-wrap .snippet-buttons {
+  padding: 0 1em;
+}
+
+.snippetcpt-wrap .snippet-button {
+  color: #888;
+  padding: .25em .32em;
 }
 
 .snippet-buttons .snippet-button::active {
   text-decoration: underline;
+  border: none;
+}
+
+body.snippet-full-screen {
+  overflow: hidden;
+  max-height: 100%;
+}
+
+.snippetcpt-footer .snippetcpt-wrap .snippet-buttons {
+  opacity: 1;
 }
 
 .snippetcpt-footer {
@@ -234,11 +257,6 @@ li.L9 {
 
 .snippetcpt-footer .gt100 pre.prettyprint.linenums {
   padding-left: 3.5em;
-}
-
-body.snippet-full-screen {
-  overflow: hidden;
-  max-height: 100%;
 }
 
 /*# sourceMappingURL=code-snippet-cpt-prettify.css.map */

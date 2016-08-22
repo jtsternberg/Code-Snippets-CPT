@@ -1,10 +1,11 @@
-window.codeSnippetCPTVisual = false;
 window.codeSnippetCPTButton = window.codeSnippetCPTButton || {};
 
 /* eslint-disable max-params, no-shadow-restricted-names, no-undefined, no-unused-vars */
-( function( window, document, tinymce, btn, visual, undefined ) {
+( function( window, document, tinymce, btn, undefined ) {
 	/* eslint-enable max-params, no-shadow-restricted-names, no-undefined, no-unused-vars */
 	'use strict';
+
+	btn.visualMode = false;
 
 	tinymce.create( 'tinymce.plugins.Snippet_CPT_Button', {
 		init : function( ed ) {
@@ -15,8 +16,8 @@ window.codeSnippetCPTButton = window.codeSnippetCPTButton || {};
 			} );
 
 			ed.addCommand( 'snippetcpt', function() {
-				visual = ed;
-				visual.focus();
+				btn.visualMode = ed;
+				btn.visualMode.focus();
 				btn.open( true );
 			} );
 		},
@@ -39,4 +40,4 @@ window.codeSnippetCPTButton = window.codeSnippetCPTButton || {};
 	// Visual editor button
 	tinymce.PluginManager.add( 'snippetcpt', tinymce.plugins.Snippet_CPT_Button );
 
-} )( window, document, window.tinymce, window.codeSnippetCPTButton, window.codeSnippetCPTVisual );
+} )( window, document, window.tinymce, window.codeSnippetCPTButton );

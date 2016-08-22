@@ -303,7 +303,7 @@ window.snippetcpt = window.snippetcpt || {};
 			window.history.pushState( { was: 'open' }, '', cpt.url );
 		}
 
-		$c.body.removeClass( 'snippet-full-screen' );
+		$c.body.removeClass( 'snippet-full-screen' ).removeClass( 'snippet-scrollable' );
 		$c.footer.html( '' ).addClass( 'snippet-hidden' );
 	};
 
@@ -316,12 +316,18 @@ window.snippetcpt = window.snippetcpt || {};
 		}
 
 		var $snippet = $( this ).parents( '.snippetcpt-wrap' ).clone();
+		var $pre = $snippet.find( 'pre' );
 
 		$c.body.addClass( 'snippet-full-screen' );
 		$snippet.find( '.dashicons-editor-expand' )
 			.replaceWith( cpt.template( iconsConfig.close, btnTemplate ) );
-		$snippet.find( 'pre' ).show();
+		$pre.show();
 		$c.footer.html( $snippet ).removeClass( 'snippet-hidden' );
+
+		if ( $pre.outerHeight() > $( window ).height() || $pre.find( '>' ).outerHeight() > $( window ).height() ) {
+			$( document.body ).addClass( 'snippet-scrollable' );
+		}
+
 		$( document.body ).trigger( 'snippet-full-screen' );
 	};
 
