@@ -32,8 +32,14 @@ window.snippetcpt = window.snippetcpt || {};
 
 			viewer.editor = ace.edit( currentEl );
 
-			viewer.editor.setOption( 'maxLines', 'auto' === viewer.data.max_lines ? Infinity : viewer.data.max_lines );
-			viewer.editor.setOption( 'minLines', 1 );
+			viewer.editor.setOptions( {
+				readOnly: true,
+				showPrintMargin: false,
+				highlightActiveLine: false,
+				maxLines: 'auto' === viewer.data.max_lines ? Infinity : viewer.data.max_lines,
+				minLines: 1
+			} );
+
 			var editSession = viewer.editor.getSession();
 
 			viewer.editor.setTheme( cpt.theme || 'ace/theme/chrome' );
@@ -51,9 +57,6 @@ window.snippetcpt = window.snippetcpt || {};
 			if ( ! viewer.data.lineNums ) {
 				viewer.editor.renderer.setShowGutter( false );
 			}
-
-			viewer.editor.setShowPrintMargin( false );
-			viewer.editor.setReadOnly( true );
 
 			viewer.editor.renderer.on( 'afterRender', viewer.triggerRender );
 
