@@ -34,6 +34,7 @@ class Snippet_CPT_Frontend {
 		if ( isset( $_GET['json'] ) ) {
 			return wp_send_json_success( $snippet_post->post_content );
 		}
+
 		ob_start();
 		include_once( DWSNIPPET_PATH .'lib/views/snippet-window.php' );
 		wp_die( ob_get_clean(), __( 'Copy Snippet (cmd/ctrl+c)', 'code-snippets-cpt' ) );
@@ -276,6 +277,7 @@ class Snippet_CPT_Frontend {
 			$features['edit'] = true;
 		}
 		$data = array(
+			'debug'      => defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG,
 			'features'   => $features,
 			'fullscreen' => self::$is_full_screen,
 			'isSnippet'  => self::$is_singular,
@@ -286,6 +288,8 @@ class Snippet_CPT_Frontend {
 				'edit'       => esc_html__( 'Edit Snippet', 'code-snippets-cpt' ),
 				'collapse'   => esc_html__( 'Collapse Snippet', 'code-snippets-cpt' ),
 				'numbers'    => esc_html__( 'Toggle Line Numbers', 'code-snippets-cpt' ),
+				'copied'     => esc_html__( 'Copied successfully.', 'code-snippets-cpt' ),
+				'copyError'  => esc_html__( 'Could not copy code snippet using document.execCommand', 'code-snippets-cpt' ),
 			),
 		);
 		wp_localize_script( 'code-snippets-cpt', 'snippetcptl10n', apply_filters( 'dsgnwrks_snippet_js_data', $data ) );

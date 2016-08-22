@@ -140,7 +140,7 @@ class Snippet_CPT_Setup {
 		$is_debug     = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG;
 		$ace_min      = $is_debug ? '' : '-min';
 		$min          = $is_debug ? '' : '.min';
-		$dependencies = array( 'jquery' );
+		$dependencies = array( 'jquery', 'wp-a11y' );
 
 		wp_register_script( 'ace-editor', DWSNIPPET_URL . "assets/js/vendor/ace/src{$ace_min}-noconflict/ace.js", array( 'jquery' ), '1.0', true );
 		wp_register_script( 'snippet-cpt-admin-js', DWSNIPPET_URL . "assets/js/code-snippet-admin-ace{$min}.js", array( 'jquery', 'ace-editor' ), '1.0', true );

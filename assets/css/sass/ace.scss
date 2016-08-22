@@ -40,22 +40,11 @@ textarea.snippet-main-content {
 	padding: .25em;
 }
 
-.snippetcpt-wrap .snippet-buttons {
-	opacity: 0;
+.snippetcpt-footer .ace_content, .snippetcpt-footer .ace_gutter {
+	padding-top: 3em;
 }
 
-.snippetcpt-wrap .snippet-copy-status {
-	font-family: inherit;
-	font-size: .75em;
-	display: none;
-}
-
-.snippetcpt-wrap:hover .snippet-buttons, .snippetcpt-wrap.snippetcpt-hidden .snippet-buttons {
-	opacity: 1;
-}
-
-.snippetcpt-wrap .snippet-button,
-.snippet-copy-status {
+.snippetcpt-wrap .snippet-button {
 	text-decoration: none;
 	color: #555;
 	cursor: pointer;

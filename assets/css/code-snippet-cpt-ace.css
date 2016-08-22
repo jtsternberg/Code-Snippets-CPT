@@ -10,10 +10,27 @@
   display: none;
 }
 
+.snippetcpt-wrap .snippet-buttons {
+  opacity: 0;
+}
+
+.snippetcpt-wrap:hover .snippet-buttons, .snippetcpt-wrap.snippetcpt-hidden .snippet-buttons {
+  opacity: 1;
+}
+
 .snippet-buttons .snippet-button:hover {
   color: #fff;
+  background: #666;
+  opacity: .95;
+  cursor: pointer;
+  text-decoration: none;
+  border: none;
+}
+
+.snippetcpt-wrap:hover .snippet-buttons {
+  color: #fff;
   background: #444;
-  opacity: .8;
+  opacity: .9;
   cursor: pointer;
   text-decoration: none;
   border: none;
@@ -26,20 +43,47 @@
   z-index: 2;
 }
 
-.snippetcpt-wrap .snippet-buttons {
+.snippetcpt-wrap .snippet-buttons, .snippetcpt-wrap .copy-success-msg {
   text-align: right;
   z-index: 2;
   width: 100%;
   z-index: 5;
 }
 
+.snippetcpt-wrap .copy-success-msg {
+  overflow: hidden;
+  position: relative;
+  height: 0;
+  color: #3fc380;
+  top: auto;
+  bottom: 0;
+  right: .25em;
+  -webkit-transition: all .25s ease-in-out;
+  -moz-transition: all .25s ease-in-out;
+  transition: all .25s ease-in-out;
+}
+
+.snippet-copied-success .copy-success-msg {
+  height: auto;
+  height: 1.5em;
+}
+.snippet-copied-success .dashicons-thumbs-up {
+  color: #3fc380 !important;
+}
+
 .snippetcpt-wrap.scrollable .snippet-buttons, .snippet-scrollable .snippetcpt-wrap .snippet-buttons {
   padding: 0 1em;
 }
 
-.snippetcpt-wrap .snippet-button {
+.snippetcpt-wrap .snippet-button, .snippet-copy-status {
   color: #888;
   padding: .25em .32em;
+}
+
+.snippetcpt-wrap .snippet-copy-status {
+  font-family: inherit;
+  font-size: .75em;
+  display: none;
 }
 
 .snippet-buttons .snippet-button::active {
@@ -50,10 +94,6 @@
 body.snippet-full-screen {
   overflow: hidden;
   max-height: 100%;
-}
-
-.snippetcpt-footer .snippetcpt-wrap .snippet-buttons {
-  opacity: 1;
 }
 
 /* ACE Custom CSS */
@@ -93,12 +133,8 @@ textarea.snippet-main-content {
   padding: .25em;
 }
 
-.snippetcpt-wrap .snippet-buttons {
-  opacity: 0;
-}
-
-.snippetcpt-wrap:hover .snippet-buttons, .snippetcpt-wrap.snippetcpt-hidden .snippet-buttons {
-  opacity: 1;
+.snippetcpt-footer .ace_content, .snippetcpt-footer .ace_gutter {
+  padding-top: 3em;
 }
 
 .snippetcpt-wrap .snippet-button {
