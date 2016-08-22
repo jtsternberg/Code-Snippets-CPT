@@ -389,14 +389,15 @@ window.snippetcpt = window.snippetcpt || {};
 		}
 
 		var $snippet = $( this ).parents( '.snippetcpt-wrap' ).clone();
+		var $pre = $snippet.find( 'pre' );
 
 		$c.body.addClass( 'snippet-full-screen' );
 		$snippet.find( '.dashicons-editor-expand' )
 			.replaceWith( cpt.template( iconsConfig.close, btnTemplate ) );
-		$snippet.find( 'pre' ).show();
+		$pre.show();
 		$c.footer.html( $snippet ).removeClass( 'snippet-hidden' );
 
-		if ( $snippet.find( 'pre >' ).outerHeight() > $( window ).height() ) {
+		if ( $pre.outerHeight() > $( window ).height() || $pre.find( '>' ).outerHeight() > $( window ).height() ) {
 			$( document.body ).addClass( 'snippet-scrollable' );
 		}
 
