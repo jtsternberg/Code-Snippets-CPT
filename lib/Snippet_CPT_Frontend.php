@@ -14,22 +14,29 @@ class Snippet_CPT_Frontend {
 		// Snippet Shortcode Setup
 		add_shortcode( CodeSnippitInit::SHORTCODE_TAG, array( $this, 'shortcode' ) );
 
-		add_action( 'init', array( $this, 'check_for_code_copy_window' ) );
+		// Super early to limit how much of WP needs to run.
+		add_action( 'plugins_loaded', array( $this, 'check_for_code_copy_window' ), 5 );
 		add_filter( 'body_class', array( $this, 'maybe_full_screen' ), 20, 2 );
 		add_action( 'template_redirect', array( $this, 'maybe_remove_filters' ) );
 		add_filter( 'the_content', array( $this, 'modify_snippet_singular_content' ), 20, 2 );
 	}
 
 	public function check_for_code_copy_window() {
-		if ( ! isset( $_GET['code-snippets'], $_GET['id'] ) || ! wp_verify_nonce( $_GET['code-snippets'], 'code-snippets-cpt' ) ) {
+		if (
+			is_admin()
+			|| ! isset( $_GET['code-snippets'], $_GET['id'] )
+			|| ! wp_verify_nonce( $_GET['code-snippets'], 'code-snippets-cpt' )
+			|| ! ( $snippet_post = get_post( absint( $_GET['id'] ) ) )
+		) {
 			return;
 		}
 
-		if ( $snippet_post = get_post( absint( $_GET['id'] ) ) ) {
-			ob_start();
-			include_once( DWSNIPPET_PATH .'lib/views/snippet-window.php' );
-			wp_die( ob_get_clean(), __( 'Copy Snippet (cmd/ctrl+c)', 'code-snippets-cpt' ) );
+		if ( isset( $_GET['json'] ) ) {
+			return wp_send_json_success( $snippet_post->post_content );
 		}
+		ob_start();
+		include_once( DWSNIPPET_PATH .'lib/views/snippet-window.php' );
+		wp_die( ob_get_clean(), __( 'Copy Snippet (cmd/ctrl+c)', 'code-snippets-cpt' ) );
 	}
 
 	public function maybe_full_screen( $body_classes ) {
