@@ -1,5 +1,5 @@
 /**
- * Code Snippets CPT - v2.0.4 - 2016-08-18
+ * Code Snippets CPT - v2.0.5 - 2016-08-22
  * http://dsgnwrks.pro
  *
  * Copyright (c) 2016;
@@ -376,7 +376,7 @@ window.snippetcpt = window.snippetcpt || {};
 			window.history.pushState( { was: 'open' }, '', cpt.url );
 		}
 
-		$c.body.removeClass( 'snippet-full-screen' );
+		$c.body.removeClass( 'snippet-full-screen' ).removeClass( 'snippet-scrollable' );
 		$c.footer.html( '' ).addClass( 'snippet-hidden' );
 	};
 
@@ -395,6 +395,11 @@ window.snippetcpt = window.snippetcpt || {};
 			.replaceWith( cpt.template( iconsConfig.close, btnTemplate ) );
 		$snippet.find( 'pre' ).show();
 		$c.footer.html( $snippet ).removeClass( 'snippet-hidden' );
+
+		if ( $snippet.find( 'pre >' ).outerHeight() > $( window ).height() ) {
+			$( document.body ).addClass( 'snippet-scrollable' );
+		}
+
 		$( document.body ).trigger( 'snippet-full-screen' );
 	};
 
