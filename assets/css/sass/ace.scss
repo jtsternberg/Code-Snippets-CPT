@@ -78,10 +78,6 @@ textarea.snippet-main-content {
 	display: none !important;
 }
 
-.snippetcpt-footer {
-	background: rgba(0,0,0,.5);
-	z-index: 99999;
-}
 .snippetcpt-footer,
 .snippetcpt-footer .snippetcpt-wrap,
 .snippetcpt-footer .snippetcpt-ace-viewer {
@@ -93,6 +89,13 @@ textarea.snippet-main-content {
   width: 100%;
   height: 100%;
   margin: 0 !important;
+}
+
+.snippetcpt-footer {
+	position: fixed;
+	background: rgba(0,0,0,.5);
+	z-index: 99999;
+	opacity: .975;
 }
 
 .snippetcpt-footer .snippetcpt-wrap {
