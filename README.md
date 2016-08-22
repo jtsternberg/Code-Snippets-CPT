@@ -1,4 +1,4 @@
-Code Snippets CPT - 2.0.4
+Code Snippets CPT - 2.0.5
 =================
 
 A WordPress plugin for elegantly managing and displaying code snippets
@@ -19,6 +19,11 @@ Features:
 [Available on wordpress.org](https://wordpress.org/plugins/code-snippets-cpt/).
 
 ## Change Log
+
+### 2.0.5
+* Enable native copy functionality available in newer browsers. Props [ramiabraham](https://github.com/ramiabraham), [#27](https://github.com/jtsternberg/Code-Snippets-CPT/pull/27).
+* Clean up styles a bit for full-screen view.
+* Clean up Ace front-end view.
 
 ### 2.0.4
 * Fix bug causing the shortcode button not to insert the snippet when in visual mode.
