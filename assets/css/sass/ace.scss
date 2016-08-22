@@ -1,3 +1,5 @@
+@import 'shared';
+
 /* ACE Custom CSS */
 .ace_editor {
 	height: 800px;
@@ -23,7 +25,6 @@ textarea.snippet-main-content {
 	background-color: rgba( 0, 0, 0, 0.25 );
 	position: relative;
 	min-height: 2em;
-	position: relative;
 
 	&.no-toolbar {
 		min-height: 0;
@@ -39,21 +40,8 @@ textarea.snippet-main-content {
 	padding: .25em;
 }
 
-.snippet-invisible { visibility: hidden; }
-.snippet-hidden { display: none; }
-
 .snippetcpt-wrap .snippet-buttons {
-	text-align: right;
 	opacity: 0;
-	position: absolute;
-	top: 0px;
-	right: 0px;
-	z-index: 2;
-	width: 100%;
-	z-index: 5;
-}
-.snippetcpt-wrap.scrollable .snippet-buttons {
-	padding: 0 1em;
 }
 
 .snippetcpt-wrap:hover .snippet-buttons, .snippetcpt-wrap.snippetcpt-hidden .snippet-buttons {
@@ -67,18 +55,6 @@ textarea.snippet-main-content {
 
 	color: #888;
 	padding: .25em .32em;
-}
-
-.snippet-buttons .snippet-button:hover {
-  color: #fff;
-  background: #444;
-  opacity: .8;
-  cursor: pointer;
-  text-decoration: none;
-}
-
-.snippet-buttons .snippet-button::active {
-  text-decoration: underline;
 }
 
 .snippetcpt-wrap .snippet-title {
@@ -119,7 +95,7 @@ textarea.snippet-main-content {
   margin: 0 !important;
 }
 
-.snippetcpt-footer .snippetcpt-wrap{
+.snippetcpt-footer .snippetcpt-wrap {
   max-height: 100%;
   overflow-y: auto;
 }
@@ -131,7 +107,8 @@ textarea.snippet-main-content {
   width: 100%; /* Compensate for pre.snippetcpt-ace-viewer padding */
 }
 
-.snippetcpt-footer .snippet-button.collapse, .snippetcpt-footer .snippet-button.line-numbers {
+.snippetcpt-footer .snippet-button.collapse,
+.snippetcpt-footer .snippet-button.line-numbers {
 	display: none;
 }
 
@@ -145,9 +122,4 @@ textarea.snippet-main-content {
 
 .snippetcpt-footer .snippetcpt-wrap .snippet-buttons {
 	position: fixed;
-}
-
-body.snippet-full-screen {
-  overflow: hidden;
-  max-height: 100%;
 }

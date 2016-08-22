@@ -67,33 +67,8 @@ li.L5,
 li.L7,
 li.L9 { background: #f3f3f3 }
 
-.snippetcpt-wrap {
-	position: relative;
-}
+@import 'shared';
 
-.snippet-invisible { visibility: hidden; }
-.snippet-hidden { display: none; }
-.snippet-buttons {
-	position: absolute;
-	top: 0;
-	right: 0;
-}
-
-.snippet-buttons .snippet-button {
-	color: #888;
-	padding: .25em .32em;
-}
-
-.snippet-buttons .snippet-button:hover {
-	color: #fff;
-	background: #444;
-	opacity: .8;
-	cursor: pointer;
-	text-decoration: none;
-}
-.snippet-buttons .snippet-button::active {
-	text-decoration: underline;
-}
 .snippetcpt-footer {
 	position: fixed;
 	top: 0;
@@ -140,7 +115,6 @@ li.L9 { background: #f3f3f3 }
 	margin: 4px;
 }
 
-
 .snippetcpt-footer pre.prettyprint.linenums {
 	padding-left: 2.5em;
 }
@@ -151,9 +125,4 @@ li.L9 { background: #f3f3f3 }
 
 .snippetcpt-footer .gt100 pre.prettyprint.linenums {
 	padding-left: 3.5em;
-}
-
-body.snippet-full-screen {
-	overflow: hidden;
-	max-height: 100%;
 }
