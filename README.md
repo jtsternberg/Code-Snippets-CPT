@@ -1,4 +1,4 @@
-Code Snippets CPT - 2.0.5
+Code Snippets CPT - 2.0.6
 =================
 
 A WordPress plugin for elegantly managing and displaying code snippets
@@ -19,6 +19,9 @@ Features:
 [Available on wordpress.org](https://wordpress.org/plugins/code-snippets-cpt/).
 
 ## Change Log
+
+### 2.0.6
+* Update snippet-copy URL so that it doesn't 404 when nonce is expired, and also `noindex,nofollow` the snippet-copy pages when the nonce has expired.
 
 ### 2.0.5
 * Enable native copy functionality available in newer browsers. Props [ramiabraham](https://github.com/ramiabraham), [#27](https://github.com/jtsternberg/Code-Snippets-CPT/pull/27).
