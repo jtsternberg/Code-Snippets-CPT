@@ -24,10 +24,16 @@ class Snippet_CPT_Frontend {
 	public function check_for_code_copy_window() {
 		if (
 			is_admin()
-			|| ! isset( $_GET['code-snippets'], $_GET['id'] )
-			|| ! wp_verify_nonce( $_GET['code-snippets'], 'code-snippets-cpt' )
+			|| ! isset( $_GET['snippet'], $_GET['id'] )
+		) {
+			return;
+		}
+
+		if (
+			! wp_verify_nonce( $_GET['snippet'], 'code-snippets-cpt' )
 			|| ! ( $snippet_post = get_post( absint( $_GET['id'] ) ) )
 		) {
+			add_action( 'wp_head', 'wp_no_robots', 1 );
 			return;
 		}
 
@@ -298,7 +304,7 @@ class Snippet_CPT_Frontend {
 	public static function show_code_url_base( $args = false ) {
 		static $show_code_url_base = false;
 		if ( ! $show_code_url_base  ) {
-			$show_code_url_base = wp_nonce_url( add_query_arg( 'code-snippets', 'show' ), 'code-snippets-cpt', 'code-snippets' );
+			$show_code_url_base = wp_nonce_url( add_query_arg( 'snippet', 'show' ), 'code-snippets-cpt', 'snippet' );
 		}
 
 		return esc_url( $args ? add_query_arg( $args, $show_code_url_base ) : $show_code_url_base );
