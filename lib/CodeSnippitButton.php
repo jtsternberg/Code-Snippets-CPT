@@ -15,7 +15,10 @@ class CodeSnippitButton {
 		}
 
 		// Add button for snippet lookup
-		add_filter( 'the_editor_content', array( $this, 'enqueue_button_script' ) );
+		add_filter( 'tiny_mce_before_init', array( $this, 'enqueue_button_script' ) );
+		add_filter( 'teeny_mce_before_init', array( $this, 'enqueue_button_script' ) );
+		add_filter( 'quicktags_settings', array( $this, 'enqueue_button_script' ) );
+
 		// script for button handler
 		add_action( 'admin_enqueue_scripts', array( $this, 'button_script' ) );
 
@@ -119,8 +122,13 @@ class CodeSnippitButton {
 	}
 
 	public function enqueue_button_script( $content ) {
+		if ( ! function_exists( 'post_categories_meta_box' ) ) {
+			require_once( ABSPATH . 'wp-admin/includes/meta-boxes.php' );
+		}
+
 		// We know wp_editor was called, so add our CSS/JS to the footer
 		add_action( 'admin_footer', array( $this, 'quicktag_button_script' ) );
+
 		return $content;
 	}
 
