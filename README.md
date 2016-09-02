@@ -1,4 +1,4 @@
-Code Snippets CPT - 2.0.6
+Code Snippets CPT - 2.0.7
 =================
 
 A WordPress plugin for elegantly managing and displaying code snippets
@@ -19,6 +19,9 @@ Features:
 [Available on wordpress.org](https://wordpress.org/plugins/code-snippets-cpt/).
 
 ## Change Log
+
+### 2.0.7
+* Fix "Uncaught Error: Call to undefined function post_categories_meta_box()" occurring when not on post-pages. Fixes [#28](https://github.com/jtsternberg/Code-Snippets-CPT/issues/28).
 
 ### 2.0.6
 * Update snippet-copy URL so that it doesn't 404 when nonce is expired, and also `noindex,nofollow` the snippet-copy pages when the nonce has expired.

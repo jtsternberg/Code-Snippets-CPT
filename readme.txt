@@ -9,7 +9,7 @@ Author: Jtsternberg
 Tags snippets, code, code snippets, syntax highlighting, shortcode
 Requires at least: 3.8.0
 Tested up to: 4.6
-Stable tag: 2.0.6
+Stable tag: 2.0.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -53,6 +53,9 @@ Feel free to [fork or contribute on Github](https://github.com/jtsternberg/Code-
 8. Inline snippet editor
 
 == Changelog ==
+
+= 2.0.7 =
+* Fix "Uncaught Error: Call to undefined function post_categories_meta_box()" occurring when not on post-pages. Fixes [#28](https://github.com/jtsternberg/Code-Snippets-CPT/issues/28).
 
 = 2.0.6 =
 * Update snippet-copy URL so that it doesn't 404 when nonce is expired, and also `noindex,nofollow` the snippet-copy pages when the nonce has expired.
@@ -114,6 +117,9 @@ Feel free to [fork or contribute on Github](https://github.com/jtsternberg/Code-
 * First Release
 
 == Upgrade Notice ==
+
+= 2.0.7 =
+* Fix "Uncaught Error: Call to undefined function post_categories_meta_box()" occurring when not on post-pages. Fixes [#28](https://github.com/jtsternberg/Code-Snippets-CPT/issues/28).
 
 = 2.0.6 =
 * Update snippet-copy URL so that it doesn't 404 when nonce is expired, and also `noindex,nofollow` the snippet-copy pages when the nonce has expired.
