@@ -17,7 +17,6 @@ window.snippetcpt = window.snippetcpt || {};
 		var viewer = {
 			toolbarDelay : 500,
 			isCollapsed  : null,
-			lineNums     : null,
 			editor       : null
 		};
 
@@ -54,7 +53,7 @@ window.snippetcpt = window.snippetcpt || {};
 				editSession.setMode( cpt.language || 'ace/mode/text' );
 			}
 
-			if ( ! viewer.data.lineNums ) {
+			if ( ! viewer.data.line_nums ) {
 				viewer.editor.renderer.setShowGutter( false );
 			}
 

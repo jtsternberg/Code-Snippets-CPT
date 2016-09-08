@@ -9,7 +9,7 @@ Author: Jtsternberg
 Tags snippets, code, code snippets, syntax highlighting, shortcode
 Requires at least: 3.8.0
 Tested up to: 4.6
-Stable tag: 2.0.7
+Stable tag: 2.0.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -53,6 +53,9 @@ Feel free to [fork or contribute on Github](https://github.com/jtsternberg/Code-
 8. Inline snippet editor
 
 == Changelog ==
+
+= 2.0.8 =
+* Fix ACE frontend to honor the 'Display Line Numbers' setting. Fixes [#29](https://github.com/jtsternberg/Code-Snippets-CPT/issues/29).
 
 = 2.0.7 =
 * Fix "Uncaught Error: Call to undefined function post_categories_meta_box()" occurring when not on post-pages. Fixes [#28](https://github.com/jtsternberg/Code-Snippets-CPT/issues/28).
@@ -117,6 +120,9 @@ Feel free to [fork or contribute on Github](https://github.com/jtsternberg/Code-
 * First Release
 
 == Upgrade Notice ==
+
+= 2.0.8 =
+* Fix ACE frontend to honor the 'Display Line Numbers' setting. Fixes [#29](https://github.com/jtsternberg/Code-Snippets-CPT/issues/29).
 
 = 2.0.7 =
 * Fix "Uncaught Error: Call to undefined function post_categories_meta_box()" occurring when not on post-pages. Fixes [#28](https://github.com/jtsternberg/Code-Snippets-CPT/issues/28).

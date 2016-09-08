@@ -1,4 +1,4 @@
-Code Snippets CPT - 2.0.7
+Code Snippets CPT - 2.0.8
 =================
 
 A WordPress plugin for elegantly managing and displaying code snippets
@@ -19,6 +19,9 @@ Features:
 [Available on wordpress.org](https://wordpress.org/plugins/code-snippets-cpt/).
 
 ## Change Log
+
+### 2.0.8
+* Fix ACE frontend to honor the 'Display Line Numbers' setting. Fixes [#29](https://github.com/jtsternberg/Code-Snippets-CPT/issues/29).
 
 ### 2.0.7
 * Fix "Uncaught Error: Call to undefined function post_categories_meta_box()" occurring when not on post-pages. Fixes [#28](https://github.com/jtsternberg/Code-Snippets-CPT/issues/28).

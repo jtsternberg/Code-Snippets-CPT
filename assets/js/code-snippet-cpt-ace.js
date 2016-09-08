@@ -1,5 +1,5 @@
 /**
- * Code Snippets CPT - v2.0.5 - 2016-08-22
+ * Code Snippets CPT - v2.0.5 - 2016-09-08
  * http://dsgnwrks.pro
  *
  * Copyright (c) 2016;
@@ -24,7 +24,6 @@ window.snippetcpt = window.snippetcpt || {};
 		var viewer = {
 			toolbarDelay : 500,
 			isCollapsed  : null,
-			lineNums     : null,
 			editor       : null
 		};
 
@@ -61,7 +60,7 @@ window.snippetcpt = window.snippetcpt || {};
 				editSession.setMode( cpt.language || 'ace/mode/text' );
 			}
 
-			if ( ! viewer.data.lineNums ) {
+			if ( ! viewer.data.line_nums ) {
 				viewer.editor.renderer.setShowGutter( false );
 			}
 
