@@ -7,7 +7,7 @@
     "name": "DsgnWrks",
     "url": "http://dsgnwrks.pro"
   },
-  "license": "GPLv2",
+  "license": "GPL-2.0",
   "devDependencies": {
     "grunt": "latest",
     "grunt-banner": "^0.6.0",

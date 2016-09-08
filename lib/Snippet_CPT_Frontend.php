@@ -165,16 +165,16 @@ class Snippet_CPT_Frontend {
 	public function get_ace_output( $atts ) {
 		static $scripts_enqueued = false;
 
-		$data_attrs = array();
+		$data_attrs = array(); // will be used by the JavaScript front-end, use camelCase for the keys
 
 		if ( $atts['line_numbers'] ) {
-			$data_attrs['line_nums'] = is_numeric( $atts['line_numbers'] ) && 0 !== absint( $atts['line_numbers'] )
+			$data_attrs['lineNums'] = is_numeric( $atts['line_numbers'] ) && 0 !== absint( $atts['line_numbers'] )
 				? absint( $atts['line_numbers'] )
 				: true;
 		}
 
-		$data_attrs['max_lines'] = absint( $atts['max_lines'] );
-		$data_attrs['max_lines'] = $data_attrs['max_lines'] > 2 ? $data_attrs['max_lines'] : 'auto';
+		$data_attrs['maxLines'] = absint( $atts['max_lines'] );
+		$data_attrs['maxLines'] = $data_attrs['maxLines'] > 2 ? $data_attrs['maxLines'] : 'auto';
 
 		$data_attrs['lang'] = apply_filters( 'dsgnwrks_snippet_default_ace_lang', 'text' );
 		if ( ! empty( $atts['lang'] ) ) {
@@ -185,9 +185,6 @@ class Snippet_CPT_Frontend {
 			// Get the language linked to the current post id
 			$data_attrs['lang'] = $lang_slug;
 		}
-
-		// Set the snippet ID, for use in the controller
-		$data_attrs['snippet-id'] = $atts['id'];
 
 		$data = '';
 		if ( ! empty( $data_attrs ) ) {
