@@ -13,11 +13,11 @@ Stable tag: 2.0.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-A WordPress plugin for elegantly managing and displaying code snippets.
+A WordPress plugin for elegantly hosting, managing, and displaying code snippets. Own your own data!
 
 == Description ==
 
-A WordPress plugin for elegantly managing and displaying code snippets.
+A WordPress plugin for elegantly hosting, managing, and displaying code snippets. Own your own data!
 
 Adds a custom post type for managing your code snippets with taxonomies for classifying the snippets. Embed snippets with syntax highlighting to posts or pages via a handy shortcode insert button that allows you to pick from the most recent snippets. Syntax highlighting provided by the [Prettify javascript library](https://github.com/google/code-prettify) and the [Ace Editor](https://ace.c9.io/).
 

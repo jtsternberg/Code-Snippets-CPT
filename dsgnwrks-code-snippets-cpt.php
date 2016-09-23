@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Code Snippets CPT
-Description: A code snippet custom post-type and shortcode for elegantly managing and displaying your code snippets.
+Description: A code snippet custom post-type and shortcode for elegantly hosting, managing, and displaying your code snippets. Own your own data!
 elegantly managing and displaying code snippets
 Plugin URI: http://j.ustin.co/jAHRM3
 Author: Jtsternberg
