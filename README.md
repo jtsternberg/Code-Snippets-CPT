@@ -1,4 +1,4 @@
-Code Snippets CPT - 2.0.8
+Code Snippets CPT - 2.0.9
 =================
 
 A WordPress plugin for elegantly hosting, managing, and displaying code snippets. Own your own data!
@@ -19,6 +19,9 @@ Features:
 [Available on wordpress.org](https://wordpress.org/plugins/code-snippets-cpt/).
 
 ## Change Log
+
+### 2.0.9
+* Fix issue with calling `wp.mce` when it doesn't exist (in instances where only quicktags are enqueued).
 
 ### 2.0.8
 * Fix ACE frontend to honor the 'Display Line Numbers' setting. Fixes [#29](https://github.com/jtsternberg/Code-Snippets-CPT/issues/29).

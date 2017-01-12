@@ -370,7 +370,9 @@ window.codeSnippetCPTButton = window.codeSnippetCPTButton || {};
 			close         : btn.close
 		} );
 
-		wp.mce.views.register( 'snippet', btn.mceView );
+		if ( wp.mce && wp.mce.views ) {
+			wp.mce.views.register( 'snippet', btn.mceView );
+		}
 
 		// text editor button
 		QTags.addButton( 'snippetcpt', btn.l10n.button_name, function() {
