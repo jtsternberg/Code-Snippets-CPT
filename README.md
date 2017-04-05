@@ -1,4 +1,4 @@
-Code Snippets CPT - 2.0.9
+Code Snippets CPT - 2.1.0
 =================
 
 A WordPress plugin for elegantly hosting, managing, and displaying code snippets. Own your own data!
@@ -19,6 +19,9 @@ Features:
 [Available on wordpress.org](https://wordpress.org/plugins/code-snippets-cpt/).
 
 ## Change Log
+
+### 2.1.0
+* Fix issue with double trailing slashes on `DWSNIPPET_URL` causing resources to no load under some circumstances.
 
 ### 2.0.9
 * Fix issue with calling `wp.mce` when it doesn't exist (in instances where only quicktags are enqueued).

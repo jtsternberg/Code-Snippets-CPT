@@ -1,120 +1,120 @@
-# Copyright (C) 2016 Jtsternberg
+# Copyright (C) 2017 Jtsternberg
 # This file is distributed under the same license as the Code Snippets CPT package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Code Snippets CPT 2.0.5\n"
+"Project-Id-Version: Code Snippets CPT 2.1.0\n"
 "Report-Msgid-Bugs-To: "
 "https://wordpress.org/support/plugin/dsgnwrks-code-snippets-cpt\n"
-"POT-Creation-Date: 2016-08-22 19:03:31+00:00\n"
+"POT-Creation-Date: 2017-04-05 19:06:37+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2016-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2017-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "X-Generator: grunt-wp-i18n 0.5.4\n"
 
-#: lib/CodeSnippitButton.php:37
+#: lib/CodeSnippitButton.php:40
 msgid "Add Snippet"
 msgstr ""
 
-#: lib/CodeSnippitButton.php:38
+#: lib/CodeSnippitButton.php:41
 msgid "Add a Code Snippet"
 msgstr ""
 
-#: lib/CodeSnippitButton.php:39 lib/views/shortcode-button-form.php:114
+#: lib/CodeSnippitButton.php:42 lib/views/shortcode-button-form.php:114
 msgid "Cancel"
 msgstr ""
 
-#: lib/CodeSnippitButton.php:40
+#: lib/CodeSnippitButton.php:43
 msgid "Insert Shortcode"
 msgstr ""
 
-#: lib/CodeSnippitButton.php:41
+#: lib/CodeSnippitButton.php:44
 msgid "Update Shortcode"
 msgstr ""
 
-#: lib/CodeSnippitButton.php:42
+#: lib/CodeSnippitButton.php:45
 msgid "Edit this Snippet"
 msgstr ""
 
-#: lib/CodeSnippitButton.php:43
+#: lib/CodeSnippitButton.php:46
 msgid ""
 "If you are creating a new snippet, you are required to have at minimum a "
 "title and content for the snippet."
 msgstr ""
 
-#: lib/CodeSnippitButton.php:44
+#: lib/CodeSnippitButton.php:47
 msgid ""
 "There has been an error processing your request, please close the dialog "
 "and try again."
 msgstr ""
 
-#: lib/CodeSnippitButton.php:45
+#: lib/CodeSnippitButton.php:48
 msgid ""
 "Silly rabbit, there are no snippets, you cannot add what doesn't exist.  "
 "Try the adding a snippet first."
 msgstr ""
 
-#: lib/CodeSnippitButton.php:46
+#: lib/CodeSnippitButton.php:49
 msgid "You must select a snippet to add to the shortcode."
 msgstr ""
 
-#: lib/CodeSnippitButton.php:58
+#: lib/CodeSnippitButton.php:61
 msgid "Security Failure"
 msgstr ""
 
-#: lib/CodeSnippitButton.php:67
+#: lib/CodeSnippitButton.php:70
 msgid "Make sure you select a programming language for this snippet."
 msgstr ""
 
-#: lib/CodeSnippitButton.php:149 lib/Snippet_CPT_Setup.php:107
+#: lib/CodeSnippitButton.php:157 lib/Snippet_CPT_Setup.php:107
 #: lib/views/shortcode-button-form.php:138
 msgid "Snippet Categories"
 msgstr ""
 
-#: lib/CodeSnippitButton.php:158 lib/Snippet_CPT_Setup.php:108
+#: lib/CodeSnippitButton.php:166 lib/Snippet_CPT_Setup.php:108
 #: lib/views/shortcode-button-form.php:143
 msgid "Snippet Tags"
 msgstr ""
 
-#: lib/CodeSnippitButton.php:202
+#: lib/CodeSnippitButton.php:210
 msgid "No items found."
 msgstr ""
 
-#: lib/Snippet_CPT_Frontend.php:40 lib/views/snippet-window.php:65
+#: lib/Snippet_CPT_Frontend.php:46 lib/views/snippet-window.php:65
 msgid "Copy Snippet (cmd/ctrl+c)"
 msgstr ""
 
-#: lib/Snippet_CPT_Frontend.php:285
+#: lib/Snippet_CPT_Frontend.php:291
 msgid "Copy Snippet"
 msgstr ""
 
-#: lib/Snippet_CPT_Frontend.php:286
+#: lib/Snippet_CPT_Frontend.php:292
 msgid "Expand Snippet"
 msgstr ""
 
-#: lib/Snippet_CPT_Frontend.php:287
+#: lib/Snippet_CPT_Frontend.php:293
 msgid "Close Snippet (or hit \"escape\" key)"
 msgstr ""
 
-#: lib/Snippet_CPT_Frontend.php:288
+#: lib/Snippet_CPT_Frontend.php:294
 msgid "Edit Snippet"
 msgstr ""
 
-#: lib/Snippet_CPT_Frontend.php:289
+#: lib/Snippet_CPT_Frontend.php:295
 msgid "Collapse Snippet"
 msgstr ""
 
-#: lib/Snippet_CPT_Frontend.php:290
+#: lib/Snippet_CPT_Frontend.php:296
 msgid "Toggle Line Numbers"
 msgstr ""
 
-#: lib/Snippet_CPT_Frontend.php:291
+#: lib/Snippet_CPT_Frontend.php:297
 msgid "Copied successfully."
 msgstr ""
 
-#: lib/Snippet_CPT_Frontend.php:292
+#: lib/Snippet_CPT_Frontend.php:298
 msgid "Could not copy code snippet using document.execCommand"
 msgstr ""
 
@@ -457,8 +457,8 @@ msgstr ""
 
 #. Description of the plugin/theme
 msgid ""
-"A code snippet custom post-type and shortcode for elegantly managing and "
-"displaying your code snippets."
+"A code snippet custom post-type and shortcode for elegantly hosting, "
+"managing, and displaying your code snippets. Own your own data!"
 msgstr ""
 
 #. Author of the plugin/theme

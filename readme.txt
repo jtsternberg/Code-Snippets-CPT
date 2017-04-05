@@ -8,8 +8,8 @@ Author URI: http://dsgnwrks.pro
 Author: Jtsternberg
 Tags snippets, code, code snippets, syntax highlighting, shortcode
 Requires at least: 3.8.0
-Tested up to: 4.7
-Stable tag: 2.0.9
+Tested up to: 4.7.3
+Stable tag: 2.1.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -53,6 +53,9 @@ Feel free to [fork or contribute on Github](https://github.com/jtsternberg/Code-
 8. Inline snippet editor
 
 == Changelog ==
+
+= 2.1.0 =
+* Fix issue with double trailing slashes on `DWSNIPPET_URL` causing resources to no load under some circumstances.
 
 = 2.0.9 =
 * Fix issue with calling `wp.mce` when it doesn't exist (in instances where only quicktags are enqueued).
@@ -123,6 +126,9 @@ Feel free to [fork or contribute on Github](https://github.com/jtsternberg/Code-
 * First Release
 
 == Upgrade Notice ==
+
+= 2.1.0 =
+* Fix issue with double trailing slashes on `DWSNIPPET_URL` causing resources to no load under some circumstances.
 
 = 2.0.9 =
 * Fix issue with calling `wp.mce` when it doesn't exist (in instances where only quicktags are enqueued).
