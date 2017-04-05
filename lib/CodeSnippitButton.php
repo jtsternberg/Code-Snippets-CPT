@@ -30,7 +30,7 @@ class CodeSnippitButton {
 	}
 
 	public function button_script() {
-		wp_register_script( 'code-snippet-button', DWSNIPPET_URL ."/assets/js/code-snippet-admin-button{$this->min}.js" , array( 'jquery', 'quicktags', 'wpdialogs' ), CodeSnippitInit::VERSION, true );
+		wp_register_script( 'code-snippet-button', DWSNIPPET_URL ."assets/js/code-snippet-admin-button{$this->min}.js" , array( 'jquery', 'quicktags', 'wpdialogs' ), CodeSnippitInit::VERSION, true );
 
 		wp_localize_script( 'code-snippet-button', 'codeSnippetCPTButton', array(
 			'snippet_nonce' => wp_create_nonce( 'insert_snippet_post' ),
@@ -112,7 +112,7 @@ class CodeSnippitButton {
 	}
 
 	public function add_button( $plugin_array ) {
-		$plugin_array['snippetcpt'] = DWSNIPPET_URL ."/assets/js/code-snippet-admin-button-mce{$this->min}.js";
+		$plugin_array['snippetcpt'] = DWSNIPPET_URL ."assets/js/code-snippet-admin-button-mce{$this->min}.js";
 		return $plugin_array;
 	}
 
