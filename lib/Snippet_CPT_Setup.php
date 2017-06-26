@@ -40,7 +40,7 @@ class Snippet_CPT_Setup {
 			'labels' => array(
 				'name'               => $this->plural,
 				'singular_name'      => $this->singular,
-				'add_new'            => __( 'Add New Code Snippet', 'code-snippets-cpt' ),
+				'add_new'            => __( 'Add New Snippet', 'code-snippets-cpt' ),
 				'add_new_item'       => __( 'Add New Code Snippet', 'code-snippets-cpt' ),
 				'edit_item'          => __( 'Edit Code Snippet', 'code-snippets-cpt' ),
 				'new_item'           => __( 'New Code Snippet', 'code-snippets-cpt' ),
