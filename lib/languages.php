@@ -119,6 +119,7 @@ return array(
 	'verilog'      => 'Verilog',
 	'vhdl'         => 'VHDL',
 	'xml'          => 'XML',
+	'xpp'          => 'X++',
 	'xquery'       => 'XQuery',
 	'yaml'         => 'YAML',
 );
