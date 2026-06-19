@@ -182,6 +182,13 @@ class CodeSnippitButton {
 	 * Parse the snippet shortcode for display within a TinyMCE view, and send it back to JS.
 	 */
 	public function ajax_parse_shortcode_callback() {
+		// Only users who can edit content (the context where the snippet
+		// button is available) may parse/execute shortcodes. Prevents
+		// subscriber-level arbitrary shortcode execution (CVE-2024-13895).
+		if ( ! current_user_can( 'edit_posts' ) ) {
+			wp_send_json_error( __( 'Security Failure', 'code-snippets-cpt' ) );
+		}
+
 		if ( empty( $_POST['shortcode'] ) ) {
 			wp_send_json_error();
 		}

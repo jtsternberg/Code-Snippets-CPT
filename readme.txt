@@ -9,7 +9,7 @@ Author: Jtsternberg
 Tags snippets, code, code snippets, syntax highlighting, shortcode
 Requires at least: 3.8.0
 Tested up to: 4.7.3
-Stable tag: 2.1.0
+Stable tag: 2.1.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -53,6 +53,9 @@ Feel free to [fork or contribute on Github](https://github.com/jtsternberg/Code-
 8. Inline snippet editor
 
 == Changelog ==
+
+= 2.1.1 =
+* Security: Require `edit_posts` capability for the shortcode-parse AJAX handler, preventing authenticated subscriber-level arbitrary shortcode execution (CVE-2024-13895).
 
 = 2.1.0 =
 * Fix issue with double trailing slashes on `DWSNIPPET_URL` causing resources to no load under some circumstances.
